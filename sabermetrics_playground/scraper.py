@@ -12,6 +12,7 @@ import os
 
 path = os.path.abspath(os.getcwd())
 
+
 def build_csv_individuals(start_year, end_year):
     pitcher_data = pitching_stats(start_year, end_year)
     pitcher_data = pitcher_data.sort_values(by=['Season'], ascending=False)
