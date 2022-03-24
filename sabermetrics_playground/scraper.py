@@ -15,10 +15,10 @@ path = os.path.abspath(os.getcwd())
 def build_csv_individuals(start_year, end_year):
     pitcher_data = pitching_stats(start_year, end_year)
     pitcher_data = pitcher_data.sort_values(by=['Season'], ascending=False)
-    #batter_data = batting_stats(start_year, end_year)
-    #batter_data = batter_data.sort_values(by=['Season'], ascending=False)
+    batter_data = batting_stats(start_year, end_year)
+    batter_data = batter_data.sort_values(by=['Season'], ascending=False)
     pitcher_data.to_csv(path + '/storage/fangraphs/pitching')
-    #batter_data.to_csv(path + '/storage/fangraphs/batting')
+    batter_data.to_csv(path + '/storage/fangraphs/batting')
 
 
 if __name__ == '__main__':
