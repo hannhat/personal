@@ -1,0 +1,115 @@
+---
+title: "aging_curves"
+output: html_document
+date: "2023-05-28"
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+batting <- read.csv("~/personal/sabermetrics_playground/storage/fangraphs/batting")
+batting <- batting[,-1]
+head(batting)
+```
+
+```{r}
+library(plm)
+library(broom)
+library(ggplot2)
+library(sandwich)
+library(tidyverse)
+library(dplyr)
+```
+
+```{r}
+df <- batting[(batting$Season <= 2019),]
+```
+
+
+Plot of the distribution of MLB players' ages when they spent their
+first year in the league versus their last
+
+```{r}
+grouped_df <- group_by(df, Name)
+career_age_span <- summarise(grouped_df, min_age=min(Age), max_age=max(Age),
+                             min_yr=min(Season), max_yr=max(Season))
+
+
+# removing players that were unlikely to have actually started playing in 1980
+# or stopped playing in 2019 but appear to in the data as a product of our
+# selection of the data
+career_age_span <- career_age_span[!(career_age_span$min_yr == 1980) 
+                                   & !(career_age_span$max_yr == 2019),]
+
+
+
+data <- data.frame(values = c(career_age_span$min_age,
+                              career_age_span$max_age),
+                   group = c(rep("Age in first year", 
+                                 length(career_age_span$min_age)),
+                             rep("Age in last year",
+                                 length(career_age_span$max_age))))
+
+ggplot(data, aes(x = values, fill = group)) +
+  geom_bar(position = "dodge") +
+  labs(x = "Age", y = "", title="Distribution of players' ages during their 
+  first and last years in the MLB") +
+  theme_minimal()
+```
+
+
+
+
+```{r}
+data <- df %>%
+  group_by(Name, Season) %>%
+  summarise(wRC. = sum(wRC.*PA) / sum(PA), PA = sum(PA), Age = min(Age))
+data <- data[(data$PA >= 150),]
+
+pdata <- pdata.frame(data, index = c("Name", "Season"))
+pdata$wRCdiff <- diff(pdata$wRC., differences=1)
+pdata$Season <- as.numeric(pdata$Season)
+pdata$Season <- pdata$Season + 1979
+head(pdata)
+```
+
+```{r}
+batters_2010s <- pdata[(pdata$Season >= 2010) & (pdata$PA >= 150),]
+batters_2000s <- pdata[(pdata$Season >= 2000) & (pdata$Season <= 2010)
+                      & (pdata$PA >= 150),]
+```
+
+
+
+
+```{r}
+batters_2010s
+```
+
+
+```{r}
+age_curve_2000s <- batters_2000s %>%
+  group_by(Age) %>%
+  summarise(mean = mean(wRCdiff, na.rm=TRUE))
+age_curve_2010s <- batters_2010s %>%
+  group_by(Age) %>%
+  summarise(mean = mean(wRCdiff, na.rm=TRUE))
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
