@@ -1,0 +1,19 @@
+# Data files (all subdirectories)
+**/*.csv
+**/*.parquet
+**/*.json
+**/*.xlsx
+**/*.xls
+**/*.tsv
+**/*.db
+**/*.sqlite
+**/*.hdf5
+**/*.h5
+**/*.feather
+**/*.pkl
+**/*.pickle
+**/*.npy
+**/*.npz
+**/*.arrow
+**/*.orc
+**/*.avro
