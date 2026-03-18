@@ -1,0 +1,287 @@
+---
+title: "Ch1_Exercises"
+output: html_document
+---
+
+```{r}
+
+```
+
+
+1. 
+
+
+(a)
+
+Plot of the marginal density of y: 
+```{r}
+y <- seq(-7,10,.02)
+dens <- 0.5*dnorm(y,1,2) + 0.5*dnorm(y,2,2)
+plot(y, dens)
+```
+
+(b)
+
+```{r}
+# Computing density of y at y=1:
+cat("p(y=1):", 0.5*dnorm(1,1,2) + 0.5*dnorm(1,2,2),"\n")
+
+# Computing density of y|theta at y=1:
+cat("p(y=1}theta):", dnorm(1,1,2))
+```
+
+(c)
+
+Looking at how the posterior probability that $\theta = 1$ changes with sigma. 
+```{r}
+sigmas <- seq(0.1,3,0.01)
+prior <- 0.5
+likelihood <- dnorm(1,1,sigmas**2)
+normalized <- 0.5*dnorm(1,1,sigmas**2) + 0.5*dnorm(1,2,sigmas**2)
+posterior_theta <- prior*likelihood/normalized
+
+plot(sigmas, posterior_theta)
+```
+
+
+4. 
+
+(b)
+
+```{r}
+# Using Normal approximation N(0,14^2) of outcome - prediction spread
+cat("P(favorite wins|point spread = 8)", 1 - pnorm(-8.5,0,13.86),"\n",
+    "P(beat the spread|point spread = 8)", 1 - pnorm(-0.5,0,13.86),"\n",
+    "P(beat the spread|point spread = 8 & favorite wins)", 
+        (1 - pnorm(-0.5,0,13.86))/(1 - pnorm(-8.5,0,13.86)))
+
+```
+
+Where the equation in the third calculation comes from (assuming continuous point differentials, which is not reflective of reality in this case because points are discrete):
+$$Pr(BS|PS=8,FW) = \frac{Pr(BS,FW|PS=8)Pr(PS=8)}{Pr(FW|PS=8)Pr(PS=8)}$$
+
+
+5.
+
+(a)
+
+Coarse prior knowledge and assumptions:
+
+1) Only about 1/4 of all US congressional seats are actually competitive in any given year (3/4 of all seats have no chance of being tied). Of competitive districts, I will assume that the proportion of votes one candidate gets is distributed uniformly from 0.4 to 0.6. 
+2) I do not have any information on how closely population size is tied to the closeness of races. I will assume independence.
+3) Smaller congressional districts should be more common than larger districts. Therefore, using the information that districts range in population from 50,000 to 350,000, I will make the simplifying assumption that each congressional race has 100,000 voters. 
+4) I will assume the results of races are independent (no specific information).
+
+```{r}
+# Monte Carlo simulation to determine a conditional probability of tying given this information
+
+N <- 100000
+voters <- 100000
+races <- 435
+lb_comp = 0.4
+ub_comp = 0.6
+p_comp = 0.25
+
+ties <- 0
+
+for (i in 1:N) {
+  samp <- sample(seq.int(lb_comp*voters:ub_comp*voters),
+                 size=races*p_comp, replace=TRUE)
+  if ((voters / 2) %in% samp) {
+    ties <- ties + 1
+  }
+}
+
+cat("P(ties):", round(100*(ties/N), digits = 2), "%")
+
+```
+
+(b)
+
+We assume (unrealisically, given rapid population growth) that the average number of votes was the same today at in 1900-1992. 
+
+We also assume that the number of votes is distributed uniformly [-99,99] in these close elections and do not make use of the fact that 6 elections were within 10 votes. Then we calculate the following probabilities:
+
+
+```{r}
+cat("P(ties):", round(49/20593*100, 2), "%")
+```
+
+
+9.
+
+(a)
+
+```{r}
+time_start <- 0
+time_end <- 420
+
+x <- cumsum(rexp(n=1000,rate = 1/10))
+entry_times <- x[x <= 420]
+
+docs <- c(0,0,0)
+
+time <- 0
+queue <- c()
+waiting_times <- c()
+
+len <- length(entry_times) + 1
+
+for (i in seq.int(1:len)) {
+
+  if (i < length(entry_times)+1) {
+      time_elapsed <- entry_times[i] - time
+  }
+  else {
+    time_elapsed <- 99999
+    time <- 420
+  }
+  
+  while (time_elapsed > 0) {
+    wait <- pmin(pmax(min(docs),0), time_elapsed)
+    time <- time + wait
+    time_elapsed <- time_elapsed - wait
+    
+    docs <- pmax(docs - wait,0)
+  
+    if (docs[1] == 0) {
+      docs[1] <- runif(1,5,20)
+      waiting_times[queue[1]] <- pmax(time - entry_times[queue[1]], 0)
+      queue <- queue[-1]
+    }
+    else if (docs[2] == 0) {
+      docs[2] <- runif(1,5,20)
+      waiting_times[queue[1]] <- pmax(time - entry_times[queue[1]], 0)
+      queue <- queue[-1]
+    }
+    else if (docs[3] == 0) {
+      docs[3] <- runif(1,5,20)
+      waiting_times[queue[1]] <- pmax(time - entry_times[queue[1]], 0)
+      queue <- queue[-1]
+    }
+    
+    if (length(queue) == 0) {
+       if (i < length(entry_times)+1) {
+        time <- time + time_elapsed
+        docs <- pmax(docs - time_elapsed,0)
+        time_elapsed <- 0
+       }
+      else {
+        break
+      }
+    }
+  }
+  
+  if (i < length(entry_times) + 1) {
+    queue[length(queue) + 1] <- i
+  }
+  else {
+    time <- time + max(docs)
+  }
+
+}
+
+
+```
+
+
+(b)
+
+```{r}
+time_start <- 0
+time_end <- 420
+
+patients <- c()
+num_waited <- c()
+wait_time <- c()
+time_closed <- c()
+
+for (j in 1:100) {
+x <- cumsum(rexp(n=1000,rate = 1/10))
+entry_times <- x[x <= 420]
+
+docs <- c(0,0,0)
+
+time <- 0
+queue <- c()
+waiting_times <- c()
+
+len <- length(entry_times) + 1
+
+for (i in seq.int(1:len)) {
+
+  if (i < length(entry_times)+1) {
+      time_elapsed <- entry_times[i] - time
+  }
+  else {
+    time_elapsed <- 99999
+    time <- 420
+  }
+  
+  while (time_elapsed > 0) {
+    wait <- pmin(pmax(min(docs),0), time_elapsed)
+    time <- time + wait
+    time_elapsed <- time_elapsed - wait
+    
+    docs <- pmax(docs - wait,0)
+  
+    if (docs[1] == 0) {
+      docs[1] <- runif(1,5,20)
+      waiting_times[queue[1]] <- pmax(time - entry_times[queue[1]], 0)
+      queue <- queue[-1]
+    }
+    else if (docs[2] == 0) {
+      docs[2] <- runif(1,5,20)
+      waiting_times[queue[1]] <- pmax(time - entry_times[queue[1]], 0)
+      queue <- queue[-1]
+    }
+    else if (docs[3] == 0) {
+      docs[3] <- runif(1,5,20)
+      waiting_times[queue[1]] <- pmax(time - entry_times[queue[1]], 0)
+      queue <- queue[-1]
+    }
+    
+    if (length(queue) == 0) {
+       if (i < length(entry_times)+1) {
+        time <- time + time_elapsed
+        docs <- pmax(docs - time_elapsed,0)
+        time_elapsed <- 0
+       }
+      else {
+        break
+      }
+    }
+  }
+  
+  if (i < length(entry_times) + 1) {
+    queue[length(queue) + 1] <- i
+  }
+  else {
+    time <- time + max(docs)
+  }
+
+}
+
+patients[j] <- length(entry_times)
+num_waited[j] <- sum((waiting_times > 0))
+wait_time[j] <- mean(waiting_times[waiting_times > 0])
+time_closed[j] <- time - 420
+}
+
+
+cat("Number of patients:", median(patients), "\n",
+    "Number of patients who waited:", median(num_waited), "\n",
+    "Average wait time for patients who waited:", median(wait_time), "\n",
+    "Minutes closed after 4pm:", median(time_closed), "\n")
+```
+
+
+
+
+
+
+
+
+
+
+
