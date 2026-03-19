@@ -1,0 +1,91 @@
+Problem Set 1
+ST425
+October 14, 2025
+
+Setup
+```{r}
+# Packages
+library(dplyr)
+library(ggplot2)
+
+# Other setup
+set.seed(1)
+```
+
+
+
+[[1]]
+
+(a) Toss a fair six-sided die n times and verify P(AB) = P(A)*P(B). 
+
+```{r}
+n <- 100000 # Sample size
+
+a <- c(2, 4, 6) # Event A
+b <- c(1, 2, 3, 4) # Event B
+
+samp <- sample(x = 1:6, size = n, replace = TRUE)
+
+p_a_and_b <- sum((samp %in% a & samp %in% b)) / n
+p_a <- sum((samp %in% a)) / n
+p_b <- sum((samp %in% b)) / n
+p_a_times_p_b <- p_a*p_b
+
+# P(A) = 50.07%, P(B) = 66.51%
+# P(A&B) = 33.31%, P(A)*P(B) = 33.30%
+
+```
+
+
+(b)
+
+```{r}
+n <- 100000 # Sample size
+
+a <- c(2, 4, 6) # Event A
+b <- c(1, 3, 5) # Event B
+
+samp <- sample(x = 1:6, size = n, replace = TRUE)
+
+p_a_and_b <- sum((samp %in% a & samp %in% b)) / n
+p_a <- sum((samp %in% a)) / n
+p_b <- sum((samp %in% b)) / n
+p_a_times_p_b <- p_a*p_b
+
+# P(A) = 49.73%, P(B) = 50.27%
+# P(A&B) = 24.99%, P(A)*P(B) = 0%
+```
+
+
+
+
+[[5]]
+
+(b)
+
+```{r}
+n <- 10000 # Sample size
+
+x_s <- rnorm(n, mean = 0, sd = 1)
+y_s <- exp(x_s)
+
+mean_y <- mean(y_s)
+variance_y <- (1/(n - 1))*sum((y_s - mean_y)**2)
+
+hist(y_s)
+
+```
+
+
+```{r}
+n <- 10000
+sample <- rexp(n, rate = 1)
+mean(sample);var(sample)
+hist(sample)
+
+x_0 <- 1
+sample_2 <- sample[sample > x_0]
+mean(sample_2);var(sample_2)
+hist(sample_2)
+par(mfrow=c(2,1))
+```

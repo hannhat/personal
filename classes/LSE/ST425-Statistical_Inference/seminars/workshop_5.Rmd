@@ -1,0 +1,57 @@
+
+(1)
+
+```{r}
+#plot cauchy loglikelihood
+set.seed(4)
+n <- 100
+theta0 <- 10
+x <- rcauchy(n,theta0) # x is a sample
+thetavals <- seq(-20,40,.1)
+loglik <- thetavals
+for (i in c(1:length(thetavals))) loglik[i] = log(sum(dcauchy(x,thetavals[i],1)))
+plot(thetavals,loglik,type='l')
+lines(thetavals,rep(0,length(thetavals)))
+```
+
+(2)
+
+```{r}
+#findMLE finds ML estimator using Newton-Raphson or Fisher scoring for parametric family
+#with real-valued parameter based on data vector x; dscorefun can be the derivative of the score function or its
+#expectation (ie, the negative of the Fisher information), to give the Newton-Raphson and Fisher scoring algorithms.
+findMLE <- function(x, scorefun, dscorefun, startvalue, stepsize) {
+conv_crit = 0.001
+max_ite = 500
+theta0 <- startvalue
+theta1 <- startvalue + 2*conv_crit
+i <- 0 # iteration counter
+while(abs(theta1-theta0) > conv_crit && i < max_ite) {
+i <- i+1
+theta0 <- theta1
+theta1 <- theta0 - stepsize * scorefun(x,theta0) / dscorefun(x,theta0)
+cat(i, "iteration:", theta1, "\n")
+}
+cat("MLE:", theta1, "No. of iterations:", i, "\n")
+}
+set.seed(1)
+n <- 100
+theta0 <- 13
+x <- rcauchy(n,theta0) # x is a sample
+cauchyscore <- function(x,theta){ 2*sum((x-theta)/((x-theta)^2+1)) }
+cauchydscore <- function(x,theta){ 2*sum(((x-theta)^2-1)/((x-theta)^2+1)^2) }
+findMLE(x,cauchyscore,cauchydscore,startvalue=11,stepsize=0.1)
+```
+
+```{r}
+theta_lst <- seq(0, 20)
+
+est <- c()
+for (i in theta_lst) {
+  est[i] <- cauchydscore(x, theta_lst[i])
+}
+
+plot(est)
+abline(h=0)
+```
+

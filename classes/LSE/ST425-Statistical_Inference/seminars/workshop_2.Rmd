@@ -1,0 +1,41 @@
+
+
+Monte Carlo integration
+
+Example: f(x) = y between 3 and 7
+```{r}
+# Calculating max and min
+x_max <- 7
+x_min <- 3
+y_max <- x_max
+y_min <- x_min
+
+# Monte carlo
+n <- 10000
+x <- runif(n, min = x_min, max = x_max)
+y <- x
+
+
+
+```
+
+(3.6)
+
+Write an R function that takes U(0,1) random variables and generates random variables from the distribution with PDF f(x) = 1/4 if x in (-1,0) U (1,2), 1/2 if x in (0,1]
+```{r}
+n <- 100000
+
+xs <- runif(n, min = 0, max = 1)
+
+ys <- case_when(xs <= 0.25 ~ 4*xs - 1,
+                xs >= 0.75 ~ 4*xs - 2,
+                xs < 0.75 & xs > 0.25  ~ 2*xs - 0.5,
+                T ~ 0)
+
+hist(ys)
+
+# KDE
+#a <- density(ys)
+#plot(a)
+```
+

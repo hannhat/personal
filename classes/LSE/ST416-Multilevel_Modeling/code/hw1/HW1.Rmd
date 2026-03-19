@@ -1,0 +1,55 @@
+Johann Hatzius
+ST416
+Problem Set 1
+
+
+```{r}
+## Loading packages -----
+library(lme4)
+library(metafor)
+library(dplyr)
+
+## Loading data -----
+hsb <- readRDS("hsb.rds")
+```
+
+**Question 1**
+
+```{r}
+cat("Number of schools:", length(unique(hsb$schoolid)), "\nMaximum students in a school:", max(table(hsb$schoolid)),
+"\nMinimum students in a school:", min(table(hsb$schoolid)))
+
+```
+
+```{r}
+hist(table(hsb$schoolid))
+```
+
+
+**Question 2**
+
+```{r}
+summary(rint.mod <- lmer(mathach ~ female+ses+minority+(1|schoolid), data=hsb, REML=F))
+```
+
+(a) The point estimates and standard errors for the fixed effects coefficients are given in the fixed effects section of the table above. 
+
+(b) The estimated random-intercepts variance is 3.636; the estimated level 1 residual variance is 35.895. 
+
+(c)
+
+```{r}
+icc <- function(model){
+  m <- as.data.frame(VarCorr(model))
+  icc <- m[1,"vcov"]/(m[1,"vcov"]+m[2,"vcov"])
+  icc
+}
+
+varcomp.mod <- lmer(mathach ~  female+ses+minority+(1|schoolid), data=hsb,REML=F)
+
+cat("Intraclass correlation", icc(varcomp.mod))
+
+# Alternatively, from (b), intraclass correlation # is 3.635/(3.635+35.895)
+```
+
+

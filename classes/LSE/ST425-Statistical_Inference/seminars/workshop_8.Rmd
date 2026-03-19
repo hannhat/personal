@@ -1,0 +1,36 @@
+
+```{r}
+n <- 100000
+size <- 10
+p <- 0.7
+
+xs <- rbinom(n, size, p)
+
+mles <- c()
+for (i in 1:n) {
+  mles[i] <- sum(xs[(size*(i-1)+1):(size*i)]) / size
+}
+
+hist(mles)
+```
+
+```{r}
+n <- 1000
+size <- 1919
+p <- 0.5
+
+xs <- rbinom(n, size, p)
+
+walds <- c()
+for (i in 1:n) {
+  walds[i] <- ((sum(xs[(size*(i-1)+1):(size*i)]) / size) - 0.5)
+}
+
+hist(walds)
+```
+
+
+
+
+
+

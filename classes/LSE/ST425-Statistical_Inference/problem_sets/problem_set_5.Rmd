@@ -1,0 +1,221 @@
+
+(4)
+
+(b) Draw a sample of size $n = 400$ from $N(5, 1)$ in R. Compute $ν∗$ with the bootstrap replication
+$B = 2000$ times. Plot the histogram of the bootstrap estimates $θ∗1, · · · , θ∗B$. This is a bootstrap
+estimator for the distribution of $θ$.
+
+
+```{r}
+
+n <- 400
+B <- 2000
+
+xs <- rnorm(n, 5, 1)
+
+sn <- sample(xs, n*B, replace = TRUE)
+
+boot <- c()
+
+for (i in 1:B) {
+  boot[i] <- exp(mean(sn[(n*(i-1)+1):(n*i)]))
+}
+
+v_boot <- (1/B)*sum((boot - mean(boot))**2)
+
+print(paste0("V_boot: ", round(v_boot, 2)))
+
+```
+
+```{r}
+hist(boot, nclass=40)
+```
+
+(c) Draw 2000 samples (with fixed size $n = 400$) from $N(5, 1)$. For each sample, compute the estimate $θ_{bi}, i = 1, · · · , 2000$. Draw histogram of those $θ_{bi}$. This may be regarded as the true distribution of $θ_{b}$.
+Compare it with its bootstrap estimator obtained in (b) above.
+
+```{r}
+
+n <- 400
+B <- 2000
+
+est <- c()
+for (i in 1:B) {
+  xs <- rnorm(n, 5, 1)
+  sn <- sample(xs, n, replace = TRUE)
+  est[i] <- exp(mean(sn))
+}
+
+v_boot_2 <- (1/B)*sum((est - mean(est))**2)
+
+print(paste0("V_boot: ", round(v_boot_2, 2)))
+```
+
+```{r}
+hist(est, nclass = 40)
+```
+
+
+(5)
+
+(b)
+
+```{r}
+R <- 500
+alpha <- 0.05
+
+normal <- 0
+pivot <- 0
+percentile <- 0
+
+for (j in 1:R) {
+
+  n <- 100
+  B <- 200
+  
+  xs <- rnorm(n, 1, 1)
+  
+  xs_hat <- mean(xs)/sd(xs)
+  
+  sn <- sample(xs, n*B, replace = TRUE)
+  
+  boot <- c()
+  
+  for (i in 1:B) {
+    boot[i] <- mean(sn[(n*(i-1)+1):(n*i)])/sd(sn[(n*(i-1)+1):(n*i)])
+  }
+  
+  v_boot <- (1/(B-1))*sum((boot - mean(boot))**2)
+  
+  l_boot <- sort(boot)[(alpha/2)*B]
+    
+  u_boot <- sort(boot)[(1 - alpha/2)*B]
+  
+  if ((xs_hat - sqrt(v_boot)*1.96 < 1) & (xs_hat + sqrt(v_boot)*1.96 > 1)) {
+    normal <- normal + 1
+  }
+  
+  if ((l_boot < 1) & (u_boot > 1)) {
+    percentile <- percentile + 1
+  }
+  
+  if ((2*xs_hat - u_boot < 1) & (2*xs_hat - l_boot > 1)) {
+    pivot <- pivot + 1
+  }
+
+}
+
+cat(paste0("Coverage\n",
+             "Normal: ", (normal / 500)*100, "%\n",
+             "Percentile: ", (percentile / 500)*100, "%\n",
+             "Pivot: ", (pivot / 500)*100, "%\n"))
+
+```
+
+
+Revision
+
+(4)
+
+(b)
+```{r}
+n <- 400
+B <- 2000
+
+xs <- rnorm(n, 5, 1)
+
+thetas <- c()
+for (i in 1:B) {
+  ys <- sample(xs, n, replace = TRUE)
+  theta <- exp(mean(ys))
+  thetas <- c(thetas, theta)
+}
+
+v_boot <- var(thetas)
+hist(thetas)
+```
+
+(c)
+```{r}
+n <- 400
+B <- 2000
+
+thetas <- c()
+for (i in 1:B) {
+  ys <- rnorm(n, 5, 1)
+  theta <- exp(mean(ys))
+  thetas <- c(thetas, theta)
+}
+
+v <- var(thetas)
+hist(thetas)
+```
+
+
+(5)
+
+(b)
+```{r}
+
+
+normal <- 0
+percentile <- 0
+pivot <- 0
+
+for (j in 1:500) {
+
+n <- 100
+B <- 200
+
+xs <- rnorm(n, 1, 1)
+
+rhos <- c()
+for (i in 1:B) {
+  ys <- sample(xs, size = n, replace = TRUE)
+  rho <- mean(ys) / sd(ys)
+  rhos <- c(rhos, rho)
+}
+
+u_boot <- mean(rhos)
+v_boot <- var(rhos)
+
+# Confidence intervals
+normal_lb <- u_boot - 1.96*sqrt(v_boot)
+normal_ub <- u_boot + 1.96*sqrt(v_boot)
+
+percentile_lb <- sort(rhos)[B*0.025]
+percentile_ub <- sort(rhos)[B*0.975]
+
+pivot_lb <- 2*u_boot - sort(rhos)[B*0.975]
+pivot_ub <- 2*u_boot - sort(rhos)[B*0.025]
+
+if (1 > normal_lb & 1 < normal_ub) {
+  normal <- normal + 1
+}
+
+if (1 > percentile_lb & 1 < percentile_ub) {
+  percentile <- percentile + 1
+}
+
+if (1 > pivot_lb & 1 < pivot_ub) {
+  pivot <- pivot + 1
+}
+
+}
+
+cat("Normal CI:", normal / 500)
+cat("Percentile CI:", percentile / 500)
+cat("Pivot CI:", pivot / 500)
+
+```
+
+
+
+
+
+
+
+
+
+
+

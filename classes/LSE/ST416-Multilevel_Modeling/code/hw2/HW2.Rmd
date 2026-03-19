@@ -1,0 +1,115 @@
+---
+title: "ST416_PS2"
+output: html_document
+---
+
+
+```{r}
+######################################################################
+# 1. 
+# Install (if not yet done) and load some add-on packages. 
+# The package lme4 (and especially its lme function) is the key one for random effects modelling.
+
+# install.packages("lme4") # uncommment and run this if package not yet installed
+# install.packages("ggplot2") # uncommment and run this if package not yet installed
+# install.packages("GGally") # uncommment and run this if package not yet installed
+# install.packages("jtools") # uncommment and run this if package not yet installed
+# install.packages("lattice") # uncommment and run this if package not yet installed
+# install.packages("metafor") # uncommment and run this if package not yet installed
+# install.packages("mitml") # uncommment and run this if package not yet installed
+# install.packages("multcomp") # uncommment and run this if package not yet installed
+
+library(lme4)
+
+library(ggplot2)
+library(GGally)
+library(jtools)
+library(lattice)
+library(metafor)
+library(mitml)
+library(multcomp)
+
+######################################################################
+# 2. 
+# Load the data
+#
+# This assumes that the file army.rds is saved in the current working directory.
+# Change working directory or add a file path to the command if needed.
+
+army <- readRDS("Seminar 2/army.rds")
+```
+
+```{r}
+######################################################################
+# 3. 
+# Initial summary statistics of the data 
+
+tail(army)
+```
+
+```{r}
+summary(as.numeric(table(army$grp)))
+```
+
+```{r}
+summary(army[,-1])
+```
+
+
+
+```{r}
+ggpairs(army,columns = 2:5, 
+        title = "",
+        axisLabels = "show") 
+```
+
+```{r}
+# A function to add smoothed (lowess) fit to a scatterplot
+lowess.plot <- function (x, y, ...)
+{
+  plot(x, y, ...)
+  lines(lowess(x,y),lwd=4,col="red")
+}
+
+par(mfrow = c(2, 2))
+lowess.plot(army$cohes,army$wbeing)
+lowess.plot(army$lead,army$wbeing)
+lowess.plot(army$hrs,army$wbeing)
+```
+
+```{r}
+######################################################################
+# 4. 
+# Fitting first random intercepts model 
+
+mod1 <- lmer(wbeing~hrs+cohes+lead+(1|grp),data=army,REML=F)
+summary(mod1)
+confint(mod1,method="Wald")
+```
+
+```{r}
+# Neater summary presentation, using a function from the jtools package
+#   the t.df=10000 adds p-values for the z-tests, 
+#   derived from standard normal distribution 
+
+summ(mod1,digits=3,pvals=T,t.df=10000)
+summ(mod1,confint=T)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

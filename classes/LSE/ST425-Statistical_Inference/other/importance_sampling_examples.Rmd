@@ -1,0 +1,45 @@
+
+
+We want to integrate f(x) = $e^{x}*e^{-2x}$ (pretend we can't find this analytically). 
+
+Naive monte carlo:
+```{r}
+N <- 1000
+xs <- rexp(N, rate = 2)
+ws <- exp(xs)/2
+
+i_hat <- (1/N)*sum(ws)
+se_hat <- sqrt(((var(ws)/N)))
+
+cat(paste0("MC Estimate: ", round(i_hat, 2), "\n",
+      "Standard Error: ", round(se_hat, 4)))
+```
+
+Importance sampling: choosing a function g(x) to downweight the chance we choose from low draws of g
+
+Choose g such that p ~ exponential(1.5) 
+```{r}
+N <- 1000
+xs <- rexp(N, rate = 1.5)
+ws <- exp(xs/2)/1.5
+
+i_hat <- (1/N)*sum(ws)
+se_hat <- sqrt(((var(ws)/N)))
+
+cat(paste0("MC Estimate: ", round(i_hat, 2), "\n",
+      "Standard Error: ", round(se_hat, 4)))
+```
+
+Choose g such that p ~ exponential(1.01) 
+```{r}
+N <- 1000
+xs <- rexp(N, rate = 1.01)
+ws <- exp(0.01*xs)/1.01
+
+i_hat <- (1/N)*sum(ws)
+se_hat <- sqrt(((var(ws)/N)))
+
+cat(paste0("MC Estimate: ", round(i_hat, 2), "\n",
+      "Standard Error: ", round(se_hat, 4)))
+```
+

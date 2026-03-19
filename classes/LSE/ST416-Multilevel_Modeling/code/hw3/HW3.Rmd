@@ -1,0 +1,139 @@
+---
+title: "HW3"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+Johann Hatzius
+ST416
+HW3
+
+
+
+```{r,results='hide'}
+library(lme4)
+library(jtools)
+library(ggplot2)
+library(GGally)
+library(dplyr)
+library(broom)
+library(stringr)
+```
+
+```{r,results='hide'}
+gpa <- readRDS("gpa.rds")
+```
+
+
+```{r}
+mod0 <- lmer(gpa ~ time + job + sex + highgpa + (1|student), 
+                  data = gpa, REML=F)
+summ(mod0,digits=3,pvals=T,t.df=10000)
+```
+
+
+```{r}
+mod1 <- lmer(gpa ~ job + sex + highgpa + factor(time) + (1|student), 
+                  data = gpa, REML=F)
+summ(mod1,digits=3,pvals=T,t.df=10000)
+```
+
+
+(1)
+
+```{r}
+# Graphing the fitted time trends from both models
+
+coefs <- tidy(mod1, conf.int=TRUE) %>% 
+  filter(str_detect(term,"time")) %>%
+  mutate(t = as.numeric(str_extract(term,"\\d")),
+         model = "Fixed effects") %>%
+  bind_rows(cross_join(tidy(mod0, conf.int=TRUE) %>% filter(term %in% "time"),data.frame("t" = c(1,2,3,4,5,6))) %>% 
+  mutate(estimate = estimate*(t-1), model = "Baseline")) %>%
+  select("t", "estimate", "model") %>%
+  rename("time" = "t")
+
+ggplot(coefs, aes(x = time, y = estimate, color = model)) +
+geom_point()
+
+```
+
+The growth curves for the two specifications seem very similar between the two models. 
+
+
+(2)
+
+```{r}
+anova(mod0,mod1)
+```
+There is no strong evidence that the unconstrained growth curve implied by the fixed effects adds much explanatory power to our baseline model with linear time trends. This result seems to line up with the graph of the point estimates for the two models in part (a).
+
+
+(3)
+
+```{r}
+mod2 <- lmer(gpa ~ job + time*sex + time*highgpa + (1|student), 
+                  data = gpa, REML=F)
+summ(mod2,digits=3,pvals=T,t.df=10000)
+```
+
+Based on the z-values for the coefficients of this model, the interaction between `time` and `highgpa` do not seem to improve the model's explanatory power sufficiently to justify its inclusion in the model. `time*sex` seems like it should be included, however.
+
+```{r}
+mod3 <- lmer(gpa ~ job + time*sex + highgpa + (1|student), 
+                  data = gpa, REML=F)
+summ(mod3,digits=3,pvals=T,t.df=10000)
+```
+
+
+(4)
+
+```{r}
+mod4 <- lmer(gpa ~ time*sex + job + highgpa + (time|student), 
+                  data = gpa, REML=F)
+summ(mod4,digits=3,pvals=T,t.df=10000)
+```
+
+```{r}
+anova(mod3,mod4)
+```
+
+The likelihood ratio test is significant, so there is evidence that the more sophisticated model with a random time coefficient should be used. 
+
+
+(5) Based on the model, a one point increase in the job variable (it does not necessarily exactly correspond to a one hour increase because of the 4+ hours of work are grouped together) is associated with a 0.121 point decrease on average for a student in that semester. 
+
+
+(6) The coefficient for time for women can be decomposed into the fixed effect and the random effect. The fixed effect is: 
+
+b_time_fixed = b_time + b_time:sex = $0.088 + 0.029 = 0.117$
+
+At two standard deviations above/below the average random effect, the coefficients would be 
+
+Above: b_time_fixed + $2*$b_time_random = $0.117 + 2*061 = 0.239$
+Below: b_time_fixed + $2*$b_time_random = $0.117 - 2*061 = -0.005$
+
+
+(7)
+
+```{r}
+spec <- cross_join(data.frame("time" = c(1,2,3,4,5,6),
+                   "job" = 2,
+                   "highgpa" = mean(gpa$highgpa)),
+        data.frame("student" = c(1), "sex" = c(0,1))) %>%
+  mutate(sex = as.numeric(sex))
+spec$gpa <- predict(mod4, spec)
+spec <- spec %>% mutate(sex = ifelse(sex == 1, "Women", "Men"))
+```
+
+```{r}
+ggplot(data = spec, aes(x = time, y = gpa, color = sex)) +
+  geom_line() +
+  scale_color_manual(values = c("blue", "red"))
+```
+
+
+
+
+

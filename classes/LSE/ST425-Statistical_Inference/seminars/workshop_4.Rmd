@@ -1,0 +1,83 @@
+
+
+
+```{r}
+#R codes for exercises 5.4 and 5.5
+
+#Exercise 5.4
+
+getBootstrapReplications <- function(x, thetafun, B)  {
+  n <- length(x)
+  # Draw B bootstrap samples, compute B bootstrap estimates theta*[1], ... theta*[B]
+  thetastar <- 1:B
+  for(i in 1:B) { 
+    xstar <- sample(x, n, replace=T) # draw bootstrap sample
+    thetastar[i] <- thetafun(xstar)  # i-th bootstrap estimate of theta
+  }
+  return(thetastar)
+}
+
+# In the below, try different values of n and B to see how sensitive results are 
+# You can also try different functions for "thetafun"
+
+# generate data
+n<-400
+mu <- 5
+sig2 <- 1
+x <- rnorm(n, mu, sig2) # generate sample x[1], ... x[n]
+
+# bootstrap replications
+thetafun <- function(x){exp(mean(x))} # function to generate theta estimate from data list x
+B <- 10000
+thetastar <- getBootstrapReplications(x, thetafun, B)
+cat("Bootstrap estimated variance:", var(thetastar), "\n")
+
+# make a histogram
+par(mar=c(4,4,3,1),mfrow=c(2,2)) # set the format for figures: 2 x 2
+histclasses <- 40
+hist(thetastar, nclass=histclasses, prob=T, xlab=expression(hat(theta)), col='gray', main='Bootstrap Estimated PDF')
+
+# Simulate the true PDF of ^theta
+thetahat <- 1:B # initialize thetahat
+for(i in 1:B) { thetahat[i] <- thetafun(rnorm(n, mu, sig2)) }
+
+hist(thetahat, nclass=histclasses, prob=T, xlab=expression(hat(theta)), col='gray', main='True PDF')
+qqplot(thetahat, thetastar, xlab="True quantiles", ylab="Bootstrap quantiles")
+
+
+
+
+#Exercise 5.5
+
+
+checkCoverage <- function(n, B, nSims, mu, sigma2) {
+  # Exercise 5-5: check the coverage rates of the three 95% bootstrap
+  # confidence intervals for tau=EY/STD(Y),  Y~ N(mu, sigma2)
+  # n is sample size, B is bootstrap replications, nSims is simulation replications
+  sigma <- sqrt(sigma2)
+  tauT <- mu/sigma  # the true value of tau
+  tau <- 1:B
+  Icount <- c(0, 0, 0) # counts of the number of intervals covering the true value
+  for(i in 1:nSims) {
+    y <- rnorm(n,mu,sigma)
+    tau0 <- mean(y)/sqrt(var(y)) # point estimator
+    for(j in 1:B) {
+      ystar <- sample(y, n, replace=T)   # draw bootstrap sample
+      tau[j] <- mean(ystar) /var(ystar)^(0.5)
+    }
+    tau <- sort(tau)   # sort the data in ascending order
+    k <- as.integer(0.025*B)  # k =[0.025B]
+    STDtau <-sqrt(var(tau)) # STD of bootstrap estimates
+    
+    if((tau0-2*STDtau<tauT)&(tauT<tau0+2*STDtau)) Icount[1] <- Icount[1]+1
+    if((2*tau0-tau[B-k]<tauT)&(tauT<2*tau0-tau[k])) Icount[2] <- Icount[2]+1
+    if((tau[k]<tauT)&(tauT<tau[B-k])) Icount[3] <- Icount[3]+1
+  }
+  cat("Coverage rate of normal interval:", Icount[1]/nSims, "\n")
+  cat("Coverage rate of pivotal interval:", Icount[2]/nSims, "\n")
+  cat("Coverage rate of percentile interval:", Icount[3]/nSims, "\n")
+}
+
+checkCoverage(n=100, B=200, nSims=500, mu=1, sigma2=1)
+```
+

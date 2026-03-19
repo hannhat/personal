@@ -1,0 +1,56 @@
+
+(3.6)
+
+Write an R function that takes U(0,1) random variables and generates random variables from the distribution with PDF f(x) = 1/4 if x in (-1,0) U (1,2), 1/2 if x in (0,1]
+
+```{r}
+library(dplyr)
+
+rn_gen <- function(xs) {
+ys <- case_when(xs <= 0.25 ~ 4*xs - 1,
+                xs >= 0.75 ~ 4*xs - 2,
+                xs < 0.75 & xs > 0.25  ~ 2*xs - 0.5,
+                T ~ 0)
+return(ys)
+}
+
+n <- 5000
+xs <- runif(n, min = 0, max = 1)
+ys <- rn_gen(xs)
+hist(ys)
+
+# KDE
+#a <- density(ys)
+#plot(a)
+```
+
+(3.7)
+
+```{r}
+
+plot_rm <- function(dist) {
+  n <- 10000
+  
+  if (dist == "normal") {
+      xs <- as_tibble(rnorm(n, 0, 1))
+  }
+  else if (dist == "cauchy") {
+    xs <- as_tibble(rcauchy(n, 0, 1))
+  }
+  
+  ys <- xs %>% mutate(running_mean = cummean(value),
+                      row = row_number()) %>%
+    select(row, running_mean)
+  
+  plot(ys, 
+      type='l', 
+      main='Sample means', 
+      xlab='n', 
+      ylab=expression(bar(Xn)),
+      ylim=c(-1,1) )
+  abline(0,0, lty=2) 
+}
+
+```
+
+

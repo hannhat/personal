@@ -1,0 +1,90 @@
+
+(4)
+
+```{r}
+mc_ellipse <- function(N, a, b) {
+  xs <- runif(N, min = 0, max = a)
+  ws <- 4*a*b*sqrt(1 - xs**2/a**2)
+  
+  i_hat <- (1/N)*sum(ws)
+  errors <- (ws-i_hat)**2
+  se_hat <- sqrt(((var(ws)/N)))
+  
+  cat(paste0("True Area:", round(pi*a*b, 2), "\n",
+             "MC Estimate: ", round(i_hat, 2), "\n",
+        "Standard Error: ", round(se_hat, 2)))
+}
+```
+
+```{r}
+mc_ellipse(10000, 2, 3)
+```
+
+
+(5)
+
+(a)
+
+```{r}
+N <- 90000
+xs <- runif(N, min = -2, max = 3)
+ws <- 5*(xs**3 + log(1+xs**2)) / (2 + cos(xs))
+
+i_hat <- (1/N)*sum(ws)
+se_hat <- sqrt(((var(ws)/N)))
+
+cat(paste0("MC Estimate: ", round(i_hat, 2), "\n",
+      "Standard Error: ", round(se_hat, 2)))
+```
+
+(b)
+
+```{r}
+N <- 90000
+xs <- rexp(N, rate = 1)
+ws <- (sin(xs**3 + 1/sqrt(xs)))
+
+i_hat <- (1/N)*sum(ws)
+se_hat <- sqrt(((var(ws)/N)))
+
+cat(paste0("MC Estimate: ", round(i_hat, 2), "\n",
+      "Standard Error: ", round(se_hat, 2)))
+```
+
+(c)
+
+```{r}
+N <- 90000
+xs <- rnorm(N, 2, 1/sqrt(2))
+ws <- sqrt(pi)*(exp(sin(xs)))
+
+i_hat <- (1/N)*sum(ws)
+se_hat <- sqrt(((var(ws)/N)))
+
+cat(paste0("MC Estimate: ", round(i_hat, 4), "\n",
+      "Standard Error: ", round(se_hat, 4)))
+```
+
+(6)
+
+```{r}
+N <- 10000
+xs <- runif(N, 0, 1)
+ws <- exp((xs + 1) / (1 + sqrt(xs)))
+ys <- rnorm(N, 20 + 60*xs, sqrt(10 / (1+xs**2)))
+
+i_hat <- sum(ys*ws)/sum(ws)
+se_hat <- sqrt(sum((ys-i_hat)**2*ws)/sum(ws))
+
+cat(paste0("MC Estimate: ", round(i_hat, 2), "\n",
+      "Standard Error: ", round(se_hat, 2)))
+```
+
+(7)
+
+
+
+
+
+
+

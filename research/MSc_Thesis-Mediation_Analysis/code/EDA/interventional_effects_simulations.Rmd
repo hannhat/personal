@@ -1,0 +1,70 @@
+
+```{r}
+library(dplyr)
+library(ggplot2)
+```
+
+
+
+Model 1: 
+
+Simple X -> M -> Y relationship, confounder X. 
+
+- X drawn from a Bernoulli(0.5) distribution
+- T drawn from a Bernoulli(0.5) distribution
+- M drawn from a Normal distribution with mean 0
+- Y drawn from a Normal distribution with mean 0
+
+```{r}
+
+generate_model_1_data <- function(sample_size, beta_t = 1, beta_m = 1, beta_tm = 1, beta_t_to_m = 10, 
+                             beta_x_to_t = 0, beta_x_to_m = 0, beta_x_to_y = 0,
+                             p_t = 0.5, error_y = 1, error_m = 1, bounds_x = 1) {
+
+xs <- runif(sample_size, -bounds_x, bounds_x)
+mean_t <- p_t + beta_x_to_t*xs
+ts <- sapply(mean_t, rbinom, n=1, size=1)
+
+mean_m <- beta_x_to_m*xs + beta_t_to_m*ts
+ms <- sapply(mean_m, rnorm, n=1, sd = error_m)
+
+mean_y <- beta_x_to_y*xs + beta_t*ts + beta_m*ms + beta_tm*ms*ts
+ys <- sapply(mean_y, rnorm, n=1, sd = error_y)
+
+data <- data.frame(Control = xs, Treatment = ts, Mediator = ms, Outcome = ys)
+return(data)
+} 
+
+```
+
+
+Estimating Model 1:
+
+"Crude" regression (Baron and Kenny method)
+```{r}
+data_no_interactions <- generate_model_1_data(10000, beta_tm = 0)
+m_on_t <- lm(data = data_no_interactions,
+        Mediator ~ Treatment)
+y_on_t <- lm(data = data_no_interactions,
+        Outcome ~ Treatment + Mediator)
+y_on_m <- lm(data = data_no_interactions,
+        Outcome ~ Mediator)
+
+#print(m_on_t$coefficients[[2]])
+#print(y_on_t$coefficients[[2]])
+#print(y_on_t$coefficients[[3]])
+
+de <- y_on_t$coefficients[[2]]
+ie <- y_on_t$coefficients[[3]]*m_on_t$coefficients[[2]]
+
+cat("Direct effect:", de, "\n",
+    "Indirect effect:", ie, "\n",
+    "Total effect:", de + ie)
+```
+
+
+
+
+
+
+

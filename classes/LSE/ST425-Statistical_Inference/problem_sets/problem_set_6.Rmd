@@ -1,0 +1,97 @@
+
+(5)
+
+(b)
+
+```{r}
+## Constants -----
+n <- 300
+B <- 500
+theta <- 2
+
+## Bootstraps -----
+
+# Drawing sample
+xs <- runif(n, 0, theta)
+
+# Non-parametric bootstrap ---
+
+# Draw from the empirical PDF
+sn <- sample(xs, size = n*B, replace = T)
+
+np_boot <- c()
+for (i in 1:B) {
+  np_boot[i] <- max(sn[(n*(i-1)+1):(n*i)])
+}
+
+v_np_boot <- (1/B)*sum((np_boot - mean(np_boot))**2)
+
+# Parametric bootstrap ---
+
+# Compute the estimated parameter theta
+p_theta <- max(xs)
+
+# Draw from the Uniform(0, theta) distribution
+sn_p <- runif(n*B, 0, theta)
+
+p_boot <- c()
+for (i in 1:B) {
+  p_boot[i] <- max(sn_p[(n*(i-1)+1):(n*i)])
+}
+
+v_p_boot <- (1/B)*sum((p_boot - mean(p_boot))**2)
+
+
+## Plotting -----
+par(mfrow=c(2,1))
+hist(p_boot, nclass = 10, xlim = c(1.9, 2.05))
+hist(np_boot, nclass = 10, xlim = c(1.9, 2.05))
+
+```
+
+The parametric bootstrap seems to be more efficient and does a better job of estimating the true parameter; 
+the bootstrapped variance is lower, and there are more estimates that are close to the true parameter (2).
+
+
+
+
+Revision
+
+(5)
+
+(b)
+```{r}
+n <- 300
+theta <- 2
+B <- 500
+
+xs <- runif(n, 0, theta)
+
+# Parametric
+theta_x <- max(xs)
+ys_p <- c()
+ys_np <- c()
+for (i in 1:B) {
+  ys <- runif(n, 0, theta_x)
+  ys_p[i] <- max(ys)
+  
+  yss <- sample(xs, n, replace = TRUE)
+  ys_np[i] <- max(yss)
+}
+
+par(mfrow=c(2,1))
+hist(ys_p)
+hist(ys_np)
+
+
+```
+
+
+
+
+
+
+
+
+
+

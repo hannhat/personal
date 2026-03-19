@@ -1,0 +1,12 @@
+
+(2.5.b)
+
+```{r}
+xs <- rnorm(n = 10000, mean = 0, sd = 1)
+ys <- exp(xs)
+s_mean <- mean(ys)
+s_var <- var(ys)
+hist(ys)
+```
+
+
