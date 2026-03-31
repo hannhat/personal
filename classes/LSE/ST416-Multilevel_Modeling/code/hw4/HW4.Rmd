@@ -1,0 +1,112 @@
+---
+title: "HW4"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+Johann Hatzius
+
+ST416
+
+HW4
+
+
+
+```{r,results='hide'}
+#Setup
+
+library(lme4)
+library(jtools)
+library(plm)
+library(nlme)
+library(lmtest)
+library(sandwich)
+library(dplyr)
+
+# to be replaced by the folder with the data
+setwd('..')
+setwd('..')
+path <- paste0(getwd(),"/data/hw4/") 
+```
+
+```{r}
+# Loading and pre-processing data
+twins_df <- readRDS(paste0(path,"twinsdat.rds"))
+
+twins_df <- twins_df %>% 
+  group_by(pair) %>%
+  mutate(educ.m = mean(educ))
+
+```
+
+```{r}
+## Models
+
+# Linear models ignoring clustering
+modA <- lm(logwage~educ, data=twins_df)
+modB <- lm(logwage~educ+educ.m, data=twins_df)
+modC <- lm(logwage~educ+age+age2+male, data=twins_df)
+modD <- lm(logwage~educ+educ.m+age+age2+male, data=twins_df)
+
+# Random intercepts models
+modE <- lmer(logwage~educ+(1|pair), data=twins_df, REML=T)
+modF <- lmer(logwage~educ+educ.m+(1|pair), data=twins_df, REML=T)
+modG <- lmer(logwage~educ+age+age2+male+(1|pair), data=twins_df, REML=T)
+modH <- lmer(logwage~educ+educ.m+age+age2+male+(1|pair), data=twins_df, REML=T)
+
+# Fixed effects model
+modI <- plm(logwage~educ, data=twins_df,
+                          ,index="pair", model="within")
+
+# Marginal models 
+modJ <- gls(logwage~educ, data=twins_df,
+            correlation=corCompSymm(form=~1|pair))
+modK <- gls(logwage~educ+educ.m, data=twins_df,
+            correlation=corCompSymm(form=~1|pair))
+modL <- gls(logwage~educ+age+age2+male, data=twins_df,
+            correlation=corCompSymm(form=~1|pair))
+modM <- gls(logwage~educ+educ.m+age+age2+male, data=twins_df,
+            correlation=corCompSymm(form=~1|pair))
+
+# Models with cluster-adjusted (sandwich) standard errors
+modN <- coeftest(modA,vcovCL(modA, cluster = ~pair))
+modO <- coeftest(modB,vcovCL(modB, cluster = ~pair))
+modP <- coeftest(modC,vcovCL(modC, cluster = ~pair))
+modQ <- coeftest(modD,vcovCL(modD, cluster = ~pair))
+
+```
+
+#### 1. Interpret the coefficient of educ in model (I), and comment on its statistical significance.
+
+```{r}
+summary(modI)
+```
+
+A one point gap in education between two identical twins in the study predicts a 0.089 point gap in log wages between the twins. This predicted gap is statistically significant at the alpha = 0.01 level.
+
+### 2. Suppose that we take the fixed effects estimate from model (I) to be the most convincing estimate of the causal effect of education on incomes here. Considering the other models, which model specifications give us an essentially same point estimate of this coefficient? Which approaches also give the same estimates standard error?
+
+Models B, D, F, H, K, O, and Q give essentially the same point estimates for the education variable.
+
+Models F, H, K give the same estimated standard errors. 
+
+
+### 3. What are the estimated values from models (H) and (M) of the intraclass correlation (i.e. within-twin-pair correlation) of the model residuals?
+
+```{r}
+summ(modH)
+```
+
+```{r}
+summary(modM)
+```
+
+Both models give an estimate of the ICC of 0.47. 
+
+
+
+
+
+
+

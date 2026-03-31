@@ -1,0 +1,510 @@
+---
+title: "social_mobility_data_eda"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+# Social Class Mobility Data Exploration
+
+The goal of this Markdown file is to investigate the data I am going to use as a real data illustration for the methods I am developing in my master's thesis. My master's thesis is focused on developing mediation analysis methods with multiple mediators when the causal ordering of the mediators is known. These methods can be used to investigate what the causal impact of socially driven disparities in variables like education can have on differential outcomes for these same social groups.
+
+The data I will be using in my thesis is based on the dataset used by Kuha et al (2021), which uses mediation analysis methods to characterize the extent to which differences in educational outcomes across social classes in Britain mediate relative social class mobility, a question of interest in the sociology literature. This data comes from three separate samples of British citizens born in 1946, 1958, and 1970, which gives information about a unit's social class various points in their life, their level of education over time, their occupation over time, their results on an intelligence test they took at age 11, and their father's social class, among other helpful covariates. I refer to these three separate datasets as the "work history data".
+
+Kuha et al (2021) does not use the intelligence test results and instead investigates the role of only education in mediating father-child social class mobility. To this end, they construct a cleaned dataset that excludes the intelligence test results and looks at their social class and education as of middle age (age 37-38) only. They also re-weight the survey data to account for sample selection effects and use multiple imputation methods to fill in missing values in the data. I refer to this cleaned dataset as the "social mobility data" below.
+
+## Setup
+
+```{r,results='hide',warning=FALSE}
+# Loading required packages
+library(dplyr)
+library(ggplot2)
+library(haven)
+library(tidyr)
+library(skimr)
+library(GGally)
+library(janitor)
+
+# Setting working directory
+setwd("/Users/19175/Documents/personal/research/MSc_Thesis-Mediation_Analysis/data")
+
+# Loading input data
+path <- "input/social_class_mobility_data/"
+social_mobility_data <- readRDS(paste0(path, "social_mobility_data.rds"))
+workhistory1 <- read_dta(paste0(path, "workhistory_1946.dta")) %>%
+  mutate(cohort = 1946)
+workhistory2 <- read_dta(paste0(path, "workhistory_1958.dta")) %>%
+  mutate(cohort = 1958)
+workhistory3 <- read_dta(paste0(path, "workhistory_1970.dta")) %>%
+  mutate(cohort = 1970)
+```
+
+The clean social mobility data has about 250,000 rows, while the three full, raw work history datasets have 5,000-15,000 rows, so I will take smaller samples of each dataset that I can visually explore in RStudio.
+
+```{r}
+# Getting samples of each dataset to investigate before looking at summary stats
+sm_sample <- social_mobility_data %>% slice_sample(n=100)
+work_hist1_sample <- workhistory1 %>% slice_sample(n=100)
+work_hist2_sample <- workhistory2 %>% slice_sample(n=100)
+work_hist3_sample <- workhistory3 %>% slice_sample(n=100)
+```
+
+## Social Mobility Data
+
+```{r}
+# Storing the column names and types as a reference
+social_mobility_data %>% glimpse()
+```
+
+```{r}
+# Checking the dimensions of the data
+dim(social_mobility_data)
+```
+
+### Basic data quality checks
+
+Summary stats on the full data
+
+```{r}
+# Getting information about the number of missing variables, unique values, basic summary stats
+skim(social_mobility_data) %>%
+  mutate(across(where(is.numeric), ~round(., 2)))
+```
+
+### Data cleaning
+
+#### Restricting to only observations with full data
+
+The `.imp` variable is equal to $0$ when the row of data was original and was not multiply imputed and is not equal to $0$ when some of the data was multiply imputed to deal with missing data. There are many strange properties of the full data, like two ID variables that frequently appear multiple times in the data. By restricting the sample to only those that have full data, it is easier to see the properties of the data and to conduct baseline analyses. The selection bias that such a filtering of the data might induce can be investigated later.
+
+#### Recoding data types
+
+It is unclear as of now what the difference between `id` and `.id` are. However, `id` and `cohort` should clearly be unordered, categorical variables.
+
+```{r}
+sm_data1 <- social_mobility_data %>%
+  filter(.imp == 0) %>%
+  mutate(id = as.factor(id),
+         cohort = as.factor(cohort))
+```
+
+```{r}
+# Checking the dimensions of the data
+dim(sm_data1)
+```
+
+```{r}
+# Getting information about the number of missing variables, unique values, basic summary stats
+skim(sm_data1) %>%
+  mutate(across(where(is.numeric), ~round(., 2)))
+```
+
+It is still unclear what the relationship between the two ID variables is, and which one should be used to map to the IQ testing data. It is also unclear what the `weight`, `parttime`, and `up` variables are meant to map to.
+
+### Variable definitions
+
+As of this point, these are my working definitions of each of the variables:
+
+-   `id`, `.id`: The unit of observation/person in the data. Unclear as of now which variable is the relevant one.
+-   `educ37`: Ordinal scale from 1-8 indicating the unit's level of education at age 37. The mediating variable in Kuha et al (2021), and one of our variables of interest here.
+-   `fclass`: The unit's father's social class, as described in Kuha et al (2021). The "treatment" variable (though it does not exactly admit a causal interpretation here).
+-   `class38`: The unit's social class at age 38. The outcome variable.
+-   `.imp`: Indicator of whether the data was imputed or not.
+-   `cohort`: The year of birth for the unit being measured. There are three cohorts, each 12 years apart, in the data.
+-   `sex`: The sex of the unit.
+-   `weight`: This is a survey weight for units from the 1946 cohort, described in Section 2 of Kuha et al (2021).
+-   `parttime`, `up`: Unknown for now. `weight` might be some kind of adjustment for sample over/under representation of the true population.
+
+It is also helpful to describe what each of the 7 levels that the social class variables can take are. This will also help justify the simplifying assumption I will make below for visualization purposes to interpret the class levels at ordered, which is not strictly accurate. From Kuha et al (2021):
+
+```         
+1.  Higher managers and professionals
+
+2.  Lower managers and professionals
+
+3.  Intermediate occupations
+
+4.  Small employers and own account workers
+
+5.  Lower supervisory and technical occupations
+
+6.  Semiroutine occupations
+
+7.  Routine occupations
+```
+
+### Relationships between variables
+
+#### Evolution of the treatment, mediator, and outcome variable distributions over time
+
+```{r,warning=FALSE}
+# I pretend that the "roughly ordinal" ordering of the social class variables
+# are strict orderings for visualization purposes
+
+sm_data2 <- sm_data1 %>%
+  mutate(fclass = as.numeric(fclass), 
+         class38 = as.numeric(class38))
+
+sm_data2 %>%
+  pivot_longer(cols = c(educ37, class38, fclass), names_to = "variable", values_to = "value") %>%
+  ggplot(aes(x = value, fill = cohort)) +
+  geom_boxplot(alpha = 0.5) + 
+  facet_wrap(~variable, scales = "free") + 
+  guides(fill = guide_legend(reverse = TRUE)) + 
+  theme(axis.text.x = element_blank(),
+        axis.title.x = element_blank())
+```
+
+As expected, level of education seems to increase over time, while social class and father's social class seem to remain relatively stable (with a slight change/ approximate "increase" in father's social class).
+
+#### Associations of treatment, mediator, outcome
+
+Running a series of basic regressions on the association between all three pairs of variables. Once again, social class is treated as roughly ordinal, where lower values are associated with social classes that I would expect to be roughly seen as "more advantaged".
+
+```{r}
+# Creating a function to fit a linear regression and visualize + summarize the relationship
+fit_lm <- function(x, y) {
+  model <- lm(reformulate(x, y), data = sm_data2)
+  
+  print(summary(model))
+  
+  ggplot(sm_data2, aes(x = .data[[x]], y = .data[[y]])) +
+    geom_smooth(method = "lm", se = TRUE) +
+    scale_x_continuous(limits = c(min(sm_data2[[x]], na.rm = TRUE), max(sm_data2[[x]], na.rm = TRUE))) +
+    scale_y_continuous(limits = c(min(sm_data2[[y]], na.rm = TRUE), max(sm_data2[[y]], na.rm = TRUE))) +
+    labs(
+      title = "",
+      x = x,
+      y = y
+    ) +
+    theme_classic()
+}
+```
+
+```{r,warning=FALSE}
+# Father's social class -> education
+fit_lm("fclass", "educ37")
+```
+
+```{r,warning=FALSE}
+# Father's social class -> unit social class
+fit_lm("fclass", "class38")
+```
+
+```{r,warning=FALSE}
+# Education -> class38
+fit_lm("educ37", "class38")
+```
+
+## Work history data
+
+```{r}
+# Checking the dimensions of the data
+dim(workhistory1)
+dim(workhistory2)
+dim(workhistory3)
+```
+
+A cursory look at the data and the number of variables shows that these data contain detailed information about the evolution of relevant unit-level characteristics: social class, education, and occupation. Of these variables, the one that is of immediate interest is the `IQ` variable as well as the other variables in the dataset that are relevant to the original analysis in Kuha et al (2021) and are included in the cleaned dataset.
+
+```{r,warning=FALSE}
+# Creating a combined dataset
+wk_data1 <- bind_rows(workhistory1 %>% mutate(cohort = "1946",
+                                              ed37 = educ), 
+                      workhistory2 %>% mutate(cohort = "1958"),
+                      workhistory3 %>% mutate(cohort = "1970")) %>%
+  select(id, sex, fclass, ed37, class38, IQ, cohort) %>%
+  mutate(fclass = as.factor(fclass),
+         ed37 = as.numeric(ed37),
+         class38 = as.factor(class38))
+```
+
+```{r}
+# Basic summary statistics
+skim(wk_data1) %>%
+  mutate(across(where(is.numeric), ~round(., 2)))
+```
+
+### Comparison of the three datasets
+
+```{r}
+# Checking overlap in variables between the three cohort datasets
+intersect(intersect(colnames(workhistory1), colnames(workhistory2)),  
+          colnames(workhistory3))
+```
+
+An immediate concern is that the 1970 data does not seem to have the same `id` variable as the 1946 and 1958 cohort data. Instead, there is a `bcsid` variable that does not have a clear analogue in the cleaned data or the other two data files. However, depending on well the first two work history datasets match with the cleaned social mobility data, it is possible that only the work history datasets could be used in the analysis. Instead of `ed37`, the 1946 cohort data has a `educ` variable.
+
+### Evolution of variables of interest over time
+
+There are a number of values for the social class variables that are outside the 1-7 scale. An interesting question is whether these variables were re-coded or just dropped from the cleaned social mobility dataset or multiply imputed entirely, and what these codes originally mapped to.
+
+```{r,warning=FALSE}
+# I pretend that the "roughly ordinal" ordering of the social class variables
+# are strict orderings for visualization purposes
+
+# Filtering out suspected junk values for social class (outside the 1-7 scale)
+wk_data2 <- wk_data1 %>%
+  mutate(fclass = as.numeric(fclass), 
+         class38 = as.numeric(class38)) %>%
+  filter(class38 >= 1 & class38 <= 7,
+         fclass >= 1 & class38 <= 7) 
+
+wk_data2 %>%
+  pivot_longer(cols = c(ed37, class38, fclass), names_to = "variable", values_to = "value") %>%
+  ggplot(aes(x = value, fill = cohort)) +
+  geom_boxplot(alpha = 0.5) + 
+  facet_wrap(~variable, scales = "free") + 
+  guides(fill = guide_legend(reverse = TRUE)) + 
+  theme(axis.text.x = element_blank(),
+        axis.title.x = element_blank())
+```
+
+```{r}
+# Not filtering out junk values for social class 
+wk_data3 <- wk_data1 %>%
+  mutate(fclass = as.numeric(fclass), 
+         class38 = as.numeric(class38)) 
+
+wk_data3 %>%
+  pivot_longer(cols = c(ed37, class38, fclass), names_to = "variable", values_to = "value") %>%
+  ggplot(aes(x = value, fill = cohort)) +
+  geom_boxplot(alpha = 0.5) + 
+  facet_wrap(~variable, scales = "free") + 
+  guides(fill = guide_legend(reverse = TRUE)) + 
+  theme(axis.text.x = element_blank(),
+        axis.title.x = element_blank())
+```
+
+The box plots using the full data without filtering seems to be closer to the cohort level distributions of these variables in the cleaned social mobility data. This suggests that instead of being dropped, these observations were somehow re-coded.
+
+## External validity
+
+### Matching the work history and social mobility datasets
+
+```{r}
+# Trying to naively match on `.id` = `id` 
+matched1 <- sm_data1 %>% 
+  mutate(id = as.integer(.id)) %>%
+  select(-.id) %>%
+  left_join(wk_data1 %>% 
+              filter(cohort != "1970"), by = c("id", "cohort"))
+# Clear mismatches in the sex, social class and education variables
+
+# Trying to naively match on `id` = `id` 
+matched2 <- sm_data1 %>% 
+  mutate(id = as.integer(id)) %>%
+  select(-.id) %>%
+  left_join(wk_data1 %>% 
+              filter(cohort != "1970"), by = c("id", "cohort"))
+# Clear mismatches in the social class and education variables
+
+```
+
+A manual review of the datasets reveals that the correct matching scheme seems to be match the row number of the stacked work history data with the `.id` variable in the social mobility data.
+
+```{r,warning=FALSE}
+wk_full <- bind_rows(workhistory1 %>% mutate(cohort = "1946",
+                                             ed37 = educ),
+                     workhistory2 %>% mutate(cohort = "1958"),
+                     workhistory3 %>% mutate(cohort = "1970")) %>%
+  mutate(id = row_number()) %>%
+  select(cohort, id, sex, fclass, class38, ed37, IQ)
+
+matched3 <- sm_data1 %>%
+  mutate(in_sm = 1,
+         id = .id) %>%
+  full_join(wk_full %>% mutate(in_wh = 1,
+                               id = as.factor(id)), 
+            by = c("id", "cohort")) %>%
+  mutate(in_both = ifelse(!is.na(in_sm) & !is.na(in_wh), 1, 0),
+         sex.x = ifelse(sex.x == "male", 0, 1),
+         class38.x = case_when(class38.x == "High.sal" ~ 1,
+                               class38.x == "Low.sal" ~ 2,
+                               class38.x == "Interm" ~ 3,
+                               class38.x == "Small.emp" ~ 4,
+                               class38.x == "Low.sup" ~ 5,
+                               class38.x == "Semi-rout" ~ 6,
+                               class38.x == "Routine" ~ 7,
+                               T ~ NA),
+         fclass.x = case_when(fclass.x == "High.sal" ~ 1,
+                               fclass.x == "Low.sal" ~ 2,
+                               fclass.x == "Interm" ~ 3,
+                               fclass.x == "Small.emp" ~ 4,
+                               fclass.x == "Low.sup" ~ 5,
+                               fclass.x == "Semi-rout" ~ 6,
+                               fclass.x == "Routine" ~ 7,
+                               T ~ NA))
+
+```
+
+```{r}
+# Checking agreement in auxiliary variables between the social mobility and work history datasets
+
+check <- matched3 %>%
+  mutate(fclass_ag = fclass.x == fclass.y,
+         educ37_ag = educ37 == ed37,
+         class38_ag = class38.x == class38.y)
+
+cat("Father's class agreement: ", round(sum(check$fclass_ag, na.rm = T) / dim(check %>% drop_na(fclass_ag))[1], 2), "\n",
+    "Education agreement: ", round(sum(check$educ37_ag, na.rm = T) / dim(check %>% drop_na(educ37_ag))[1], 2), "\n",
+    "Unit class agreement: ", round(sum(check$class38_ag, na.rm = T) / dim(check %>% drop_na(class38_ag))[1], 2), "\n")
+
+# Perfect agreement
+```
+
+```{r}
+matched <- matched3 %>%
+  select(id, cohort, weight, sex.y, fclass.y, class38.y, ed37, 
+         IQ, in_wh, in_both) %>%
+  rename(sex = sex.y, fclass = fclass.y, class = class38.y,
+         educ = ed37) %>%
+  mutate(class = ifelse(class >= 1 & class <= 7, class, NA))
+
+# There are observations in the work history 1946 data that are not in the social mobility data. This is because of the weighting that was performed to account for the sampling quirks of the 1946 data. For consistency, these observations will be dropped for now. 
+
+matched <- matched %>% filter(in_both == 1)
+```
+
+### Properties of the matched dataset
+
+#### Prevalence of missing variables
+
+```{r}
+skim(matched) %>%
+  mutate(across(where(is.numeric), ~round(., 2)))
+```
+
+##### Checking the distribution of other variables based on whether they are missing the IQ variable or not
+
+```{r}
+summary(matched %>% filter(is.na(IQ)))
+```
+
+```{r}
+summary(matched %>% filter(!is.na(IQ)))
+```
+
+No significant differences in other variables observed
+
+##### Checking the distribution of other variables based on whether they are missing the unit class variable or not
+
+```{r}
+summary(matched %>% filter(is.na(class)))
+```
+
+```{r}
+summary(matched %>% filter(!is.na(class)))
+```
+
+Larger differences are observed here, where is unit's social class is not observed, it seems that these units are in "lower" social classes and have lower average levels of education.
+
+##### Dropping variables with any missing variables
+
+The data with missing variables can be handled by missing imputation procedures if this becomes a focus of my dissertation. However, because I am mostly using this dataset for illustrative purposes, I will work with the "complete case analysis" data for now.
+
+```{r}
+data_cca <- matched %>% 
+  drop_na() %>%
+  select(-in_wh, -in_both) %>%
+  mutate(cohort = as.numeric(cohort))
+```
+
+```{r}
+skim(data_cca) %>%
+  mutate(across(where(is.numeric), ~round(., 2)))
+```
+
+```{r}
+# Number of observations broken by cohort and sex 
+data_cca %>%
+  group_by(cohort, sex) %>%
+  summarize(count = n()) %>%
+  pivot_wider(names_from = cohort, values_from = count)
+```
+
+#### Checks for overlap of the IQ and education variables
+
+The differential distributions of IQ and education by social classes is of particular interest for my application of mediation analysis approaches for analyzing social class driven disparities. This is because for interventional effect approaches to mediation analysis, a key assumption for estimators to be consistent is an analogue of the common support assumption often adopted in causal inference selection on observables. If the distribution of these two variables diverges too much across (father's) social classes, certain non-parametric methods of estimating interventional effects, like the ones advances by Benkesar and Ran (2021) and Diaz et al (2021), become much less attractive and more parametric assumptions need to be made to estimate the effects.
+
+I expect that because education is a discrete variable, there will be satisfactory overlap here. For the continuous IQ variable, however, there will be more of a problem with overlap for estimation. Since the goal of my thesis is to develop the theory (identification, estimation) of a certain class of interventional effects, the contrast between these two variables is actually very helpful for illustration of some of the issues with common support that I will be discussing, and can justify the choice of estimators I develop.
+
+I will produce distributions for education and IQ by father's social class both as a whole and broken down by the sex and cohort covariates. Having overlap conditional on covariates that might confound the relationship between IQ/education and unit social class (confounders of the mediator-outcome relationship) is essential for identification, so I will be interested in both the overall distributions and the cohort/sex specific ones.
+
+```{r}
+data_cca <- data_cca %>% 
+  mutate(class_c = case_when(class == 1 ~ "High.sal",
+                               class == 2 ~ "Low.sal",
+                               class == 3 ~ "Interm",
+                               class == 4 ~ "Small.emp",
+                               class == 5 ~ "Low.sup",
+                               class == 6 ~"Semi-rout",
+                               class == 7 ~ "Routine",
+                               T ~ NA),
+         fclass_c = case_when(fclass == 1 ~ "High.sal",
+                               fclass == 2 ~ "Low.sal",
+                               fclass == 3 ~ "Interm",
+                               fclass == 4 ~ "Small.emp",
+                               fclass == 5 ~ "Low.sup",
+                               fclass == 6 ~"Semi-rout",
+                               fclass == 7 ~ "Routine",
+                               T ~ NA))
+
+```
+
+##### Education distributions
+
+```{r,warning=FALSE, include=FALSE}
+# A plot of all seven social classes is difficult to visualize, so instead the number of observations of the least common father's social class by education level will be assessed here
+
+overlap_table <- data_cca %>%
+  group_by(sex, cohort, educ, fclass_c) %>%
+  summarize(count = n()) %>%
+  ungroup() %>%
+  group_by(cohort, sex, educ) %>%
+  summarize(overlap = min(count)) %>%
+  pivot_wider(names_from = educ, values_from = overlap) %>%
+  arrange(cohort, sex) %>%
+  mutate(sex = ifelse(sex == 1, "Female", "Male"),
+         cohort = as.character(cohort)) %>%
+  adorn_totals()
+```
+
+```{r}
+overlap_table
+```
+
+There is complete overlap in education across all father social classes even when broken down by cohort and sex. However, there will probably be potential issues with the variance of inverse probability weighting (IPW) based methods to estimate interventional effects conditional on confounders because of the fact that some father's social classes will have only 1 or 2 observations for a given level of education to based estimates off of.
+
+##### IQ distributions
+
+Because this is a continuous variable, clearly there will be non-overlap in the strict sense. The two options are to either assume that the distribution of the IQ tests follows a parametrically specified distribution in each group or to perform discretization on the continuous data to satisfy positivity. The smaller the differences in performance on the test, the more justified a discetization + non-parametric approach would be. However, it is well known in the literature that performance on IQ tests should be normally distributed in the population (by construction), so a parametric assumption on the structure of the distribution we are trying to estimate seems justified here.
+
+Here, I think it is helpful to first get a sense of the differences in the distributions of IQ test scores by father's social class by looking at some histograms.
+
+```{r}
+ggplot(data = data_cca, aes(x = IQ, color = fclass_c)) +
+  geom_density(alpha = 0.5) +
+  theme_classic() +
+  labs(
+    title = "",
+    x = "IQ test performance",
+    y = "Density"
+  )
+```
+
+```{r}
+ggplot(data = data_cca %>% 
+         mutate(sex = ifelse(sex == 0, "Male", "Female")), 
+       aes(x = IQ, color = fclass_c)) +
+  geom_density(alpha = 0.5) +
+  theme_classic() +
+  labs(
+    title = "",
+    x = "IQ test performance",
+    y = "Density"
+  ) +
+  facet_grid(sex~cohort, scales = "free")
+```
+
+Interestingly, there are larger observed discrepancies in IQ test performance for the 1946 and 1958 cohorts compared to 1970, which looks like it follows the relatively normal, minor discrepancies across father's social class of the overall data. This might point to the smaller sample size in 1946, but it also might be evidence of a change in how the IQ test was administered and what it consisted of across the 24 years of the data. In each case, this test was administered at age 11, so it would have been administered in 1946, 1958, and 1970. This is an interesting quirk of the data that will be worth looking into in the future.

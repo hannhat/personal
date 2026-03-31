@@ -1,0 +1,1784 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={social\_mobility\_data\_eda},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{social\_mobility\_data\_eda}
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+\maketitle
+
+\section{Social Class Mobility Data
+Exploration}\label{social-class-mobility-data-exploration}
+
+The goal of this Markdown file is to investigate the data I am going to
+use as a real data illustration for the methods I am developing in my
+master's thesis. My master's thesis is focused on developing mediation
+analysis methods with multiple mediators when the causal ordering of the
+mediators is known. These methods can be used to investigate what the
+causal impact of socially driven disparities in variables like education
+can have on differential outcomes for these same social groups.
+
+The data I will be using in my thesis is based on the dataset used by
+Kuha et al (2021), which uses mediation analysis methods to characterize
+the extent to which differences in educational outcomes across social
+classes in Britain mediate relative social class mobility, a question of
+interest in the sociology literature. This data comes from three
+separate samples of British citizens born in 1946, 1958, and 1970, which
+gives information about a unit's social class various points in their
+life, their level of education over time, their occupation over time,
+their results on an intelligence test they took at age 11, and their
+father's social class, among other helpful covariates. I refer to these
+three separate datasets as the ``work history data''.
+
+Kuha et al (2021) does not use the intelligence test results and instead
+investigates the role of only education in mediating father-child social
+class mobility. To this end, they construct a cleaned dataset that
+excludes the intelligence test results and looks at their social class
+and education as of middle age (age 37-38) only. They also re-weight the
+survey data to account for sampele selection effects and use multiple
+imputation methods to fill in missing values in the data. I refer to
+this cleaned dataset as the ``social mobility data'' below.
+
+\subsection{Setup}\label{setup}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Loading required packages}
+\FunctionTok{library}\NormalTok{(dplyr)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'dplyr'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(ggplot2)}
+\FunctionTok{library}\NormalTok{(haven)}
+\FunctionTok{library}\NormalTok{(tidyr)}
+\FunctionTok{library}\NormalTok{(skimr)}
+\FunctionTok{library}\NormalTok{(GGally)}
+\FunctionTok{library}\NormalTok{(janitor)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'janitor'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:stats':
+## 
+##     chisq.test, fisher.test
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Setting working directory}
+\FunctionTok{setwd}\NormalTok{(}\StringTok{"/Users/19175/Documents/personal/research/MSc\_Thesis{-}Mediation\_Analysis/data"}\NormalTok{)}
+
+\CommentTok{\# Loading input data}
+\NormalTok{path }\OtherTok{\textless{}{-}} \StringTok{"input/social\_class\_mobility\_data/"}
+\NormalTok{social\_mobility\_data }\OtherTok{\textless{}{-}} \FunctionTok{readRDS}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(path, }\StringTok{"social\_mobility\_data.rds"}\NormalTok{))}
+\NormalTok{workhistory1 }\OtherTok{\textless{}{-}} \FunctionTok{read\_dta}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(path, }\StringTok{"workhistory\_1946.dta"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{cohort =} \DecValTok{1946}\NormalTok{)}
+\NormalTok{workhistory2 }\OtherTok{\textless{}{-}} \FunctionTok{read\_dta}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(path, }\StringTok{"workhistory\_1958.dta"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{cohort =} \DecValTok{1958}\NormalTok{)}
+\NormalTok{workhistory3 }\OtherTok{\textless{}{-}} \FunctionTok{read\_dta}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(path, }\StringTok{"workhistory\_1970.dta"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{cohort =} \DecValTok{1970}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+The clean social mobility data has about 250,000 rows, while the three
+full, raw work history datasets have 5,000-15,000 rows, so I will take
+smaller samples of each dataset that I can visually explore in RStudio.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Getting samples of each dataset to investigate before looking at summary stats}
+\NormalTok{sm\_sample }\OtherTok{\textless{}{-}}\NormalTok{ social\_mobility\_data }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{slice\_sample}\NormalTok{(}\AttributeTok{n=}\DecValTok{100}\NormalTok{)}
+\NormalTok{work\_hist1\_sample }\OtherTok{\textless{}{-}}\NormalTok{ workhistory1 }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{slice\_sample}\NormalTok{(}\AttributeTok{n=}\DecValTok{100}\NormalTok{)}
+\NormalTok{work\_hist2\_sample }\OtherTok{\textless{}{-}}\NormalTok{ workhistory2 }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{slice\_sample}\NormalTok{(}\AttributeTok{n=}\DecValTok{100}\NormalTok{)}
+\NormalTok{work\_hist3\_sample }\OtherTok{\textless{}{-}}\NormalTok{ workhistory3 }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{slice\_sample}\NormalTok{(}\AttributeTok{n=}\DecValTok{100}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Social Mobility Data}\label{social-mobility-data}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Storing the column names and types as a reference}
+\NormalTok{social\_mobility\_data }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{glimpse}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Rows: 248,369
+## Columns: 11
+## $ .imp     <fct> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0~
+## $ .id      <fct> 2, 4, 5, 8, 9, 10, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24~
+## $ cohort   <dbl> 1946, 1946, 1946, 1946, 1946, 1946, 1946, 1946, 1946, 1946, 1~
+## $ weight   <dbl> 0.4511865, 0.4511865, 0.4511865, 1.8047462, 0.4511865, 0.4511~
+## $ id       <dbl> 4600002, 4600004, 4600005, 4600010, 4600011, 4600012, 4600016~
+## $ sex      <fct> male, male, male, female, male, male, female, female, female,~
+## $ fclass   <fct> Interm, High.sal, Routine, Routine, Interm, Low.sal, Low.sal,~
+## $ educ37   <dbl> 7, 7, 1, 3, 4, 3, 5, 4, 4, 4, 6, 2, 1, 3, 1, 1, 1, 2, 1, 7, 4~
+## $ class38  <fct> High.sal, NA, Routine, Interm, High.sal, Low.sup, NA, Low.sal~
+## $ parttime <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0~
+## $ up       <dbl> 0, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA~
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Checking the dimensions of the data}
+\FunctionTok{dim}\NormalTok{(social\_mobility\_data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 248369     11
+\end{verbatim}
+
+\subsubsection{Basic data quality
+checks}\label{basic-data-quality-checks}
+
+Summary stats on the full data
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Getting information about the number of missing variables, unique values, basic summary stats}
+\FunctionTok{skim}\NormalTok{(social\_mobility\_data) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\FunctionTok{across}\NormalTok{(}\FunctionTok{where}\NormalTok{(is.numeric), }\SpecialCharTok{\textasciitilde{}}\FunctionTok{round}\NormalTok{(., }\DecValTok{2}\NormalTok{)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}ll@{}}
+\caption{Data summary}\tabularnewline
+\toprule\noalign{}
+\endfirsthead
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Name & social\_mobility\_data \\
+Number of rows & 248369 \\
+Number of columns & 11 \\
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ & \\
+Column type frequency: & \\
+factor & 5 \\
+numeric & 6 \\
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ & \\
+Group variables & None \\
+\end{longtable}
+
+\textbf{Variable type: factor}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1373}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.0980}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1373}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.0784}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.0882}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.4608}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+skim\_variable
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+n\_missing
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+complete\_rate
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+ordered
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+n\_unique
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+top\_counts
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+.imp & 0 & 1.00 & FALSE & 11 & 0: 22579, 1: 22579, 2: 22579, 3: 22579 \\
+.id & 0 & 1.00 & FALSE & 22579 & 10: 11, 100: 11, 100: 11, 100: 11 \\
+sex & 0 & 1.00 & FALSE & 2 & mal: 171512, fem: 76857 \\
+fclass & 2812 & 0.99 & FALSE & 7 & Rou: 62556, Low: 40657, Low: 38920,
+Sem: 31499 \\
+class38 & 7099 & 0.97 & FALSE & 7 & Low: 55670, Int: 37531, Hig: 36356,
+Sem: 33915 \\
+\end{longtable}
+
+\textbf{Variable type: numeric}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.1273}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0909}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.1273}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.1000}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0909}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.1000}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0727}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0727}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0727}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0909}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0545}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+skim\_variable
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+n\_missing
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+complete\_rate
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+mean
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+sd
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p0
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p25
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p50
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p75
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p100
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+hist
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+cohort & 0 & 1.00 & 1960.66 & 8.27 & 1946.00 & 1958 & 1958 & 1970 &
+1970.0 & ▂▁▇▁▆ \\
+weight & 0 & 1.00 & 1.00 & 0.26 & 0.45 & 1 & 1 & 1 & 1.8 & ▁▁▇▁▁ \\
+id & 0 & 1.00 & 6071657.16 & 827557.30 & 4600002.00 & 5802954 & 5810508
+& 7003984 & 7012132.0 & ▂▁▇▁▆ \\
+educ37 & 84 & 1.00 & 3.78 & 2.12 & 1.00 & 2 & 4 & 6 & 8.0 & ▇▆▆▃▅ \\
+parttime & 1859 & 0.99 & 0.05 & 0.23 & 0.00 & 0 & 0 & 0 & 1.0 & ▇▁▁▁▁ \\
+up & 248368 & 0.00 & 0.00 & NA & 0.00 & 0 & 0 & 0 & 0.0 & ▁▁▇▁▁ \\
+\end{longtable}
+
+\subsubsection{Data cleaning}\label{data-cleaning}
+
+\paragraph{Restricting to only observations with full
+data}\label{restricting-to-only-observations-with-full-data}
+
+The \texttt{.imp} variable is equal to \(0\) when the row of data was
+original and was not multiply imputed and is not equal to \(0\) when
+some of the data was multiply imputed to deal with missing data. There
+are many strange properties of the full data, like two ID variables that
+frequently appear multiple times in the data. By restricting the sample
+to only those that have full data, it is easier to see the properties of
+the data and to conduct baseline analyses. The selection bias that such
+a filtering of the data might induce can be investigated later.
+
+\paragraph{Recoding data types}\label{recoding-data-types}
+
+It is unclear as of now what the difference between \texttt{id} and
+\texttt{.id} are. However, \texttt{id} and \texttt{cohort} should
+clearly be unordered, categorical variables.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sm\_data1 }\OtherTok{\textless{}{-}}\NormalTok{ social\_mobility\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(.imp }\SpecialCharTok{==} \DecValTok{0}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{id =} \FunctionTok{as.factor}\NormalTok{(id),}
+         \AttributeTok{cohort =} \FunctionTok{as.factor}\NormalTok{(cohort))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Checking the dimensions of the data}
+\FunctionTok{dim}\NormalTok{(sm\_data1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 22579    11
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Getting information about the number of missing variables, unique values, basic summary stats}
+\FunctionTok{skim}\NormalTok{(sm\_data1) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\FunctionTok{across}\NormalTok{(}\FunctionTok{where}\NormalTok{(is.numeric), }\SpecialCharTok{\textasciitilde{}}\FunctionTok{round}\NormalTok{(., }\DecValTok{2}\NormalTok{)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}ll@{}}
+\caption{Data summary}\tabularnewline
+\toprule\noalign{}
+\endfirsthead
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Name & sm\_data1 \\
+Number of rows & 22579 \\
+Number of columns & 11 \\
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ & \\
+Column type frequency: & \\
+factor & 7 \\
+numeric & 4 \\
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ & \\
+Group variables & None \\
+\end{longtable}
+
+\textbf{Variable type: factor}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1429}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1020}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1429}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.0816}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.0918}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.4388}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+skim\_variable
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+n\_missing
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+complete\_rate
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+ordered
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+n\_unique
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+top\_counts
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+.imp & 0 & 1.00 & FALSE & 1 & 0: 22579, 1: 0, 2: 0, 3: 0 \\
+.id & 0 & 1.00 & FALSE & 22579 & 10: 1, 100: 1, 100: 1, 100: 1 \\
+cohort & 0 & 1.00 & FALSE & 3 & 195: 10754, 197: 8411, 194: 3414 \\
+id & 0 & 1.00 & FALSE & 22579 & 460: 1, 460: 1, 460: 1, 460: 1 \\
+sex & 0 & 1.00 & FALSE & 2 & mal: 15592, fem: 6987 \\
+fclass & 2812 & 0.88 & FALSE & 7 & Rou: 5010, Low: 3298, Low: 3145, Sem:
+2507 \\
+class38 & 7099 & 0.69 & FALSE & 7 & Low: 3723, Hig: 2523, Int: 2442,
+Sem: 1979 \\
+\end{longtable}
+
+\textbf{Variable type: numeric}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.1842}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.1316}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.1842}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0658}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0658}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0658}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0526}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0526}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0526}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0658}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0789}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+skim\_variable
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+n\_missing
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+complete\_rate
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+mean
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+sd
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p0
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p25
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p50
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p75
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p100
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+hist
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+weight & 0 & 1.00 & 1.00 & 0.26 & 0.45 & 1 & 1 & 1 & 1.8 & ▁▁▇▁▁ \\
+educ37 & 84 & 1.00 & 3.78 & 2.12 & 1.00 & 2 & 4 & 6 & 8.0 & ▇▆▆▃▅ \\
+parttime & 169 & 0.99 & 0.05 & 0.23 & 0.00 & 0 & 0 & 0 & 1.0 & ▇▁▁▁▁ \\
+up & 22578 & 0.00 & 0.00 & NA & 0.00 & 0 & 0 & 0 & 0.0 & ▁▁▇▁▁ \\
+\end{longtable}
+
+It is still unclear what the relationship between the two ID variables
+is, and which one should be used to map to the IQ testing data. It is
+also unclear what the \texttt{weight}, \texttt{parttime}, and
+\texttt{up} variables are meant to map to.
+
+\subsubsection{Variable definitions}\label{variable-definitions}
+
+As of this point, these are my working definitions of each of the
+variables:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{id}, \texttt{.id}: The unit of observation/person in the data.
+  Unclear as of now which variable is the relevant one.
+\item
+  \texttt{educ37}: Ordinal scale from 1-8 indicating the unit's level of
+  education at age 37. The mediating variable in Kuha et al (2021), and
+  one of our variables of interest here.
+\item
+  \texttt{fclass}: The unit's father's social class, as described in
+  Kuha et al (2021). The ``treatment'' variable (though it does not
+  exactly admit a causal interpretation here).
+\item
+  \texttt{class38}: The unit's social class at age 38. The outcome
+  variable.
+\item
+  \texttt{.imp}: Indicator of whether the data was imputed or not.
+\item
+  \texttt{cohort}: The year of birth for the unit being measured. There
+  are three cohorts, each 12 years apart, in the data.
+\item
+  \texttt{sex}: The sex of the unit.
+\item
+  \texttt{weight}: This is a survey weight for units from the 1946
+  cohort, described in Section 2 of Kuha et al (2021).
+\item
+  \texttt{parttime}, \texttt{up}: Unknown for now. \texttt{weight} might
+  be some kind of adjustment for sample over/under representation of the
+  true population.
+\end{itemize}
+
+It is also helpful to describe what each of the 7 levels that the social
+class variables can take are. This will also help justify the
+simplifying assumption I will make below for visualization purposes to
+interpret the class levels at ordered, which is not strictly accurate.
+From Kuha et al (2021):
+
+\begin{verbatim}
+1.  Higher managers and professionals
+
+2.  Lower managers and professionals
+
+3.  Intermediate occupations
+
+4.  Small employers and own account workers
+
+5.  Lower supervisory and technical occupations
+
+6.  Semiroutine occupations
+
+7.  Routine occupations
+\end{verbatim}
+
+\subsubsection{Relationships between
+variables}\label{relationships-between-variables}
+
+\paragraph{Evolution of the treatment, mediator, and outcome variable
+distributions over
+time}\label{evolution-of-the-treatment-mediator-and-outcome-variable-distributions-over-time}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# I pretend that the "roughly ordinal" ordering of the social class variables}
+\CommentTok{\# are strict orderings for visualization purposes}
+
+\NormalTok{sm\_data2 }\OtherTok{\textless{}{-}}\NormalTok{ sm\_data1 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{fclass =} \FunctionTok{as.numeric}\NormalTok{(fclass), }
+         \AttributeTok{class38 =} \FunctionTok{as.numeric}\NormalTok{(class38))}
+
+\NormalTok{sm\_data2 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{pivot\_longer}\NormalTok{(}\AttributeTok{cols =} \FunctionTok{c}\NormalTok{(educ37, class38, fclass), }\AttributeTok{names\_to =} \StringTok{"variable"}\NormalTok{, }\AttributeTok{values\_to =} \StringTok{"value"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ value, }\AttributeTok{fill =}\NormalTok{ cohort)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_boxplot}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{variable, }\AttributeTok{scales =} \StringTok{"free"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{guides}\NormalTok{(}\AttributeTok{fill =} \FunctionTok{guide\_legend}\NormalTok{(}\AttributeTok{reverse =} \ConstantTok{TRUE}\NormalTok{)) }\SpecialCharTok{+} 
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.text.x =} \FunctionTok{element\_blank}\NormalTok{(),}
+        \AttributeTok{axis.title.x =} \FunctionTok{element\_blank}\NormalTok{())}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{social_mobility_data_eda_files/figure-latex/unnamed-chunk-9-1.pdf}}
+
+As expected, level of education seems to increase over time, while
+social class and father's social class seem to remain relatively stable
+(with a slight change/ approximate ``increase'' in father's social
+class).
+
+\paragraph{Associations of treatment, mediator,
+outcome}\label{associations-of-treatment-mediator-outcome}
+
+Running a series of basic regressions on the association between all
+three pairs of variables. Once again, social class is treated as roughly
+ordinal, where lower values are associated with social classes that I
+would expect to be roughly seen as ``more advantaged''.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Creating a function to fit a linear regression and visualize + summarize the relationship}
+\NormalTok{fit\_lm }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x, y) \{}
+\NormalTok{  model }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(}\FunctionTok{reformulate}\NormalTok{(x, y), }\AttributeTok{data =}\NormalTok{ sm\_data2)}
+  
+  \FunctionTok{print}\NormalTok{(}\FunctionTok{summary}\NormalTok{(model))}
+  
+  \FunctionTok{ggplot}\NormalTok{(sm\_data2, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ .data[[x]], }\AttributeTok{y =}\NormalTok{ .data[[y]])) }\SpecialCharTok{+}
+    \FunctionTok{geom\_smooth}\NormalTok{(}\AttributeTok{method =} \StringTok{"lm"}\NormalTok{, }\AttributeTok{se =} \ConstantTok{TRUE}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{scale\_x\_continuous}\NormalTok{(}\AttributeTok{limits =} \FunctionTok{c}\NormalTok{(}\FunctionTok{min}\NormalTok{(sm\_data2[[x]], }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{), }\FunctionTok{max}\NormalTok{(sm\_data2[[x]], }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{))) }\SpecialCharTok{+}
+    \FunctionTok{scale\_y\_continuous}\NormalTok{(}\AttributeTok{limits =} \FunctionTok{c}\NormalTok{(}\FunctionTok{min}\NormalTok{(sm\_data2[[y]], }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{), }\FunctionTok{max}\NormalTok{(sm\_data2[[y]], }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{))) }\SpecialCharTok{+}
+    \FunctionTok{labs}\NormalTok{(}
+      \AttributeTok{title =} \StringTok{""}\NormalTok{,}
+      \AttributeTok{x =}\NormalTok{ x,}
+      \AttributeTok{y =}\NormalTok{ y}
+\NormalTok{    ) }\SpecialCharTok{+}
+    \FunctionTok{theme\_classic}\NormalTok{()}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Father\textquotesingle{}s social class {-}\textgreater{} education}
+\FunctionTok{fit\_lm}\NormalTok{(}\StringTok{"fclass"}\NormalTok{, }\StringTok{"educ37"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = reformulate(x, y), data = sm_data2)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -4.0342 -1.6867 -0.0342  1.6608  5.0508 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  5.381684   0.033659  159.89   <2e-16 ***
+## fclass      -0.347499   0.006841  -50.79   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.989 on 19721 degrees of freedom
+##   (2856 observations deleted due to missingness)
+## Multiple R-squared:  0.1157, Adjusted R-squared:  0.1156 
+## F-statistic:  2580 on 1 and 19721 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\begin{verbatim}
+## `geom_smooth()` using formula = 'y ~ x'
+\end{verbatim}
+
+\pandocbounded{\includegraphics[keepaspectratio]{social_mobility_data_eda_files/figure-latex/unnamed-chunk-11-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Father\textquotesingle{}s social class {-}\textgreater{} unit social class}
+\FunctionTok{fit\_lm}\NormalTok{(}\StringTok{"fclass"}\NormalTok{, }\StringTok{"class38"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = reformulate(x, y), data = sm_data2)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3.3369 -1.5436 -0.4402  1.6631  4.4564 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) 2.244664   0.038085   58.94   <2e-16 ***
+## fclass      0.298891   0.007875   37.96   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.92 on 13797 degrees of freedom
+##   (8780 observations deleted due to missingness)
+## Multiple R-squared:  0.09455,    Adjusted R-squared:  0.09448 
+## F-statistic:  1441 on 1 and 13797 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\begin{verbatim}
+## `geom_smooth()` using formula = 'y ~ x'
+\end{verbatim}
+
+\pandocbounded{\includegraphics[keepaspectratio]{social_mobility_data_eda_files/figure-latex/unnamed-chunk-12-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Education {-}\textgreater{} class38}
+\FunctionTok{fit\_lm}\NormalTok{(}\StringTok{"educ37"}\NormalTok{, }\StringTok{"class38"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = reformulate(x, y), data = sm_data2)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -3.986 -1.148 -0.148  1.433  5.325 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  5.459063   0.030269  180.35   <2e-16 ***
+## educ37      -0.473011   0.006697  -70.63   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.758 on 15446 degrees of freedom
+##   (7131 observations deleted due to missingness)
+## Multiple R-squared:  0.2441, Adjusted R-squared:  0.2441 
+## F-statistic:  4989 on 1 and 15446 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\begin{verbatim}
+## `geom_smooth()` using formula = 'y ~ x'
+\end{verbatim}
+
+\pandocbounded{\includegraphics[keepaspectratio]{social_mobility_data_eda_files/figure-latex/unnamed-chunk-13-1.pdf}}
+
+\subsection{Work history data}\label{work-history-data}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Checking the dimensions of the data}
+\FunctionTok{dim}\NormalTok{(workhistory1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 4506  144
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{dim}\NormalTok{(workhistory2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 14313   232
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{dim}\NormalTok{(workhistory3)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 12132   170
+\end{verbatim}
+
+A cursory look at the data and the number of variables shows that these
+data contain detailed information about the evolution of relevant
+unit-level characteristics: social class, education, and occupation. Of
+these variables, the one that is of immediate interest is the
+\texttt{IQ} variable as well as the other variables in the dataset that
+are relevant to the original analysis in Kuha et al (2021) and are
+included in the cleaned dataset.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Creating a combined dataset}
+\NormalTok{wk\_data1 }\OtherTok{\textless{}{-}} \FunctionTok{bind\_rows}\NormalTok{(workhistory1 }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{mutate}\NormalTok{(}\AttributeTok{cohort =} \StringTok{"1946"}\NormalTok{,}
+                                              \AttributeTok{ed37 =}\NormalTok{ educ), }
+\NormalTok{                      workhistory2 }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{mutate}\NormalTok{(}\AttributeTok{cohort =} \StringTok{"1958"}\NormalTok{),}
+\NormalTok{                      workhistory3 }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{mutate}\NormalTok{(}\AttributeTok{cohort =} \StringTok{"1970"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(id, sex, fclass, ed37, class38, IQ, cohort) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{fclass =} \FunctionTok{as.factor}\NormalTok{(fclass),}
+         \AttributeTok{ed37 =} \FunctionTok{as.numeric}\NormalTok{(ed37),}
+         \AttributeTok{class38 =} \FunctionTok{as.factor}\NormalTok{(class38))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Basic summary statistics}
+\FunctionTok{skim}\NormalTok{(wk\_data1) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\FunctionTok{across}\NormalTok{(}\FunctionTok{where}\NormalTok{(is.numeric), }\SpecialCharTok{\textasciitilde{}}\FunctionTok{round}\NormalTok{(., }\DecValTok{2}\NormalTok{)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}ll@{}}
+\caption{Data summary}\tabularnewline
+\toprule\noalign{}
+\endfirsthead
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Name & wk\_data1 \\
+Number of rows & 30951 \\
+Number of columns & 7 \\
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ & \\
+Column type frequency: & \\
+character & 1 \\
+factor & 2 \\
+numeric & 4 \\
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ & \\
+Group variables & None \\
+\end{longtable}
+
+\textbf{Variable type: character}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1944}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1389}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1944}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.0556}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.0556}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.0833}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1250}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1528}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+skim\_variable
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+n\_missing
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+complete\_rate
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+min
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+max
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+empty
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+n\_unique
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+whitespace
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+cohort & 0 & 1 & 4 & 4 & 0 & 3 & 0 \\
+\end{longtable}
+
+\textbf{Variable type: factor}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1538}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1099}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1538}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.0879}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.0989}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.3956}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+skim\_variable
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+n\_missing
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+complete\_rate
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+ordered
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+n\_unique
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+top\_counts
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+fclass & 3788 & 0.88 & FALSE & 7 & 7: 6852, 2: 4525, 5: 4395, 6: 3463 \\
+class38 & 0 & 1.00 & FALSE & 10 & -1: 7679, 2: 5290, 3: 4154, 6: 3715 \\
+\end{longtable}
+
+\textbf{Variable type: numeric}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.1414}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.1010}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.1414}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0808}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0808}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0606}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0808}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0808}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0808}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0909}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0606}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+skim\_variable
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+n\_missing
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+complete\_rate
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+mean
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+sd
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p0
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p25
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p50
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p75
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p100
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+hist
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+id & 12132 & 0.61 & 6100.95 & 4151.55 & 1.00 & 2578.00 & 5124.00 &
+9622.50 & 14346.00 & ▇▇▅▅▅ \\
+sex & 0 & 1.00 & 0.50 & 0.50 & 0.00 & 0.00 & 0.00 & 1.00 & 1.00 &
+▇▁▁▁▇ \\
+ed37 & 112 & 1.00 & 3.76 & 2.09 & 1.00 & 2.00 & 3.00 & 6.00 & 8.00 &
+▇▆▆▃▃ \\
+IQ & 10186 & 0.67 & 0.03 & 0.99 & -3.66 & -0.67 & 0.08 & 0.77 & 3.37 &
+▁▃▇▅▁ \\
+\end{longtable}
+
+\subsubsection{Comparison of the three
+datasets}\label{comparison-of-the-three-datasets}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Checking overlap in variables between the three cohort datasets}
+\FunctionTok{intersect}\NormalTok{(}\FunctionTok{intersect}\NormalTok{(}\FunctionTok{colnames}\NormalTok{(workhistory1), }\FunctionTok{colnames}\NormalTok{(workhistory2)),  }
+          \FunctionTok{colnames}\NormalTok{(workhistory3))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "sex"     "part16"  "part17"  "part18"  "part19"  "part20"  "part21" 
+##  [8] "part22"  "part23"  "part24"  "part25"  "part26"  "part27"  "part28" 
+## [15] "part29"  "part30"  "part31"  "part32"  "part33"  "part34"  "part35" 
+## [22] "part36"  "part37"  "part38"  "nssec16" "nssec17" "nssec18" "nssec19"
+## [29] "nssec20" "nssec21" "nssec22" "nssec23" "nssec24" "nssec25" "nssec26"
+## [36] "nssec27" "nssec28" "nssec29" "nssec30" "nssec31" "nssec32" "nssec33"
+## [43] "nssec34" "nssec35" "nssec36" "nssec37" "nssec38" "class16" "class17"
+## [50] "class18" "class19" "class20" "class21" "class22" "class23" "class24"
+## [57] "class25" "class26" "class27" "class28" "class29" "class30" "class31"
+## [64] "class32" "class33" "class34" "class35" "class36" "class37" "class38"
+## [71] "occ16"   "occ17"   "occ18"   "occ19"   "occ20"   "occ21"   "occ22"  
+## [78] "occ23"   "occ24"   "occ25"   "occ26"   "occ27"   "occ28"   "occ29"  
+## [85] "occ30"   "occ31"   "occ32"   "occ33"   "occ34"   "occ35"   "occ36"  
+## [92] "occ37"   "occ38"   "fclass"  "IQ"      "ed426"   "cohort"
+\end{verbatim}
+
+An immediate concern is that the 1970 data does not seem to have the
+same \texttt{id} variable as the 1946 and 1958 cohort data. Instead,
+there is a \texttt{bcsid} variable that does not have a clear analogue
+in the cleaned data or the other two data files. However, depending on
+well the first two work history datasets match with the cleaned social
+mobility data, it is possible that only the work history datasets could
+be used in the analysis. Instead of \texttt{ed37}, the 1946 cohort data
+has a \texttt{educ} variable.
+
+\subsubsection{Evolution of variables of interest over
+time}\label{evolution-of-variables-of-interest-over-time}
+
+There are a number of values for the social class variables that are
+outside the 1-7 scale. An interesting question is whether these
+variables were re-coded or just dropped from the cleaned social mobility
+dataset or multiply imputed entirely, and what these codes originally
+mapped to.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# I pretend that the "roughly ordinal" ordering of the social class variables}
+\CommentTok{\# are strict orderings for visualization purposes}
+
+\CommentTok{\# Filtering out suspected junk values for social class (outside the 1{-}7 scale)}
+\NormalTok{wk\_data2 }\OtherTok{\textless{}{-}}\NormalTok{ wk\_data1 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{fclass =} \FunctionTok{as.numeric}\NormalTok{(fclass), }
+         \AttributeTok{class38 =} \FunctionTok{as.numeric}\NormalTok{(class38)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(class38 }\SpecialCharTok{\textgreater{}=} \DecValTok{1} \SpecialCharTok{\&}\NormalTok{ class38 }\SpecialCharTok{\textless{}=} \DecValTok{7}\NormalTok{,}
+\NormalTok{         fclass }\SpecialCharTok{\textgreater{}=} \DecValTok{1} \SpecialCharTok{\&}\NormalTok{ class38 }\SpecialCharTok{\textless{}=} \DecValTok{7}\NormalTok{) }
+
+\NormalTok{wk\_data2 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{pivot\_longer}\NormalTok{(}\AttributeTok{cols =} \FunctionTok{c}\NormalTok{(ed37, class38, fclass), }\AttributeTok{names\_to =} \StringTok{"variable"}\NormalTok{, }\AttributeTok{values\_to =} \StringTok{"value"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ value, }\AttributeTok{fill =}\NormalTok{ cohort)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_boxplot}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{variable, }\AttributeTok{scales =} \StringTok{"free"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{guides}\NormalTok{(}\AttributeTok{fill =} \FunctionTok{guide\_legend}\NormalTok{(}\AttributeTok{reverse =} \ConstantTok{TRUE}\NormalTok{)) }\SpecialCharTok{+} 
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.text.x =} \FunctionTok{element\_blank}\NormalTok{(),}
+        \AttributeTok{axis.title.x =} \FunctionTok{element\_blank}\NormalTok{())}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{social_mobility_data_eda_files/figure-latex/unnamed-chunk-18-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Not filtering out junk values for social class }
+\NormalTok{wk\_data3 }\OtherTok{\textless{}{-}}\NormalTok{ wk\_data1 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{fclass =} \FunctionTok{as.numeric}\NormalTok{(fclass), }
+         \AttributeTok{class38 =} \FunctionTok{as.numeric}\NormalTok{(class38)) }
+
+\NormalTok{wk\_data3 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{pivot\_longer}\NormalTok{(}\AttributeTok{cols =} \FunctionTok{c}\NormalTok{(ed37, class38, fclass), }\AttributeTok{names\_to =} \StringTok{"variable"}\NormalTok{, }\AttributeTok{values\_to =} \StringTok{"value"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ value, }\AttributeTok{fill =}\NormalTok{ cohort)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_boxplot}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{variable, }\AttributeTok{scales =} \StringTok{"free"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{guides}\NormalTok{(}\AttributeTok{fill =} \FunctionTok{guide\_legend}\NormalTok{(}\AttributeTok{reverse =} \ConstantTok{TRUE}\NormalTok{)) }\SpecialCharTok{+} 
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.text.x =} \FunctionTok{element\_blank}\NormalTok{(),}
+        \AttributeTok{axis.title.x =} \FunctionTok{element\_blank}\NormalTok{())}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Removed 3900 rows containing non-finite outside the scale range
+## (`stat_boxplot()`).
+\end{verbatim}
+
+\pandocbounded{\includegraphics[keepaspectratio]{social_mobility_data_eda_files/figure-latex/unnamed-chunk-19-1.pdf}}
+
+The box plots using the full data without filtering seems to be closer
+to the cohort level distributions of these variables in the cleaned
+social mobility data. This suggests that instead of being dropped, these
+observations were somehow re-coded.
+
+\subsection{External validity}\label{external-validity}
+
+\subsubsection{Matching the work history and social mobility
+datasets}\label{matching-the-work-history-and-social-mobility-datasets}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Trying to naively match on \textasciigrave{}.id\textasciigrave{} = \textasciigrave{}id\textasciigrave{} }
+\NormalTok{matched1 }\OtherTok{\textless{}{-}}\NormalTok{ sm\_data1 }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{id =} \FunctionTok{as.integer}\NormalTok{(.id)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{.id) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{left\_join}\NormalTok{(wk\_data1 }\SpecialCharTok{\%\textgreater{}\%} 
+              \FunctionTok{filter}\NormalTok{(cohort }\SpecialCharTok{!=} \StringTok{"1970"}\NormalTok{), }\AttributeTok{by =} \FunctionTok{c}\NormalTok{(}\StringTok{"id"}\NormalTok{, }\StringTok{"cohort"}\NormalTok{))}
+\CommentTok{\# Clear mismatches in the sex, social class and education variables}
+
+\CommentTok{\# Trying to naively match on \textasciigrave{}id\textasciigrave{} = \textasciigrave{}id\textasciigrave{} }
+\NormalTok{matched2 }\OtherTok{\textless{}{-}}\NormalTok{ sm\_data1 }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{id =} \FunctionTok{as.integer}\NormalTok{(id)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{.id) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{left\_join}\NormalTok{(wk\_data1 }\SpecialCharTok{\%\textgreater{}\%} 
+              \FunctionTok{filter}\NormalTok{(cohort }\SpecialCharTok{!=} \StringTok{"1970"}\NormalTok{), }\AttributeTok{by =} \FunctionTok{c}\NormalTok{(}\StringTok{"id"}\NormalTok{, }\StringTok{"cohort"}\NormalTok{))}
+\CommentTok{\# Clear mismatches in the social class and education variables}
+\end{Highlighting}
+\end{Shaded}
+
+A manual review of the datasets reveals that the correct matching scheme
+seems to be match the row number of the stacked work history data with
+the \texttt{.id} variable in the social mobility data.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{wk\_full }\OtherTok{\textless{}{-}} \FunctionTok{bind\_rows}\NormalTok{(workhistory1 }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{mutate}\NormalTok{(}\AttributeTok{cohort =} \StringTok{"1946"}\NormalTok{,}
+                                             \AttributeTok{ed37 =}\NormalTok{ educ),}
+\NormalTok{                     workhistory2 }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{mutate}\NormalTok{(}\AttributeTok{cohort =} \StringTok{"1958"}\NormalTok{),}
+\NormalTok{                     workhistory3 }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{mutate}\NormalTok{(}\AttributeTok{cohort =} \StringTok{"1970"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{id =} \FunctionTok{row\_number}\NormalTok{()) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(cohort, id, sex, fclass, class38, ed37, IQ)}
+
+\NormalTok{matched3 }\OtherTok{\textless{}{-}}\NormalTok{ sm\_data1 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{in\_sm =} \DecValTok{1}\NormalTok{,}
+         \AttributeTok{id =}\NormalTok{ .id) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{full\_join}\NormalTok{(wk\_full }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{mutate}\NormalTok{(}\AttributeTok{in\_wh =} \DecValTok{1}\NormalTok{,}
+                               \AttributeTok{id =} \FunctionTok{as.factor}\NormalTok{(id)), }
+            \AttributeTok{by =} \FunctionTok{c}\NormalTok{(}\StringTok{"id"}\NormalTok{, }\StringTok{"cohort"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{in\_both =} \FunctionTok{ifelse}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(in\_sm) }\SpecialCharTok{\&} \SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(in\_wh), }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{),}
+         \AttributeTok{sex.x =} \FunctionTok{ifelse}\NormalTok{(sex.x }\SpecialCharTok{==} \StringTok{"male"}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{),}
+         \AttributeTok{class38.x =} \FunctionTok{case\_when}\NormalTok{(class38.x }\SpecialCharTok{==} \StringTok{"High.sal"} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{,}
+\NormalTok{                               class38.x }\SpecialCharTok{==} \StringTok{"Low.sal"} \SpecialCharTok{\textasciitilde{}} \DecValTok{2}\NormalTok{,}
+\NormalTok{                               class38.x }\SpecialCharTok{==} \StringTok{"Interm"} \SpecialCharTok{\textasciitilde{}} \DecValTok{3}\NormalTok{,}
+\NormalTok{                               class38.x }\SpecialCharTok{==} \StringTok{"Small.emp"} \SpecialCharTok{\textasciitilde{}} \DecValTok{4}\NormalTok{,}
+\NormalTok{                               class38.x }\SpecialCharTok{==} \StringTok{"Low.sup"} \SpecialCharTok{\textasciitilde{}} \DecValTok{5}\NormalTok{,}
+\NormalTok{                               class38.x }\SpecialCharTok{==} \StringTok{"Semi{-}rout"} \SpecialCharTok{\textasciitilde{}} \DecValTok{6}\NormalTok{,}
+\NormalTok{                               class38.x }\SpecialCharTok{==} \StringTok{"Routine"} \SpecialCharTok{\textasciitilde{}} \DecValTok{7}\NormalTok{,}
+\NormalTok{                               T }\SpecialCharTok{\textasciitilde{}} \ConstantTok{NA}\NormalTok{),}
+         \AttributeTok{fclass.x =} \FunctionTok{case\_when}\NormalTok{(fclass.x }\SpecialCharTok{==} \StringTok{"High.sal"} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{,}
+\NormalTok{                               fclass.x }\SpecialCharTok{==} \StringTok{"Low.sal"} \SpecialCharTok{\textasciitilde{}} \DecValTok{2}\NormalTok{,}
+\NormalTok{                               fclass.x }\SpecialCharTok{==} \StringTok{"Interm"} \SpecialCharTok{\textasciitilde{}} \DecValTok{3}\NormalTok{,}
+\NormalTok{                               fclass.x }\SpecialCharTok{==} \StringTok{"Small.emp"} \SpecialCharTok{\textasciitilde{}} \DecValTok{4}\NormalTok{,}
+\NormalTok{                               fclass.x }\SpecialCharTok{==} \StringTok{"Low.sup"} \SpecialCharTok{\textasciitilde{}} \DecValTok{5}\NormalTok{,}
+\NormalTok{                               fclass.x }\SpecialCharTok{==} \StringTok{"Semi{-}rout"} \SpecialCharTok{\textasciitilde{}} \DecValTok{6}\NormalTok{,}
+\NormalTok{                               fclass.x }\SpecialCharTok{==} \StringTok{"Routine"} \SpecialCharTok{\textasciitilde{}} \DecValTok{7}\NormalTok{,}
+\NormalTok{                               T }\SpecialCharTok{\textasciitilde{}} \ConstantTok{NA}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Checking agreement in auxiliary variables between the social mobility and work history datasets}
+
+\NormalTok{check }\OtherTok{\textless{}{-}}\NormalTok{ matched3 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{fclass\_ag =}\NormalTok{ fclass.x }\SpecialCharTok{==}\NormalTok{ fclass.y,}
+         \AttributeTok{educ37\_ag =}\NormalTok{ educ37 }\SpecialCharTok{==}\NormalTok{ ed37,}
+         \AttributeTok{class38\_ag =}\NormalTok{ class38.x }\SpecialCharTok{==}\NormalTok{ class38.y)}
+
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Father\textquotesingle{}s class agreement: "}\NormalTok{, }\FunctionTok{round}\NormalTok{(}\FunctionTok{sum}\NormalTok{(check}\SpecialCharTok{$}\NormalTok{fclass\_ag, }\AttributeTok{na.rm =}\NormalTok{ T) }\SpecialCharTok{/} \FunctionTok{dim}\NormalTok{(check }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{drop\_na}\NormalTok{(fclass\_ag))[}\DecValTok{1}\NormalTok{], }\DecValTok{2}\NormalTok{), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{,}
+    \StringTok{"Education agreement: "}\NormalTok{, }\FunctionTok{round}\NormalTok{(}\FunctionTok{sum}\NormalTok{(check}\SpecialCharTok{$}\NormalTok{educ37\_ag, }\AttributeTok{na.rm =}\NormalTok{ T) }\SpecialCharTok{/} \FunctionTok{dim}\NormalTok{(check }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{drop\_na}\NormalTok{(educ37\_ag))[}\DecValTok{1}\NormalTok{], }\DecValTok{2}\NormalTok{), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{,}
+    \StringTok{"Unit class agreement: "}\NormalTok{, }\FunctionTok{round}\NormalTok{(}\FunctionTok{sum}\NormalTok{(check}\SpecialCharTok{$}\NormalTok{class38\_ag, }\AttributeTok{na.rm =}\NormalTok{ T) }\SpecialCharTok{/} \FunctionTok{dim}\NormalTok{(check }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{drop\_na}\NormalTok{(class38\_ag))[}\DecValTok{1}\NormalTok{], }\DecValTok{2}\NormalTok{), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Father's class agreement:  1 
+##  Education agreement:  1 
+##  Unit class agreement:  1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Perfect agreement}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{matched }\OtherTok{\textless{}{-}}\NormalTok{ matched3 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(id, cohort, weight, sex.y, fclass.y, class38.y, ed37, }
+\NormalTok{         IQ, in\_wh, in\_both) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{rename}\NormalTok{(}\AttributeTok{sex =}\NormalTok{ sex.y, }\AttributeTok{fclass =}\NormalTok{ fclass.y, }\AttributeTok{class =}\NormalTok{ class38.y,}
+         \AttributeTok{educ =}\NormalTok{ ed37) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{class =} \FunctionTok{ifelse}\NormalTok{(class }\SpecialCharTok{\textgreater{}=} \DecValTok{1} \SpecialCharTok{\&}\NormalTok{ class }\SpecialCharTok{\textless{}=} \DecValTok{7}\NormalTok{, class, }\ConstantTok{NA}\NormalTok{))}
+
+\CommentTok{\# There are observations in the work history 1946 data that are not in the social mobility data. This is because of the weighting that was performed to account for the sampling quirks of the 1946 data. For consistency, these observations will be dropped for now. }
+
+\NormalTok{matched }\OtherTok{\textless{}{-}}\NormalTok{ matched }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(in\_both }\SpecialCharTok{==} \DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{Properties of the matched
+dataset}\label{properties-of-the-matched-dataset}
+
+\paragraph{Prevalence of missing
+variables}\label{prevalence-of-missing-variables}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{skim}\NormalTok{(matched) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\FunctionTok{across}\NormalTok{(}\FunctionTok{where}\NormalTok{(is.numeric), }\SpecialCharTok{\textasciitilde{}}\FunctionTok{round}\NormalTok{(., }\DecValTok{2}\NormalTok{)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}ll@{}}
+\caption{Data summary}\tabularnewline
+\toprule\noalign{}
+\endfirsthead
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Name & matched \\
+Number of rows & 22579 \\
+Number of columns & 10 \\
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ & \\
+Column type frequency: & \\
+character & 1 \\
+factor & 1 \\
+numeric & 8 \\
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ & \\
+Group variables & None \\
+\end{longtable}
+
+\textbf{Variable type: character}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1944}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1389}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1944}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.0556}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.0556}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.0833}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1250}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1528}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+skim\_variable
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+n\_missing
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+complete\_rate
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+min
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+max
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+empty
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+n\_unique
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+whitespace
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+cohort & 0 & 1 & 4 & 4 & 0 & 3 & 0 \\
+\end{longtable}
+
+\textbf{Variable type: factor}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1647}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1176}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1647}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.0941}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1059}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.3529}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+skim\_variable
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+n\_missing
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+complete\_rate
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+ordered
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+n\_unique
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+top\_counts
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+id & 0 & 1 & FALSE & 22579 & 10: 1, 100: 1, 100: 1, 100: 1 \\
+\end{longtable}
+
+\textbf{Variable type: numeric}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.1728}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.1235}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.1728}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0617}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0617}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0741}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0741}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0617}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0617}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0617}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0741}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+skim\_variable
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+n\_missing
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+complete\_rate
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+mean
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+sd
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p0
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p25
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p50
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p75
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p100
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+hist
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+weight & 0 & 1.00 & 1.00 & 0.26 & 0.45 & 1.00 & 1.00 & 1.00 & 1.80 &
+▁▁▇▁▁ \\
+sex & 0 & 1.00 & 0.31 & 0.46 & 0.00 & 0.00 & 0.00 & 1.00 & 1.00 &
+▇▁▁▁▃ \\
+fclass & 2812 & 0.88 & 4.46 & 2.07 & 1.00 & 2.00 & 5.00 & 7.00 & 7.00 &
+▅▂▂▃▇ \\
+class & 7099 & 0.69 & 3.57 & 2.02 & 1.00 & 2.00 & 3.00 & 6.00 & 7.00 &
+▇▃▂▂▅ \\
+educ & 84 & 1.00 & 3.78 & 2.12 & 1.00 & 2.00 & 4.00 & 6.00 & 8.00 &
+▇▆▆▃▅ \\
+IQ & 7582 & 0.66 & 0.03 & 1.00 & -3.66 & -0.68 & 0.07 & 0.77 & 3.28 &
+▁▃▇▆▁ \\
+in\_wh & 0 & 1.00 & 1.00 & 0.00 & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 &
+▁▁▇▁▁ \\
+in\_both & 0 & 1.00 & 1.00 & 0.00 & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 &
+▁▁▇▁▁ \\
+\end{longtable}
+
+\subparagraph{Checking the distribution of other variables based on
+whether they are missing the IQ variable or
+not}\label{checking-the-distribution-of-other-variables-based-on-whether-they-are-missing-the-iq-variable-or-not}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(matched }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(IQ)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        id          cohort              weight            sex        
+##  10003  :   1   Length:7582        Min.   :0.4512   Min.   :0.0000  
+##  10004  :   1   Class :character   1st Qu.:1.0000   1st Qu.:0.0000  
+##  1001   :   1   Mode  :character   Median :1.0000   Median :0.0000  
+##  10014  :   1                      Mean   :0.9930   Mean   :0.3168  
+##  10016  :   1                      3rd Qu.:1.0000   3rd Qu.:1.0000  
+##  10017  :   1                      Max.   :1.8047   Max.   :1.0000  
+##  (Other):7576                                                       
+##      fclass          class            educ             IQ           in_wh  
+##  Min.   :1.000   Min.   :1.000   Min.   :1.000   Min.   : NA    Min.   :1  
+##  1st Qu.:2.000   1st Qu.:2.000   1st Qu.:2.000   1st Qu.: NA    1st Qu.:1  
+##  Median :5.000   Median :3.000   Median :3.000   Median : NA    Median :1  
+##  Mean   :4.552   Mean   :3.635   Mean   :3.684   Mean   :NaN    Mean   :1  
+##  3rd Qu.:7.000   3rd Qu.:6.000   3rd Qu.:6.000   3rd Qu.: NA    3rd Qu.:1  
+##  Max.   :7.000   Max.   :7.000   Max.   :8.000   Max.   : NA    Max.   :1  
+##  NA's   :1902    NA's   :2429    NA's   :77      NA's   :7582              
+##     in_both 
+##  Min.   :1  
+##  1st Qu.:1  
+##  Median :1  
+##  Mean   :1  
+##  3rd Qu.:1  
+##  Max.   :1  
+## 
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(matched }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(IQ)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        id           cohort              weight            sex        
+##  10     :    1   Length:14997       Min.   :0.4512   Min.   :0.0000  
+##  100    :    1   Class :character   1st Qu.:1.0000   1st Qu.:0.0000  
+##  10000  :    1   Mode  :character   Median :1.0000   Median :0.0000  
+##  10005  :    1                      Mean   :0.9990   Mean   :0.3057  
+##  10006  :    1                      3rd Qu.:1.0000   3rd Qu.:1.0000  
+##  10008  :    1                      Max.   :1.8047   Max.   :1.0000  
+##  (Other):14991                                                       
+##      fclass          class            educ             IQ               in_wh  
+##  Min.   :1.000   Min.   :1.000   Min.   :1.000   Min.   :-3.65914   Min.   :1  
+##  1st Qu.:3.000   1st Qu.:2.000   1st Qu.:2.000   1st Qu.:-0.68476   1st Qu.:1  
+##  Median :5.000   Median :3.000   Median :4.000   Median : 0.07289   Median :1  
+##  Mean   :4.429   Mean   :3.537   Mean   :3.833   Mean   : 0.02705   Mean   :1  
+##  3rd Qu.:6.000   3rd Qu.:5.000   3rd Qu.:6.000   3rd Qu.: 0.77292   3rd Qu.:1  
+##  Max.   :7.000   Max.   :7.000   Max.   :8.000   Max.   : 3.28085   Max.   :1  
+##  NA's   :910     NA's   :4670    NA's   :7                                     
+##     in_both 
+##  Min.   :1  
+##  1st Qu.:1  
+##  Median :1  
+##  Mean   :1  
+##  3rd Qu.:1  
+##  Max.   :1  
+## 
+\end{verbatim}
+
+No significant differences in other variables observed
+
+\subparagraph{Checking the distribution of other variables based on
+whether they are missing the unit class variable or
+not}\label{checking-the-distribution-of-other-variables-based-on-whether-they-are-missing-the-unit-class-variable-or-not}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(matched }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(class)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        id          cohort              weight            sex        
+##  100    :   1   Length:7099        Min.   :0.4512   Min.   :0.0000  
+##  1001   :   1   Class :character   1st Qu.:1.0000   1st Qu.:0.0000  
+##  10011  :   1   Mode  :character   Median :1.0000   Median :0.0000  
+##  10017  :   1                      Mean   :0.9811   Mean   :0.3364  
+##  10021  :   1                      3rd Qu.:1.0000   3rd Qu.:1.0000  
+##  10024  :   1                      Max.   :1.8047   Max.   :1.0000  
+##  (Other):7093                                                       
+##      fclass          class           educ             IQ              in_wh  
+##  Min.   :1.000   Min.   : NA    Min.   :1.000   Min.   :-3.6591   Min.   :1  
+##  1st Qu.:3.000   1st Qu.: NA    1st Qu.:1.000   1st Qu.:-0.9215   1st Qu.:1  
+##  Median :5.000   Median : NA    Median :3.000   Median :-0.1419   Median :1  
+##  Mean   :4.687   Mean   :NaN    Mean   :3.318   Mean   :-0.1712   Mean   :1  
+##  3rd Qu.:7.000   3rd Qu.: NA    3rd Qu.:4.000   3rd Qu.: 0.6026   3rd Qu.:1  
+##  Max.   :7.000   Max.   : NA    Max.   :8.000   Max.   : 3.2555   Max.   :1  
+##  NA's   :1131    NA's   :7099   NA's   :52      NA's   :2429                 
+##     in_both 
+##  Min.   :1  
+##  1st Qu.:1  
+##  Median :1  
+##  Mean   :1  
+##  3rd Qu.:1  
+##  Max.   :1  
+## 
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(matched }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(class)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        id           cohort              weight            sex        
+##  10     :    1   Length:15480       Min.   :0.4512   Min.   :0.0000  
+##  10000  :    1   Class :character   1st Qu.:1.0000   1st Qu.:0.0000  
+##  10003  :    1   Mode  :character   Median :1.0000   Median :0.0000  
+##  10004  :    1                      Mean   :1.0043   Mean   :0.2971  
+##  10005  :    1                      3rd Qu.:1.0000   3rd Qu.:1.0000  
+##  10006  :    1                      Max.   :1.8047   Max.   :1.0000  
+##  (Other):15474                                                       
+##      fclass          class           educ             IQ              in_wh  
+##  Min.   :1.000   Min.   :1.00   Min.   :1.000   Min.   :-3.2823   Min.   :1  
+##  1st Qu.:2.000   1st Qu.:2.00   1st Qu.:2.000   1st Qu.:-0.5685   1st Qu.:1  
+##  Median :5.000   Median :3.00   Median :4.000   Median : 0.1617   Median :1  
+##  Mean   :4.368   Mean   :3.57   Mean   :3.996   Mean   : 0.1167   Mean   :1  
+##  3rd Qu.:6.000   3rd Qu.:6.00   3rd Qu.:6.000   3rd Qu.: 0.8290   3rd Qu.:1  
+##  Max.   :7.000   Max.   :7.00   Max.   :8.000   Max.   : 3.2808   Max.   :1  
+##  NA's   :1681                   NA's   :32      NA's   :5153                 
+##     in_both 
+##  Min.   :1  
+##  1st Qu.:1  
+##  Median :1  
+##  Mean   :1  
+##  3rd Qu.:1  
+##  Max.   :1  
+## 
+\end{verbatim}
+
+Larger differences are observed here, where is unit's social class is
+not observed, it seems that these units are in ``lower'' social classes
+and have lower average levels of education.
+
+\subparagraph{Dropping variables with any missing
+variables}\label{dropping-variables-with-any-missing-variables}
+
+The data with missing variables can be handled by missing imputation
+procedures if this becomes a focus of my dissertation. However, because
+I am mostly using this dataset for illustrative purposes, I will work
+with the ``complete case analysis'' data for now.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data\_cca }\OtherTok{\textless{}{-}}\NormalTok{ matched }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{drop\_na}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{in\_wh, }\SpecialCharTok{{-}}\NormalTok{in\_both) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{cohort =} \FunctionTok{as.numeric}\NormalTok{(cohort))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{skim}\NormalTok{(data\_cca) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\FunctionTok{across}\NormalTok{(}\FunctionTok{where}\NormalTok{(is.numeric), }\SpecialCharTok{\textasciitilde{}}\FunctionTok{round}\NormalTok{(., }\DecValTok{2}\NormalTok{)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}ll@{}}
+\caption{Data summary}\tabularnewline
+\toprule\noalign{}
+\endfirsthead
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Name & data\_cca \\
+Number of rows & 9803 \\
+Number of columns & 8 \\
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ & \\
+Column type frequency: & \\
+factor & 1 \\
+numeric & 7 \\
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ & \\
+Group variables & None \\
+\end{longtable}
+
+\textbf{Variable type: factor}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1647}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1176}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1647}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.0941}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1059}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.3529}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+skim\_variable
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+n\_missing
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+complete\_rate
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+ordered
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+n\_unique
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+top\_counts
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+id & 0 & 1 & FALSE & 9803 & 10: 1, 100: 1, 100: 1, 100: 1 \\
+\end{longtable}
+
+\textbf{Variable type: numeric}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.1443}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.1031}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.1443}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0825}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0515}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0825}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0825}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0825}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0825}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0825}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0619}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+skim\_variable
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+n\_missing
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+complete\_rate
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+mean
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+sd
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p0
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p25
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p50
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p75
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p100
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+hist
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+cohort & 0 & 1 & 1960.89 & 8.36 & 1946.00 & 1958.00 & 1958.00 & 1970.00
+& 1970.00 & ▂▁▇▁▇ \\
+weight & 0 & 1 & 1.01 & 0.26 & 0.45 & 1.00 & 1.00 & 1.00 & 1.80 &
+▁▁▇▁▁ \\
+sex & 0 & 1 & 0.30 & 0.46 & 0.00 & 0.00 & 0.00 & 1.00 & 1.00 & ▇▁▁▁▃ \\
+fclass & 0 & 1 & 4.34 & 1.97 & 1.00 & 2.00 & 5.00 & 6.00 & 7.00 &
+▆▃▂▅▇ \\
+class & 0 & 1 & 3.53 & 2.01 & 1.00 & 2.00 & 3.00 & 5.00 & 7.00 &
+▇▃▂▂▅ \\
+educ & 0 & 1 & 4.06 & 2.08 & 1.00 & 3.00 & 4.00 & 6.00 & 8.00 & ▇▆▇▅▆ \\
+IQ & 0 & 1 & 0.13 & 0.97 & -3.28 & -0.56 & 0.17 & 0.84 & 3.28 & ▁▃▇▅▁ \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Number of observations broken by cohort and sex }
+\NormalTok{data\_cca }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(cohort, sex) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{count =} \FunctionTok{n}\NormalTok{()) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{pivot\_wider}\NormalTok{(}\AttributeTok{names\_from =}\NormalTok{ cohort, }\AttributeTok{values\_from =}\NormalTok{ count)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## `summarise()` has regrouped the output.
+## i Summaries were computed grouped by cohort and sex.
+## i Output is grouped by cohort.
+## i Use `summarise(.groups = "drop_last")` to silence this message.
+## i Use `summarise(.by = c(cohort, sex))` for per-operation grouping
+##   (`?dplyr::dplyr_by`) instead.
+\end{verbatim}
+
+\begin{verbatim}
+## # A tibble: 2 x 4
+##   sex        `1946` `1958` `1970`
+##   <dbl+lbl>   <int>  <int>  <int>
+## 1 0 [male]      969   3188   2730
+## 2 1 [female]    513   1288   1115
+\end{verbatim}
+
+\paragraph{Checks for overlap of the IQ and education
+variables}\label{checks-for-overlap-of-the-iq-and-education-variables}
+
+The differential distributions of IQ and education by social classes is
+of particular interest for my application of mediation analysis
+approaches for analyzing social class driven disparities. This is
+because for interventional effect approaches to mediation analysis, a
+key assumption for estimators to be consistent is an analogue of the
+common support assumption often adopted in causal inference selection on
+observables. If the distribution of these two variables diverges too
+much across (father's) social classes, certain non-parametric methods of
+estimating interventional effects, like the ones advances by Benkesar
+and Ran (2021) and Diaz et al (2021), become much less attractive and
+more parametric assumptions need to be made to estimate the effects.
+
+I expect that because education is a discrete variable, there will be
+satisfactory overlap here. For the continuous IQ variable, however,
+there will be more of a problem with overlap for estimation. Since the
+goal of my thesis is to develop the theory (identification, estimation)
+of a certain class of interventional effects, the contrast between these
+two variables is actually very helpful for illustration of some of the
+issues with common support that I will be discussing, and can justify
+the choice of estimators I develop.
+
+I will produce distributions for education and IQ by father's social
+class both as a whole and broken down by the sex and cohort covariates.
+Having overlap conditional on covariates that might confound the
+relationship between IQ/education and unit social class (confounders of
+the mediator-outcome relationship) is essential for identification, so I
+will be interested in both the overall distributions and the cohort/sex
+specific ones.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data\_cca }\OtherTok{\textless{}{-}}\NormalTok{ data\_cca }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{class\_c =} \FunctionTok{case\_when}\NormalTok{(class }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\textasciitilde{}} \StringTok{"High.sal"}\NormalTok{,}
+\NormalTok{                               class }\SpecialCharTok{==} \DecValTok{2} \SpecialCharTok{\textasciitilde{}} \StringTok{"Low.sal"}\NormalTok{,}
+\NormalTok{                               class }\SpecialCharTok{==} \DecValTok{3} \SpecialCharTok{\textasciitilde{}} \StringTok{"Interm"}\NormalTok{,}
+\NormalTok{                               class }\SpecialCharTok{==} \DecValTok{4} \SpecialCharTok{\textasciitilde{}} \StringTok{"Small.emp"}\NormalTok{,}
+\NormalTok{                               class }\SpecialCharTok{==} \DecValTok{5} \SpecialCharTok{\textasciitilde{}} \StringTok{"Low.sup"}\NormalTok{,}
+\NormalTok{                               class }\SpecialCharTok{==} \DecValTok{6} \SpecialCharTok{\textasciitilde{}}\StringTok{"Semi{-}rout"}\NormalTok{,}
+\NormalTok{                               class }\SpecialCharTok{==} \DecValTok{7} \SpecialCharTok{\textasciitilde{}} \StringTok{"Routine"}\NormalTok{,}
+\NormalTok{                               T }\SpecialCharTok{\textasciitilde{}} \ConstantTok{NA}\NormalTok{),}
+         \AttributeTok{fclass\_c =} \FunctionTok{case\_when}\NormalTok{(fclass }\SpecialCharTok{==} \DecValTok{1} \SpecialCharTok{\textasciitilde{}} \StringTok{"High.sal"}\NormalTok{,}
+\NormalTok{                               fclass }\SpecialCharTok{==} \DecValTok{2} \SpecialCharTok{\textasciitilde{}} \StringTok{"Low.sal"}\NormalTok{,}
+\NormalTok{                               fclass }\SpecialCharTok{==} \DecValTok{3} \SpecialCharTok{\textasciitilde{}} \StringTok{"Interm"}\NormalTok{,}
+\NormalTok{                               fclass }\SpecialCharTok{==} \DecValTok{4} \SpecialCharTok{\textasciitilde{}} \StringTok{"Small.emp"}\NormalTok{,}
+\NormalTok{                               fclass }\SpecialCharTok{==} \DecValTok{5} \SpecialCharTok{\textasciitilde{}} \StringTok{"Low.sup"}\NormalTok{,}
+\NormalTok{                               fclass }\SpecialCharTok{==} \DecValTok{6} \SpecialCharTok{\textasciitilde{}}\StringTok{"Semi{-}rout"}\NormalTok{,}
+\NormalTok{                               fclass }\SpecialCharTok{==} \DecValTok{7} \SpecialCharTok{\textasciitilde{}} \StringTok{"Routine"}\NormalTok{,}
+\NormalTok{                               T }\SpecialCharTok{\textasciitilde{}} \ConstantTok{NA}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\subparagraph{Education distributions}\label{education-distributions}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{overlap\_table}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  cohort    sex  1  2  3   4  5   6  7  8
+##    1946   Male  2  3  2  13  2  12  4  1
+##    1946 Female  2  5  4   9  1   2  1  1
+##    1958   Male  7  4 16  23  4  23  9  2
+##    1958 Female  5  4  6  10  1   9  4  1
+##    1970   Male 19  8 29  51  6  46 39  8
+##    1970 Female  3  4 10  19  1  15 13  2
+##   Total      - 38 28 67 125 15 107 70 15
+\end{verbatim}
+
+There is complete overlap in education across all father social classes
+even when broken down by cohort and sex. However, there will probably be
+potential issues with the variance of inverse probability weighting
+(IPW) based methods to estimate interventional effects conditional on
+confounders because of the fact that some father's social classes will
+have only 1 or 2 observations for a given level of education to based
+estimates off of.
+
+\subparagraph{IQ distributions}\label{iq-distributions}
+
+Because this is a continuous variable, clearly there will be non-overlap
+in the strict sense. The two options are to either assume that the
+distribution of the IQ tests follows a parametrically specified
+distribution in each group or to perform discretization on the
+continuous data to satisfy positivity. The smaller the differences in
+performance on the test, the more justified a discetization +
+non-parametric approach would be. However, it is well known in the
+literature that performance on IQ tests should be normally distributed
+in the population (by construction), so a parametric assumption on the
+structure of the distribution we are trying to estimate seems justified
+here.
+
+Here, I think it is helpful to first get a sense of the differences in
+the distributions of IQ test scores by father's social class by looking
+at some histograms.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ data\_cca, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ IQ, }\AttributeTok{color =}\NormalTok{ fclass\_c)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_density}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_classic}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{""}\NormalTok{,}
+    \AttributeTok{x =} \StringTok{"IQ test performance"}\NormalTok{,}
+    \AttributeTok{y =} \StringTok{"Density"}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{social_mobility_data_eda_files/figure-latex/unnamed-chunk-35-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ data\_cca }\SpecialCharTok{\%\textgreater{}\%} 
+         \FunctionTok{mutate}\NormalTok{(}\AttributeTok{sex =} \FunctionTok{ifelse}\NormalTok{(sex }\SpecialCharTok{==} \DecValTok{0}\NormalTok{, }\StringTok{"Male"}\NormalTok{, }\StringTok{"Female"}\NormalTok{)), }
+       \FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ IQ, }\AttributeTok{color =}\NormalTok{ fclass\_c)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_density}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_classic}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{""}\NormalTok{,}
+    \AttributeTok{x =} \StringTok{"IQ test performance"}\NormalTok{,}
+    \AttributeTok{y =} \StringTok{"Density"}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{facet\_grid}\NormalTok{(sex}\SpecialCharTok{\textasciitilde{}}\NormalTok{cohort, }\AttributeTok{scales =} \StringTok{"free"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{social_mobility_data_eda_files/figure-latex/unnamed-chunk-36-1.pdf}}
+
+Interestingly, there are larger observed discrepancies in IQ test
+performance for the 1946 and 1958 cohorts compared to 1970, which looks
+like it follows the relatively normal, minor discrepancies across
+father's social class of the overall data. This might point to the
+smaller sample size in 1946, but it also might be evidence of a change
+in how the IQ test was administered and what it consisted of across the
+24 years of the data. In each case, this test was administered at age
+11, so it would have been administered in 1946, 1958, and 1970. This is
+an interesting quirk of the data that will be worth looking into in the
+future.
+
+\end{document}

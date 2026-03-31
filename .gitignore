@@ -17,3 +17,5 @@
 **/*.arrow
 **/*.orc
 **/*.avro
+**/*.pdf
+**/*.html
