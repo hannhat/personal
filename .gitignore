@@ -19,3 +19,6 @@
 **/*.avro
 **/*.pdf
 **/*.html
+
+# Don't ignore subfolders
+!classes/LSE/ST451-Bayesian_ML/project/fg_builds/**/*.csv
