@@ -1,0 +1,72 @@
+\documentclass[11pt]{article} % Times New Roman, 12pt
+
+% SINGLE OR DOUBLE SPACE
+%\usepackage{gscale_thesis_singlespace} % Single spaced thesis
+\usepackage{../settings/template/gscale_thesis_doublespace} % Double spaced thesis
+\usepackage{../settings/template/fancyheadings} % Header and footer styling
+\usepackage[numbers, sort&compress]{natbib} % Bibliography
+
+\usepackage{setspace} % Allows double spacing but skips headers/footers
+\setcounter{tocdepth}{1} % Limits the TOC to chapter and section names
+
+% Additional packages
+\usepackage{graphicx} % Allows the inclusion of figures
+\usepackage{subcaption} % Allows captions to be added to subfigures
+\usepackage[justification=centering]{caption} % Centres caption text
+\usepackage{array} % Used for table formatting
+\newcolumntype{P}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\usepackage{booktabs} % Fancy-style tables
+\usepackage{longtable} % Allows for tables that are more than one page long
+\usepackage{float} % Better figure placement control
+\usepackage{rotating}
+\usepackage{enumerate} % Numbered lists
+\usepackage[shortlabels]{enumitem} % For controlling enumerate labels
+\usepackage[shortcuts]{extdash} % Allows manual hyphenation of hypenated words
+\usepackage{amsmath} % Non-standard math symbols
+\usepackage{amsfonts} % Extended fonts for mathematics
+\usepackage{multirow}
+
+\usepackage[hidelinks]{hyperref} % Linking to LaTeX labels and external URLs
+
+\numberwithin{equation}{section} % Numbers equations based on their section
+
+\usepackage{tabularx}
+\usepackage{pdflscape}
+\usepackage{booktabs} % for better horizontal lines
+\usepackage{makecell} % for line breaks inside cells
+
+% CUSTOM SETTINGS ********************************
+\input{../settings/custom/packages}
+\input{../settings/custom/settings}
+\input{../settings/custom/commands}
+
+\title{Mediation analysis with multiple mediators: Literature Review}
+\author{Johann Hatzius}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+Many questions in the social and biomedical sciences concern whether some variable has a causal effect on an outcome of interest. For example, an epidemiologist might be interested in the effect that taking a particular birth-control pill has on rates of thrombosis in women (Hesslow 1976~\citep{hesslow1976}; Pearl 2001~\citep{pearl2001}). Here, the interest is not in properties of the variable or the outcome themselves but in the causal relationship between the two. If it were found that taking the pill caused meaningfully higher rates of thrombosis in women, this could have meaningful implications for doctors and policymakers. 
+
+The goal of mediation analysis is to examine the specific mechanisms through which a treatment variable affects an outcome. In the simplest case, this is done by identifying a variable - a mediator - that might affect the outcome but is itself affected by the treatment variable. The effect of the treatment on the outcome is then broken down into the component of the effect that is due to changes in the mediator variable induced by the treatment - the indirect effect - and the component of the effect that is due to the direct effect of the treatment on the outcome. As Pearl (2001) states, in the birth-control pill example above, the birth-control pill is suspected to both directly increase the risk of thrombosis in women and indirectly lower it by reducing pregnancy rates (pregnant women are known to be more likely to develop thrombosis). Figuring out how significant these direct and indirect effects are in this case could have important implications for future drug discovery initiatives. 
+
+Mediation analysis methods have historically been implemented in the social sciences within the linear structural equation modeling framework (Wright 1934~\citep{wright1934}; Baron and Kenny 1986~\citep{baronkenny1986}). However, the linear structural equation modeling framework imposes implausibly stringent assumptions on the functional form and potential interactions between treatment, outcome, and mediators (Pearl 2001; Imai et al 2010~\citep{imaietal2010}). 
+
+More recently, the development of the potential outcomes framework for causal inference (Rubin 1976~\citep{rubin1976} has led to more flexible formulations of direct and indirect effects for mediation analysis. In particular, Robins and Greenland (1992)~\citep{robinsgreenland1992} and Pearl (2001) leveraged the potential outcomes framework to formulated natural, or pure, direct and indirect effects as counterfactual quantities that are not bound by the unrealistic relationships imposed by classical mediation analysis. 
+
+Despite the conceptual elegance of natural effects, concerns have been raised about the stringent assumptions needed to identify natural effects (Vanderweele and Vansteelandt 2009~\citep{vanderweelevansteelandt2009}; Imai et al 2010; Vanderweele 2015~\citep{vanderweele2015}). Of particular concern is an assumption known as the "cross-world independence" assumption, which is not empirically testable; in fact, there does not even exist a hypothetical experiment that could falsify such an assumption (Robins and Richardson 2010~\citep{robinsrichardson2010}). Additionally, the natural effects framework does not generalize well to situations in which there is either a treatment-induced mediator-outcome confounder or where there is more than one mediator of interest. Situations like these are very common in the social and biomedical sciences (Vanderweele and Vansteelandt 2009), but natural effects (or path-specific analogues in the multiple mediator case) cannot be identified even if the cross-world identification assumption holds (Avin et al 2005~\citep{avinetal2005}; Vanderweele et al 2014~\citep{vanderweeleetal2014}). Finally, there is debate among researchers about the policy relevance of natural indirect effects because of the difficulty of conceptualizing a hypothetical intervention that could map to the natural indirect effect (Vanderweele and Vansteelandt 2009). 
+
+In response to these issues, Vanderweele et al (2014) proposed randomized interventional direct and indirect effects as alternative, policy relevant effects that do not require untestable cross-world independence assumptions for identification. These effects represent the effect of a joint stochastic intervention on the treatment and the mediator that could hypothetically be implemented in an experiment (see Moreno-Betancur and Carlin (2018)~\citep{morenobetancur2018} for a detailed example of what such a hypothetical experiment would look like). These effects are similar to a more general version of direct and indirect effects defined without the use of counterfactuals in Didelez et al (2006)~\citep{didelez2006}, Geneletti (2007)~\citep{geneletti2007}, and van der Laan and Petersen (2008)~\citep{vanderlaanpetersen2008}. Relatedly, Diaz and van der Laan (2012)~\citep{diazvanderlaan2012} developed a framework for estimating the causal effects of stochastic as opposed to deterministic interventions. Miles (2023)~\citep{miles2023} showed that interventional effects do not capture the notion of causal mediation in the same way that natural effects do. 
+
+There have been a number of extensions to the one mediator interventional effects framework of Vanderweele et al 2014. Most importantly for the contents of this paper, Vansteelandt and Daniel 2017~\citep{vansteelandtdaniel2017} extended the interventional effects framework to situations with multiple mediators and showed that these effects remained identified even without knowing the causal structure of the mediators. Vanderweele and Robinson 2014~\citep{vanderweelerobinson2014} formulated a version of interventional effects that requires fewer identification assumptions than normal interventional effects do (Kuha et al~\citep{kuhaetal2021}) and can be helpful in analyzing disparities across social groups (Vanderweele and Robinson 2014; Jackson 2019~\citep{jackson2019}). 
+
+
+\bibliographystyle{IEEEtranN}
+\bibliography{../bib/references,../bib/secondary_references}
+
+\end{document}
+

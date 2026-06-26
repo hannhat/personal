@@ -1,0 +1,98 @@
+% !TEX root = Thesis_Main.tex
+\documentclass[12pt]{report} % Times New Roman, 12pt
+
+% SINGLE OR DOUBLE SPACE
+%\usepackage{gscale_thesis_singlespace} % Single spaced thesis
+\usepackage{settings/template/gscale_thesis_doublespace} % Double spaced thesis
+
+
+\usepackage{settings/template/fancyheadings} % Header and footer styling
+
+\usepackage[numbers, sort&compress]{natbib} % Bibliography
+
+\usepackage{setspace} % Allows double spacing but skips headers/footers
+\setcounter{tocdepth}{1} % Limits the TOC to chapter and section names
+
+% Additional packages
+\usepackage{graphicx} % Allows the inclusion of figures
+\usepackage{subcaption} % Allows captions to be added to subfigures
+\usepackage[justification=centering]{caption} % Centres caption text
+\usepackage{array} % Used for table formatting
+\newcolumntype{P}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\usepackage{booktabs} % Fancy-style tables
+\usepackage{longtable} % Allows for tables that are more than one page long
+\usepackage{float} % Better figure placement control
+\usepackage{rotating}
+\usepackage{enumerate} % Numbered lists
+\usepackage[shortlabels]{enumitem} % For controlling enumerate labels
+\usepackage[shortcuts]{extdash} % Allows manual hyphenation of hypenated words
+\usepackage{amsmath} % Non-standard math symbols
+\usepackage{amsfonts} % Extended fonts for mathematics
+\usepackage{multirow}
+
+\usepackage[hidelinks]{hyperref} % Linking to LaTeX labels and external URLs
+
+\numberwithin{equation}{section} % Numbers equations based on their section
+
+\usepackage{tabularx}
+\usepackage{pdflscape}
+\usepackage{booktabs} % for better horizontal lines
+\usepackage{makecell} % for line breaks inside cells
+
+% CUSTOM SETTINGS ********************************
+\input{settings/custom/packages}
+\input{settings/custom/settings}
+\input{settings/custom/commands}
+
+
+% ********************************
+\begin{document}
+\include{sections/0_preamble/0_definitions} % LaTeX variables for preface pages/headers
+    
+\beforepreface % Half title page, title page, declaration page   
+  \include{sections/0_preamble/1_layabstr} % Lay Abstract
+  \include{sections/0_preamble/3_abstr} % Abstract
+  \include{sections/0_preamble/4_dedic} % Dedication
+  \include{sections/0_preamble/5_acknowledgements} % Acknowledgements
+  \referencepages % Table of Contents, List of Figures, List of Tables
+  \include{sections/0_preamble/6_notation}
+  \academicstatement{sections/0_preamble/7_academicachievementdeclaration}
+\afterpreface
+  
+        
+  \include{sections/1_chapters/1_Introduction}                  
+       \setcounter{figure}{0}
+       \setcounter{equation}{0}
+       \setcounter{table}{0}
+
+    \include{sections/1_chapters/2_Sample_Chapter}                  
+       \setcounter{figure}{0}
+       \setcounter{equation}{0}
+       \setcounter{table}{0}
+
+   \include{sections/1_chapters/3_Conclusion}                  
+       \setcounter{figure}{0}
+       \setcounter{equation}{0}
+       \setcounter{table}{0}
+       
+\begin{appendix}
+    \include{sections/3_appendix/appendixA}
+        \setcounter{figure}{0}
+        \setcounter{equation}{0}
+        \setcounter{table}{0}
+
+    \include{sections/3_appendix/appendixB}
+        \setcounter{figure}{0}
+        \setcounter{equation}{0}
+        \setcounter{table}{0}
+\end{appendix}
+
+
+\bibliographystyle{IEEEtranN}
+\bibliography{bib/references,bib/secondary_references}
+
+
+\label{NumDocumentPages}
+
+\end{document}
+% ********************************

@@ -1,0 +1,249 @@
+\documentclass[12pt]{article} % Times New Roman, 12pt
+
+% SINGLE OR DOUBLE SPACE
+%\usepackage{gscale_thesis_singlespace} % Single spaced thesis
+\usepackage{../settings/template/gscale_thesis_doublespace} % Double spaced thesis
+
+
+\usepackage{../settings/template/fancyheadings} % Header and footer styling
+
+\usepackage[numbers, sort&compress]{natbib} % Bibliography
+
+\usepackage{setspace} % Allows double spacing but skips headers/footers
+\setcounter{tocdepth}{1} % Limits the TOC to chapter and section names
+
+% Additional packages
+\usepackage{graphicx} % Allows the inclusion of figures
+\usepackage{subcaption} % Allows captions to be added to subfigures
+\usepackage[justification=centering]{caption} % Centres caption text
+\usepackage{array} % Used for table formatting
+\newcolumntype{P}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\usepackage{booktabs} % Fancy-style tables
+\usepackage{longtable} % Allows for tables that are more than one page long
+\usepackage{float} % Better figure placement control
+\usepackage{rotating}
+\usepackage{enumerate} % Numbered lists
+\usepackage[shortlabels]{enumitem} % For controlling enumerate labels
+\usepackage[shortcuts]{extdash} % Allows manual hyphenation of hypenated words
+\usepackage{amsmath} % Non-standard math symbols
+\usepackage{amsfonts} % Extended fonts for mathematics
+\usepackage{multirow}
+
+\usepackage[hidelinks]{hyperref} % Linking to LaTeX labels and external URLs
+
+\numberwithin{equation}{section} % Numbers equations based on their section
+
+\usepackage{tabularx}
+\usepackage{pdflscape}
+\usepackage{booktabs} % for better horizontal lines
+\usepackage{makecell} % for line breaks inside cells
+
+% CUSTOM SETTINGS ********************************
+\input{../settings/custom/packages}
+\input{../settings/custom/settings}
+\input{../settings/custom/commands}
+
+\title{Mediation analysis with multiple mediators: Preliminary effect definitions}
+\author{Johann Hatzius}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+This document presents my progress on understanding the various effects of interest that have been defined in the causal inference mediation analysis literature. Section~\ref{sec:one_mediator} walks through my current understanding of controlled, interventional, and natural effects and the associated assumptions required for their identification. Section~\ref{sec:two_mediators} presents my understanding of how these effects generalize to the case of two causally ordered mediators. In particular, I tentatively find that knowing the causal structure of the mediators allows one to define slightly different interventional effects from the ones proposed in Vansteelandt and Daniel (2017)~\cite{vansteelandtdaniel2017}. Additionally, I define a different kind of controlled effect that I have not yet seen in the literature in the two mediator case. Finally, I present a rough summary of how natural effects generalize in the two mediator case. 
+
+\section{One Mediator}
+\label{sec:one_mediator}
+
+Let $T$ denote a binary treatment variable that takes on the values $0$ and $1$, $M$ denote a discrete mediator variable, $Y$ denote a binary or continuous response variable, and let $C$ be a vector of discrete or categorical pre-treatment covariates. The mathematical formulations of the effects described below are similar in cases where we have continuous variables but with integrals replacing summations. Let $O = (C, T, M, Y)$ and let $O_{1},...,O_{n}$ denote a sample of i.i.d. draws from $O$. 
+
+\subsection{Definition of effects}
+
+The average \textbf{natural direct effect} is equal to the average change that would be observed in $Y$ if, for each unit in the population, $T$ were moved from level $T = 0$ to level $T = 1$ while holding the level of the mediator $M$ fixed at the level it would have attained had $T$ been set to $T = 0$. Mathematically, this is expressed in potential outcomes notation as $\mathbb{E}[Y(1,M(0)) - Y(0,M(0))]$ where $M(t)$ is a population level potential outcome distribution of the mediator given the treatment level $T = t$. 
+
+The \textbf{natural indirect effect} is equal to the average change that would be observed in $Y$ if, for each unit in the population, $T$ were fixed at level $T = 1$ while the level of the mediator $M$ was moved from the level it would attain if $T=1$ to the level if would have attained had $T$ been set to $T = 0$. Mathematically, this is equal to $\mathbb{E}[Y(1,M(1)) - Y(1,M(0))]$. 
+
+These definitions of natural ("pure") effects match those given in Robins and Greenland (1992)~\citep{robinsgreenland1992} and Pearl (2001)~\citep{pearl2001}. An important property of natural effects is that, with the consistency assumption that $Y(t = Y(t,M(t))$ for $t \in T$, the natural direct and indirect effect sum up to the total effect: $$\mathbb{E}[Y(1,M(1)) - Y(0,M(0))] = \mathbb{E}[Y(1,M(1)) - Y(1,M(0))] + \mathbb{E}[Y(1,M(0)) - Y(0,M(0))]$$
+
+The \textbf{controlled direct effect} is equal to the average effect a change in $T$ from level $T = 0$ to level $T = 1$ has on $Y$ while holding the level of the mediator $M$ at a fixed level $M = m^{*}$ for all units (Pearl (2001)). Mathematically, this is expressed as $\mathbb{E}[Y(1,m^{*}) - Y(0,m^{*}) |M=m^{*}]$.
+
+Finally, the \textbf{interventional direct effect}, formulated by Vanderweele et al. (2014)~\citep{vanderweeleetal2014}, is expressed as $\mathbb{E}[Y(1,G_{M(0)}) - Y(0,G_{M(0)})]$, where $G_{M(t)}$ is a random draw from the potential outcome distribution $M(t)$. This represents the population level average effect of giving someone treatment while also assigning them a random level of the mediator from the distribution of potential mediators $M(0)$ for people that do not receive treatment. As first noted by Van der Laan and Petersen (2008)~\citep{vanderlaanpetersen2008} and reiterated in Vanderweele et al (2014), the interventional direct effect can be interpreted as an average of controlled direct effects weighted by the distribution of $G_{M(0)}$: 
+$$\mathbb{E}[Y(1,G_{M(0)}) - Y(0,G_{M(0)})] = \sum_{m^*\in G_{M(0)}} \mathbb{E}[Y(1,m^*) - Y(0,m^*)|G_{M(0)}=m^*]\mathbb{P}[G_{M(0)}=m^*]$$
+The \textbf{interventional indirect effect} is expressed as $\mathbb{E}[Y(1,G_{M(1)}) - Y(1,G_{M(0)})]$ and gives the average effect of shifting the distribution of the mediator variable from that for units who receive treatment to that for units who do not. 
+
+\subsection{Identification: assumptions and results}
+
+In order to identify the natural and interventional effects discussed above, many of the same types of assumptions for identification in "simple" causal inference problems apply. In addition to technical assumptions like Donald Rubin's Stable Unit Treatment Value Assumption (see Rubin (1990a)~\citep{rubin1990a}) for details and consistency, we need a set of conditional ignorability assumptions to hold:
+
+\begin{enumerate}
+\item $M(t) \indep T | C$  $\forall t, c$
+\item $Y(t,m) \indep T | C$  $\forall t, m, c$
+\item $Y(t,m) \indep M | C$  $\forall t, m, c$
+\end{enumerate}
+
+In addition to these assumptions, in order to identify natural effects, we need to make a \textbf{cross-world independence} assumption: 
+$$M(t^*) \indep Y(t,m) | C \hspace{0.5cm} \forall t, m, c$$ 
+As has been discussed extensively in the literature, this cross-world assumption is particularly problematic for a myriad of reasons. In particular, it is impossible to verify that this assumption holds from observed data because doing so would require observing the potential outcomes $Y(t,m)$ and $M(t^{*})$ for the same unit, which is impossible because every unit can only ever be assigned one treatment level. Additionally, this assumption rules out the existence of any treatment-induced exposure-mediator confounder $L$. This is problematic because the assumption of no treatment-induced confounders is often implausible. More generally, this assumption prevents natural effects as they are formulated above from being identified in most situations with multiple mediators (Avin et al (2005)~\citep{avinetal2005}, Vanderweele et al (2014)). 
+
+The identifying assumptions for natural effects in the single mediator case can be represented by the directed acyclic graph (DAG) in Figure~\ref{fig:one_mediator_dag} below. 
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}
+
+  % Define nodes
+  \node[obs]                               (T) {$T$};
+  \node[obs, right=of T, yshift=1.5cm] (M) {$\mathbf{M}$};
+  \node[obs, right=2.5cm of T]  (Y) {$\mathbf{Y}$};
+  \node[obs, left=of T]  (C) {$\mathbf{C}$};
+
+  % Connect the nodes
+  \edge {T,M} {Y} ; %
+  \draw[->] (C) to[out=315, in=225] (Y); %
+  \edge {C,T} {M} ; %
+  \edge {C} {T} ; %
+
+\end{tikzpicture}
+\caption[]{}
+\label{fig:one_mediator_dag}
+\end{figure}
+
+Under the assumptions outlined above and encoded by the DAG in Figure 1, interventional effect estimates are equal to natural effects. This is because the cross-world assumption breaks the dependence of the potential outcomes of the mediator on the potential outcomes of the response. Mathematically, for any $t,t^{*} \in T$, we have
+
+$$\mathbb{E}[Y(t,M(t^*))] = \sum_{m \in M(t^*)}\mathbb{E}[Y(t,m)|M(t^*)=m]\mathbb{P}[M(t^*)=m]$$
+$$= \sum_{m \in M(t^*)}\mathbb{E}[Y(t,m)]\mathbb{P}[M(t^*)=m]$$
+$$= \sum_{m \in G_{M(t^{*})}}\mathbb{E}[Y(t,m)]\mathbb{P}[G_{M(t^*)}=m]$$
+where the second equality follows from the cross-world independence assumption. Using this equality, it can be seen that the natural and interventional effects will be equal. Note that even without the cross-world independence assumption, interventional effects are still identified (more on this in the following section). 
+
+\section{Two Causally Ordered Mediators}
+\label{sec:two_mediators}
+
+We repeat the setup given in the previous section for one mediator variable with the following modification: instead of a single mediator $M$, we now consider two mediators $M_{1}$ and $M_{2}$ of the effect of $T$ on $Y$. Additionally, we make the assumption that $M_{1}$ and $M_{2}$ are causally ordered: $M_{2}$ may depend on $M_{1}$, but $M_{1}$ is not dependent on $M_{2}$. 
+
+\subsection{Notation}
+In the one mediator case, $Y(t,m)$ defined potential outcomes for each combination of treatment and mediator and $M(t)$ defined potential mediators for each treatment. Similarly, $M_{1}(t)$ will define potential mediators $M_{1}$ for each treatment; $M_{2}(t,m_{1})$ will define potential mediators $M_{2}$ for each combination of treatment and $M_{1}$; and $Y(t,m_{1},m_{2})$ will define potential outcomes for combinations of treatment, $M_{1}$, and $M_{2}$. 
+
+\subsection{Differences with previous formulations}
+
+This formulation differs from the formulation given in Vansteelandt and Daniel (2017) in the setup to their definition of interventional effects with multiple mediators. The difference is that although they do not assume knowledge of the causal ordering (if any) between the mediators $M_{1}$ and $M_{2}$, they define potential mediators $M_{1}(t)$ and $M_{2}(t)$ as dependent on potential treatments only. This has important differences for how they define interventional effects in the case where the causal relationship between the mediators is known, which is discussed in Section~\ref{sec:interventional effects}. 
+
+
+\subsection{Definition of effects}
+
+It is tricky to define analogues of the effects defined in the single mediator case. Unlike in the previous section, it will be easier to first specify some identification assumptions. 
+
+\subsubsection{Assumptions}
+We will adopt the same types of assumptions as we had in the single mediator case. There were three types of assumptions we made in the single mediator case: 
+\begin{enumerate}
+    \item \textbf{Technical assumptions} We needed two technical assumptions, SUTVA and consistency, to hold. These remain the same, except that the set of our potential outcome variables $M_{1},M_{2},Y$ that we assume exhibit these properties expands. 
+    \item \textbf{Conditional ignorability} We need pairwise independence between all combinations of observed values of $T, M_{1}, M_{2}$ and all potential outcomes of $M_{1},M_{2},Y$. 
+    \item \textbf{Cross-world independence} We need pairwise independence of all combinations of potential outcomes of $M_{1}, M_{2},Y$. This set of assumptions is only needed to identify natural effects, not controlled or interventional effects. 
+\end{enumerate}
+It is easiest to summarize the identification assumptions we need with a DAG, which is shown in Figure~\ref{fig:two_mediator_dag} below.
+
+\begin{figure}
+\centering
+\begin{tikzpicture}
+
+  % Define nodes
+  \node[obs]                               (T) {$T$};
+  \node[obs, right=of T, yshift=1.5cm] (M1) {$\mathbf{M_{1}}$};
+  \node[obs, right=2cm of T] (M2) {$\mathbf{M_{2}}$};
+  \node[obs, right=1cm of M2]  (Y) {$\mathbf{Y}$};
+  \node[obs, left=of T]  (C) {$\mathbf{C}$};
+
+  % Connect the nodes
+  \edge {T,M1} {M2} ; %
+  \edge {M2} {Y} ; %
+  \draw[->] (T) to[out=-30, in=-150] (Y); %
+  \draw[->] (M1) to[out=0, in=120] (Y); %
+  \draw[->] (C) to[out=300, in=240] (Y); %
+  \draw[->] (C) to[out=315, in=225] (M2); %
+  \edge {C,T} {M1} ; %
+  \edge {C} {T} ; %
+
+\end{tikzpicture}
+\caption[]{}
+\label{fig:two_mediator_dag}
+\end{figure}
+
+
+\subsubsection{Controlled effects}
+
+In the single mediator case, there is a single controlled effect: the controlled direct effect. In the multiple mediator case, there are three controlled effects:
+
+\begin{enumerate}
+    \item The \textbf{controlled direct effect} is equal to the average effect a change in $T$ from level $T = 0$ to level $T = 1$ has on $Y$ while holding the level of the mediators $M_{1}$ and $M_{2}$ at fixed levels $M_{1} = m_{1}^{*}$ and $M_{2} = m_{2}^{*}$ for all units: $\mathbb{E}[Y(1,m_{1}^{*},m_{2}^{*}) - Y(0,m_{1}^{*},m_{2}^{*})]$. 
+    \item The \textbf{controlled effect through M1} is equal to the average effect a change in $T$ from level $T = 0$ to level $T = 1$ has on $Y$ while holding the level of the mediator $M_{2}$ at fixed level $M_{2} = m_{2}^{*}$ for all units: $\mathbb{E}[Y(1,M_{1}(1),m_{2}^{*}) - Y(0,M_{1}(0),m_{2}^{*})]$. This is equal to the total effect of $T$ on $Y$ while holding $M_{2}$ at a constant level, which is identifiable given assumptions (1) and (2) above. 
+    \item Similarly, the \textbf{controlled effect through M2} is equal to the average effect a change in $T$ from level $T = 0$ to level $T = 1$ has on $Y$ while holding the level of the mediator $M_{1}$ at fixed level $M_{1} = m_{1}^{*}$ for all units: $\mathbb{E}[Y(1,m_{1}^{*},M_{2}(1,m_{1}^{*})) - Y(0,m_{1}^{*},M_{2}(0,m_{1}^{*}))]$. 
+\end{enumerate}
+
+These controlled effects, like their single mediator analogue, have substantive policy-relevant interpretations as the effect of a joint intervention on the treatment and a particular set of mediators on an outcome. 
+
+\subsubsection{Interventional effects}
+\label{sec:interventional effects}
+
+In the multiple mediator case, interventional effects are defined and interpreted in the same way as in Vansteelandt and Daniel (2017), but with a difference in the potential outcomes notation used. This leads to slightly different equations and interpretations for the interventional indirect effects. 
+
+\begin{enumerate}
+    \item The \textbf{interventional direct effect} represents the population level average effect of giving someone treatment while also assigning them a random level of the mediators from the joint distribution of potential mediators $M_{1}(0), M_{2}(0,M_{1}(0))$ for people who do not receive treatment. Following Vansteelandt and Daniel (2017), this is expressed as
+    \begin{align*}
+    \sum_{m_{1}} \sum_{m_{2}} \mathbb{E}[Y(1,m_{1},m_{2}) - Y(0,m_{1},m_{2})]\mathbb{P}[M_{1}(0) = m_{1}, M_{2}(0)=m_{2}]
+    \end{align*}
+
+    The interpretation of this effect is the same as that given in Vansteelandt and Daniel (2017). This effect can also be interpreted as the controlled direct effect weighted by the joint mediator distribution. 
+    
+    \item The \textbf{interventional indirect effect through M1} represents the population level average effect of shifting the distribution of $M_{1}$ to a random draw $m_{1}$ from the counterfactual distribution of $M_{1}(0)$ while fixing the treatment at $T=1$ and the mediator $M_{2}$ to a random draw from $M_{2}(0,m_{1})$. This can be expressed as
+    \begin{align*}
+     \sum_{m_{1}} \sum_{m_{2}} \mathbb{E}[Y(1,m_{1},m_{2})](\mathbb{P}[M_{1}(1) = m_{1}] -
+     \mathbb{P}[M_{1}(0)=m_{1})])\mathbb{P}[M_{2}(0,m_{1})=m_{2}]
+    \end{align*}
+    The difference between this equation and the one given by Vansteelandt and Daniel (2017) is that their last term is $\mathbb{P}[M_{2}(0)=m_{2}]$, which is the observed distribution of $M_{2}$ given treatment $T=0$. In a hypothetical experiment, the interpretation of the effect given in Vansteelandt and Daniel (2017) is that for a given treated unit, $M_{1}(0)$ and $M_{2}(0)$ are 
+    stochastically drawn and assigned independently of each other. Under our definition, however, the treated unit is first assigned a random value of the mediator $M_{1}$ from $M_{1}(0)$. Then, dependent on the value of $m_{1}$ assigned to this unit, a random value $m_{2}$ is assigned from $M_{2}(0,m_{1})$. This effect thus takes the causal structure of $M_{1}$ and $M_{2}$ into account. 
+    
+    \item The \textbf{interventional indirect effect through M2} represents the population level average effect of shifting the distribution of $M_{2}$ to a random draw $m_{2}$ from the counterfactual distribution of $M_{2}(0,M_{1}(0))$ while fixing the treatment at $T=1$ and the mediator $M_{1}$ to a random draw from $M_{1}(0)$. This can be expressed as
+    \begin{align*}
+     \sum_{m_{1}} \sum_{m_{2}} \mathbb{E}[Y(1,m_{1},m_{2})](\mathbb{P}[M_{2}(1,m_{1}) = m_{2}] -
+     \mathbb{P}[M_{2}(0,m_{1})=m_{2})])\mathbb{P}[M_{1}(0)=m_{1}]
+    \end{align*}
+    Like for the interventional effect through $M_{1}$, the difference between this definition and the one given in Vansteelandt and Daniel (2017) is that this definition takes the causal structure of the mediators into account.
+\end{enumerate}
+
+\subsubsection{Natural effects}
+
+Natural effects are difficult to reason about when considering multiple mediators with dependence between them. The total effect cannot be decomposed into a direct effect and two indirect effects through $M_{1}$ and $M_{2}$ due to the dependence between the mediators. Instead, the total effect can be decomposed into the sum of the effects of the paths $T \rightarrow Y$, $T \rightarrow M_{1} \rightarrow Y$, $T \rightarrow M_{2} \rightarrow Y$, and $T \rightarrow M_{1} \rightarrow M_{2} \rightarrow Y$. In potential outcomes notation, we have the decomposition 
+
+\begin{align*}
+    \mathbb{E}[Y(1,M_{1}(1),M_{2}(1,M_{1}(1))) - Y(1,M_{1}(0),M_{2}(0,M_{1}(0)))] = \\
+    \mathbb{E}[Y(1,M_{1}(1),M_{2}(1,M_{1}(1))) - Y(1,M_{1}(1),M_{2}(0,M_{1}(1)))] \\
+    + \mathbb{E}[Y(1,M_{1}(1),M_{2}(0,M_{1}(1))) - Y(1,M_{1}(1),M_{2}(0,M_{1}(0)))] \\
+    + \mathbb{E}[Y(1,M_{1}(1),M_{2}(0,M_{1}(0))) - Y(1,M_{1}(0),M_{2}(0,M_{1}(0)))] \\
+    + \mathbb{E}[Y(1,M_{1}(0),M_{2}(0,M_{1}(0))) - Y(0,M_{1}(0),M_{2}(0,M_{1}(0)))]
+\end{align*}
+
+Given the assumptions listed above, the natural path effects $T \rightarrow Y$ and $T \rightarrow M_{2} \rightarrow Y$ are identified but the two other path effects are not (Avin et al (2005), Vanderweele et al (2014)). \textcolor{red}{I have derived the path effects in terms of potential outcomes notation for each of the four paths. There is an equivalence between the multiple mediator interventional effects and the two identified path effects given the assumptions listen in section 3.2.1, but I have not included that here as I am not sure how helpful it is to spell out given that I will probably focus on interventional effects for my paper. This section also has relevance understanding why a post-treatment mediating confounder leads to natural effects not being identified in the single mediator case, as the reasoning is similar to the identification issues that arise in the two mediator case.}
+
+
+\bibliographystyle{IEEEtranN}
+\bibliography{../bib/references,../bib/secondary_references}
+
+\end{document}
+
+
+
+
+
+Notes
+
+On interventional effects as a weighted average of controlled effects:
+
+Mathematically, this can be represented as the weighted average of the controlled direct effect defined above:
+
+    \begin{align*}
+    \mathbb{E}[Y(1,M_{1}(0),M_{2}(0,M_{1}(0))) - Y(0,M_{1}(0),M_{2}(0,M_{1}(0)))] \\
+    = \sum_{m_{1}} \sum_{m_{2}} \mathbb{E}[Y(1,m_{1},m_{2}) - Y(0,m_{1},m_{2})|M_{1}(0) = m_{1},M_{2}(0,M_{1}(0)) = m_{2}] \\
+    \mathbb{P}[M_{2}(0,m_{1}) = m_{2}|M_{1}(0)=m_{1}]\mathbb{P}[M_{1}(0)=m_{1}]
+    \end{align*}

@@ -1,0 +1,144 @@
+\documentclass{beamer}
+\usetheme{Boadilla}
+\usepackage{tikz}
+\usepackage{natbib}
+\usetikzlibrary{positioning}
+
+\title{Mediation Analysis with Multiple Mediators}
+\subtitle{Characterizing the Effects of Social Disparities}
+\author{Johann Hatzius}
+\institute{Department of Statistics}
+\date{March 27, 2026}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{Motivation}
+\begin{itemize}
+\item Causal inference is often framed as being motivated by the goal of figuring out the \textbf{effects of causes}
+\begin{itemize}
+\item \textbf{Example:} Does taking a new experimental drug that causes mild headaches as a side effect effectively treat cold symptoms for patients?
+\end{itemize}
+\item Manipulable causes (e.g. treatments, policies, interventions) often induce effects in multiple, sometimes conflicting ways
+\begin{itemize}
+\item In the above example, the drug might \textbf{directly} directly fight cold symptoms. However, it might also \textbf{indirectly} treat cold symptoms by inducing patients to take aspirin to treat the headache, which might treat cold symptoms on its own or in interaction with the drug ~\citep{pearl2001}
+\item This has important policy implications: even if the pill was seen to treat cold symptoms, knowing how dependent this effect is on taking it with aspirin has important implications for prescription and future drug development
+\end{itemize}
+
+\item Mediation analysis aims to describe the mechanisms - the direct and indirect effects - through which causes induce effects
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{History}
+\begin{itemize}
+\item Mediation analysis has been a popular technique in the social sciences for almost a century ~\citep{wright1934, baronkenny1986}
+\begin{itemize}
+\item These early methods relied on often highly implausible and restrictive assumptions (e.g. linearity, additive effects, no treatment-mediator interaction) 
+\end{itemize}
+\item In the past few decades, statisticians have outlined a formal framework for mediation analysis and analyzed the assumptions under which mediational effects are identified while avoiding the restrictive assumptions of their predecessors ~\citep{robinsgreenland1992, pearl2001}
+\item \textbf{Problem:} Valid estimation of causal effects in "simple" causal inference problems is already difficult; mediation analysis is far more challenging 
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Recent developments}
+\begin{itemize}
+\item Classical pure/natural direct and indirect effects have become controversial because their identification assumptions are extremely stringent and sometimes unfalsifiable ~\citep{vanderweelevansteelandt2009}
+\begin{itemize}
+\item This problem becomes even more pronounced when multiple mediators are present, as is commonly the case ~\citep{avinetal2005}
+\end{itemize}
+\item In response, multiple different versions of mediation effects, some with less stringent identification assumptions, have been proposed:
+\begin{itemize}
+\item Controlled effects
+\item Interventional effects ~\citep{vanderweeleetal2014}
+\item Mediation analysis for associations ~\citep{kuhaetal2021}
+\end{itemize}
+\item In particular, interventional effects have become a popular type of mediational effect that does not require accepting unfalsifiable assumptions
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Interventional effects}
+\begin{itemize}
+\item Interventional effects represent the effect of a hypothetical joint intervention on the treatment and the distribution of the mediator
+\begin{itemize}
+\item In our example, the \textbf{interventional direct effect} would be the effect of the drug on cold symptoms if in addition to giving patients the drug, we also somehow shifted the distribution of their aspirin use to that of the patients who did not take the drug
+\end{itemize}
+\item Important extensions to this framework include:
+\begin{itemize}
+\item Applications of interventional effects to explore the effect of discrepancies in mediator distributions between social groups on outcomes ~\citep{vanderweelerobinson2014}
+\item Defining interventional effects for cases in which there are multiple, potentially causally ordered mediators ~\citep{vansteelandtdaniel2017}
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{My work}
+\begin{itemize}
+\item I am working on formally developing the framework for analyzing the effect of disparities in mediator distributions across treatment groups that was advanced in Vanderweele and Robinson (2014)
+\item Compared to normal interventional effects, this version of interventional effects has:
+\begin{itemize}
+\item Less stringent identification assumptions 
+\item Possibly more attractive estimation properties
+\end{itemize}
+\item These effects are appropriate for situations such as the analysis of the effects of social disparities, where the "treatment" is a non-manipulable characteristic such as race or social class and thus does not admit a causal interpretation
+\item Importantly, I will also extend my analysis of the identification and estimation of these effects to situations where there are multiple mediators
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{The effect of mediators on social class mobility}
+
+\begin{itemize}
+    \item As an illustrative example of these methods, I will analyze how inter-generational social class mobility is mediated by differences in the distribution of IQ and education by father's social class
+    \item This is based on the analysis done in Kuha et al (2021), which examines how inter-generational social class mobility is mediated by education
+\end{itemize}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}
+
+  % Define nodes
+  \node[obs] (T) {Father's social class};
+  \node[obs, right=of T, yshift=1.5cm] (M1) {IQ};
+  \node[obs, right=2cm of T]  (M2) {Education};
+  \node[obs, right=1cm of M2]  (Y) {Social class};
+
+  % Connect the nodes
+  \draw[->, line width= 1] (T) --  (M1) ; %
+  \draw[->, line width= 1] (T) --  (M2) ; %
+  \draw[->, line width= 1] (M1) --  (M2) ; %
+  \draw[->, line width= 1] (M1) --  (Y) ; %
+  \draw[->, line width= 1] (T) to[out=325, in=215] (Y) ; %
+  \draw[->, line width= 1] (M2) --  (Y) ; %
+
+\end{tikzpicture}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Timeline}
+\text{Sections}
+\begin{enumerate}
+\item Introduction (Winter term)
+\item Literature Review (Drafted)
+\item Summary and comparison of mediation effect definitions (Drafted)
+\item Weak Interventional effects with one mediator (Spring term)
+\item Extension to multiple mediators (Spring term)
+\item Simulations comparing estimators (Summer, might be cut)
+\item Application to social mobility data (Summer)
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+        \frametitle{References}
+        \bibliographystyle{IEEEtranN}
+        \bibliography{../bib/references}
+\end{frame}
+
+\end{document}

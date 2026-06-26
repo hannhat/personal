@@ -15,6 +15,7 @@ Kuha et al (2021) does not use the intelligence test results and instead investi
 
 ## Setup
 
+
 ```{r,results='hide',warning=FALSE}
 # Loading required packages
 library(dplyr)
@@ -24,12 +25,13 @@ library(tidyr)
 library(skimr)
 library(GGally)
 library(janitor)
+library(here)
 
 # Setting working directory
-setwd("/Users/19175/Documents/personal/research/MSc_Thesis-Mediation_Analysis/data")
+setwd(here::here())
 
 # Loading input data
-path <- "input/social_class_mobility_data/"
+path <- "data/input/social_class_mobility_data/"
 social_mobility_data <- readRDS(paste0(path, "social_mobility_data.rds"))
 workhistory1 <- read_dta(paste0(path, "workhistory_1946.dta")) %>%
   mutate(cohort = 1946)
@@ -508,3 +510,10 @@ ggplot(data = data_cca %>%
 ```
 
 Interestingly, there are larger observed discrepancies in IQ test performance for the 1946 and 1958 cohorts compared to 1970, which looks like it follows the relatively normal, minor discrepancies across father's social class of the overall data. This might point to the smaller sample size in 1946, but it also might be evidence of a change in how the IQ test was administered and what it consisted of across the 24 years of the data. In each case, this test was administered at age 11, so it would have been administered in 1946, 1958, and 1970. This is an interesting quirk of the data that will be worth looking into in the future.
+
+```{r}
+# Writing clean data file to memory
+setwd(here::here())
+saveRDS(data_cca, file = "data/build/social_mobility_complete.rds")
+```
+
