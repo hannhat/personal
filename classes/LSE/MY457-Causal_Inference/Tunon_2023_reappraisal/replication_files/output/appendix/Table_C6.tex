@@ -1,0 +1,33 @@
+\begin{table}
+\centering
+\begin{tblr}[         %% tabularray outer open
+]                     %% tabularray outer close
+{                     %% tabularray inner open
+colspec={Q[]Q[]Q[]Q[]Q[]},
+hline{2}={1-5}{solid, black, 0.05em},
+hline{12}={1-5}{solid, black, 0.05em},
+hline{1}={1-5}{solid, black, 0.08em},
+hline{19}={1-5}{solid, black, 0.08em},
+column{2-5}={}{halign=c},
+column{1}={}{halign=l},
+}                     %% tabularray inner close
+& PT vote 1989 & PT vote 1994 & PT vote 1998 & PT vote 2002 \\
+Retirement\_factor1985-1989 & \num{1.261} & \num{0.034} & \num{0.197} & \num{2.064} \\
+& (\num{1.451}) & (\num{1.473}) & (\num{1.946}) & (\num{1.787}) \\
+Retirement\_factor1989-1994 &  & \num{1.551} & \num{1.488} & \num{2.577} \\
+&  & (\num{1.273}) & (\num{1.357}) & (\num{1.439}) \\
+Retirement\_factor1994-1998 &  &  & \num{5.556} & \num{4.967} \\
+&  &  & (\num{2.564}) & (\num{1.940}) \\
+Retirement\_factor1998-2002 &  &  &  & \num{5.162} \\
+&  &  &  & (\num{1.794}) \\
+Retirement\_factorPost-Election & \num{2.904} & \num{3.644} & \num{3.779} & \num{3.296} \\
+& (\num{1.136}) & (\num{1.339}) & (\num{1.384}) & (\num{1.577}) \\
+Num.Obs. & \num{3593} & \num{4070} & \num{4489} & \num{4540} \\
+R2 & \num{0.298} & \num{0.246} & \num{0.409} & \num{0.304} \\
+R2 Adj. & \num{0.293} & \num{0.241} & \num{0.405} & \num{0.300} \\
+AIC & \num{43973.8} & \num{41879.1} & \num{41127.9} & \num{33863.3} \\
+BIC & \num{43992.3} & \num{41904.3} & \num{41159.9} & \num{33901.8} \\
+RMSE & \num{30.67} & \num{24.35} & \num{22.41} & \num{10.07} \\
+Std.Errors & by: CE\_1978 & by: CE\_1978 & by: CE\_1978 & by: CE\_1978 \\
+\end{tblr}
+\end{table}

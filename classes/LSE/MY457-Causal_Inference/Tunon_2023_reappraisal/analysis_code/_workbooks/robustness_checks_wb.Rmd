@@ -1,0 +1,998 @@
+---
+title: "robustness_checks_wb"
+output: html_document
+---
+
+
+```{r}
+# Basics
+rm(list = ls())
+set.seed(1234)
+options(scipen = 999)
+
+# Packages
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(dplyr, tidyr, readr, ggplot2, estimatr, broom, xtable, modelsummary, here, purrr)
+
+# Data
+munidata <- readr::read_csv(here::here("replication_files/data/munidata.csv"), show_col_types = FALSE)
+diodata  <- readr::read_csv(here::here("replication_files/data/diodata.csv"),  show_col_types = FALSE)
+electoral <- readr::read_csv(here::here("replication_files/data/IPEA_electoral_data.csv"), show_col_types = FALSE)
+
+```
+
+
+### Instrument Validity
+
+#### Defining a new mandatory retirement variable, helpful dummy variables
+
+```{r}
+# Creating additional variables in "diodata.csv": 
+#   - M_YEAR_ND_jh: Mandated year of retirement, not accounting for death
+#   - death_dum_jh: Categorical variable for whether the bishop's reason for replacement was death
+#   - transfer_dum_jh: Categorical variable for whether the bishop's reason for replacement was a transfer
+
+diodata_jh <- diodata %>%
+  mutate(M_YEAR_ND_jh = 1978 + pmax(0, round(75 - round(AGEOCT78, digits = 0))),
+         death_dum_jh = ifelse(out_method_0 == "DEATH", 1, 0),
+         transfer_dum_jh = ifelse(out_method_0 == "TRANSFER", 1, 0))
+
+# Merging onto municipal data
+munidata_jh <- munidata %>% 
+  left_join(diodata_jh %>% 
+              select("CE_code", "M_YEAR_ND_jh", 
+                     "death_dum_jh", "transfer_dum_jh"), 
+            by = "CE_code")
+
+# Quick check of summary statistics on replacement reason
+diodata_jh %>% 
+  group_by(out_method_0) %>%
+  summarize(count = n(),
+            mandated_retire_yr = mean(M_YEAR_ND_jh),
+            replacement_yr = mean(JPIIAPT_YEAR))
+```
+
+#### Balance tests with new variables
+
+```{r}
+# Creating a function for balance tests of custom variables
+balance_test <- function(response = "I_YEAR", exclusion = "") {
+  
+  if (exclusion != "") {
+  diodata_jh2 <- diodata_jh %>%
+    filter(!(out_method_0 %in% exclusion))
+  }
+  else {
+    diodata_jh2 <- diodata_jh
+  }
+  
+  response_str <- paste0(response, " ~ ")
+  #print(response_str)
+  
+# Panel A: Diocese characteristics
+  rel_diolevel <- do.call(rbind, lapply(c("IR","NIR","INR","DIAC","REL",
+                                          "CASASREL_MASC","CASASREL_FEM","NR_PAR","NR_MUNI",
+                                          "recursos_nro","recursos_total_activities"), function(v) {
+                                            broom::tidy(
+                                              estimatr::lm_robust(
+                                                formula       = as.formula(paste0(response_str, v)),
+                                                data          = subset(diodata_jh2, CE_TYPE != "A")
+                                              )
+                                            )[2, ]
+                                          }))
+  
+  munidata_jh$parish_1980[is.na(munidata_jh$cod.1980)] <- NA
+  rel_munilevel <- do.call(rbind, lapply(c("parish_1980"), function(v) {
+    broom::tidy(
+      estimatr::lm_robust(
+        formula       = as.formula(paste0(response_str, v)),
+        data          = subset(munidata_jh, CE_TYPE != "A"),
+        clusters      = CE_1978,
+        fixed_effects = UF
+      )
+    )
+  }))
+  
+  rel <- rbind(rel_diolevel, rel_munilevel); rm(rel_diolevel, rel_munilevel)
+  
+  rel <- rel[, c("term", "estimate", "std.error", "p.value")]
+  rel$N <- 189L
+  rel$N[nrow(rel)] <- sum(!is.na(munidata_jh$parish_1980))
+  row.names(rel) <- NULL
+  
+  
+  # Panel B: Social variables
+  
+  social <- do.call(rbind, lapply(c("pop.tot.1970", "pop.urb.1970", 
+                                              "pop.rur.1970", "share_catolico_1970", 
+                                              "share_evangelico_1970", "share_catolico_1978", 
+                                              "share_evangelico_1978", "growth_evangelica"), function(v) {
+    broom::tidy(
+      estimatr::lm_robust(
+        formula       = as.formula(paste0(response_str, v)),
+        data          = subset(munidata_jh, CE_TYPE != "A"),
+        clusters      = CE_1978,
+        fixed_effects = UF
+      )
+    )
+  }))
+  
+  social <- social[, c("term", "estimate", "std.error", "p.value")]
+  social$N <- c(
+    sum(!is.na(munidata_jh$pop.tot.1970)),
+    sum(!is.na(munidata_jh$pop.urb.1970)),
+    sum(!is.na(munidata_jh$pop.rur.1970)),
+    sum(!is.na(munidata_jh$share_catolico_1970)),
+    sum(!is.na(munidata_jh$share_evangelico_1970)),
+    sum(!is.na(munidata_jh$share_catolico_1978)),
+    sum(!is.na(munidata_jh$share_evangelico_1978)),
+    sum(!is.na(munidata_jh$growth_evangelica))
+  )
+  row.names(social) <- NULL
+  
+  # Panel C: Electoral variables
+  
+  elect <- do.call(rbind, lapply(c("ELEITORADO_1976", "MDB1976_SH", "ARENA1976_SH",
+                                   "ELEITORADO_1972", "MDB1972_SH", "ARENA1972_SH"), function(v) {
+                                      broom::tidy(
+                                        estimatr::lm_robust(
+                                          formula       = as.formula(paste0(response_str, v)),
+                                          data          = subset(munidata_jh, CE_TYPE != "A"),
+                                          clusters      = CE_1978,
+                                          fixed_effects = UF
+                                        )
+                                      )
+                                    }))
+  
+  elect <- elect[, c("term", "estimate", "std.error", "p.value")]
+  elect$N <- c(
+    sum(!is.na(munidata_jh$ELEITORADO_1976)),
+    sum(!is.na(munidata_jh$MDB1976_SH)),
+    sum(!is.na(munidata_jh$ARENA1976_SH)),
+    sum(!is.na(munidata_jh$ELEITORADO_1972)),
+    sum(!is.na(munidata_jh$MDB1972_SH)),
+    sum(!is.na(munidata_jh$ARENA1972_SH))
+  )
+  row.names(elect) <- NULL
+  
+  
+  balance <- rbind(rel, social, elect); rm(rel, social, elect)
+  return(balance)
+}
+```
+
+```{r}
+balance_test()
+```
+
+```{r}
+balance_test(exclusion = "DEATH")
+```
+
+```{r}
+balance_test(response = "death_dum_jh")
+```
+
+```{r}
+# I should additionally control for age here, but I don't get significant results anyway and I would only include the age control (which almost certainly would explain away any significant results) if I got significant results at this stagexs
+balance_test(response = "death_dum_jh")
+```
+
+```{r}
+balance_test(response = "M_YEAR_ND_jh")
+```
+
+```{r}
+# Confirming that transfer is meaningful
+balance_test(response = "transfer_dum_jh")
+
+# Surprisingly less meaningful in terms of characteristics of diocese with transfered bishops than was expected
+```
+
+#### Figure 2: Newly defined mandatory age instrument plots
+
+```{r}
+## Panel A
+
+f_2A <- diodata_jh %>%
+  filter(CE_TYPE != "A") %>%
+  ggplot(aes(x = M_YEAR_ND_jh, y = JPIIAPT_YEAR)) +
+  geom_jitter(alpha = .4, width = .5, height = .5, size = 2, color = "grey60") +
+  geom_abline(intercept = 0, slope = 1, color = "black", linetype = "dashed", linewidth = .2) +
+  geom_smooth(method = lm, color = "black", se = FALSE, linewidth = .8) +
+  labs(x = "Mandated Retirement", y = "First JPII Appointment") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = .5))
+f_2A
+
+## Panel B
+
+years_all  <- 1979:max(diodata_jh$M_YEAR_ND_jh, na.rm = TRUE)
+years_main <- c(1989, 1994, 1998, 2002)
+
+first_stage <- lapply(years_all, function(i) {
+  idx <- diodata_jh$CE_TYPE != "A"
+  I_years <- ifelse(diodata_jh$M_YEAR_ND_jh[idx] < i, diodata_jh$M_YEAR_ND_jh[idx] - 1978, i - 1978)
+  Expos   <- ifelse(diodata_jh$JPIIAPT_YEAR[idx] < i, diodata_jh$JPIIAPT_YEAR[idx] - 1978, i - 1978)
+  fit     <- estimatr::lm_robust(Expos ~ I_years)
+  out     <- broom::tidy(fit)[2, c("estimate", "conf.low", "conf.high")]
+  fstat   <- unname(fit$fstatistic[1])
+  cbind(out, fstat = fstat, year = i)
+}) %>% bind_rows() %>%
+  mutate(outcome_years = !(year %in% years_main))
+
+f_2B <- ggplot(first_stage, aes(x = year, y = estimate, color = outcome_years)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = conf.low, ymax = conf.high), width = 0) +
+  scale_color_grey() +
+  labs(x = "Year", y = "Estimate") +
+  theme_minimal() +
+  theme(legend.position = "none", axis.text.x = element_text(angle = 90, vjust = .5))
+f_2B
+
+## Panel C
+
+f_2C <- ggplot(first_stage, aes(x = year, y = fstat)) +
+  geom_line(color = "grey40") +
+  geom_point(aes(color = outcome_years)) +
+  scale_color_grey() +
+  labs(x = "Year", y = "F-Statistic") +
+  theme_minimal() +
+  theme(legend.position = "none", axis.text.x = element_text(angle = 90, vjust = .5))
+f_2C
+
+# Broadly similar results
+```
+
+
+### Placebo Tests
+
+```{r}
+# Additional helper functions and data preparation
+
+# Municipality-level panel -----------------------------------------------------
+munidata_panel_election_jh <- dplyr::left_join(munidata_jh, electoral, by = "cod.2010")
+
+# Diocese-level panel with vote shares ----------------------------------------
+diodata_panel_election_jh <- munidata_panel_election_jh %>%
+  dplyr::group_by(CE_code, cargo, election, partido) %>%
+  dplyr::summarise(votos = sum(votos, na.rm = TRUE), 
+                   votos_total = sum(votos.sum, na.rm = TRUE),
+                   vote.sh     = 100 * votos / votos_total,
+                   .groups = "drop") %>%
+  dplyr::ungroup() %>%
+  dplyr::left_join(diodata_jh, by = "CE_code")
+
+# Derived variables (muni & dio panels) ---------------------------------------
+munidata_panel_election_jh <- munidata_panel_election_jh %>%
+  mutate(
+    Retirement_Years = dplyr::if_else(I_YEAR < election, I_YEAR - 1978, election - 1978
+    ),
+    Exposure = dplyr::if_else(JPIIAPT_YEAR < election, JPIIAPT_YEAR - 1978, election - 1978
+    ),
+    # EDIT: Adding custom Exposure variable using modified instrument (does not account for death)
+    Retirement_Years_jh = dplyr::if_else(M_YEAR_ND_jh < election, M_YEAR_ND_jh - 1978, election - 1978
+    ),
+    # EDIT: Adding custom time from replacement (TFR) that is the "opposite" of Exposure.
+    TFR = dplyr::if_else(JPIIAPT_YEAR < election, election - JPIIAPT_YEAR, 0
+    ),
+    # EDIT: Adding logs
+    log_TFR = log(1 + TFR),
+    log_Exposure = log(Exposure),
+    log_Retirement_Years = dplyr::if_else(I_YEAR < election, I_YEAR - 1978, election - 1978
+    )
+)
+
+diodata_panel_election_jh <- diodata_panel_election_jh %>%
+  mutate(
+    Retirement_Years = dplyr::if_else(I_YEAR < election, I_YEAR - 1978, election - 1978
+    ),
+    Exposure = dplyr::if_else(JPIIAPT_YEAR < election, JPIIAPT_YEAR - 1978, election - 1978
+    ),
+    Retirement_Years_jh = dplyr::if_else(M_YEAR_ND_jh < election, M_YEAR_ND_jh - 1978, election - 1978
+  ),
+    TFR = dplyr::if_else(JPIIAPT_YEAR < election, election - JPIIAPT_YEAR, 0
+  ),
+  log_TFR = log(1 + TFR),
+  log_Exposure = log(Exposure),
+  log_Retirement_Years = dplyr::if_else(M_YEAR_ND_jh < election, M_YEAR_ND_jh - 1978, election - 1978
+    )
+)
+
+# Helpers ----------------------------------------------------------------------
+years_pres <- c(1989, 1994, 1998, 2002)
+
+run_itt <- function(df, y) {
+  estimatr::lm_robust(
+    as.formula(paste0(y, " ~ Retirement_Years")),
+    data = df,
+    clusters = CE_1978,    # Cluster SEs at the 1978 diocese level
+    fixed_effects = ~ UF  # State FEs
+  )
+}
+
+run_cace <- function(df, y) {
+  estimatr::iv_robust(
+    as.formula(paste0(y, " ~ Exposure | Retirement_Years")),
+    data = df,
+    clusters = CE_1978,    # Cluster SEs at the 1978 diocese level
+    fixed_effects = ~ UF  # State FEs
+  )
+}
+
+run_itt_nuf <- function(df, y) {
+  estimatr::lm_robust(
+    as.formula(paste0(y, " ~ Retirement_Years")),
+    data = df,
+    clusters = CE_1978    # Cluster SEs at the 1978 diocese level
+  )
+}
+
+run_cace_nuf <- function(df, y) {
+  estimatr::iv_robust(
+    as.formula(paste0(y, " ~ Exposure | Retirement_Years")),
+    data = df,
+    clusters = CE_1978    # Cluster SEs at the 1978 diocese level
+  )
+}
+
+run_itt2 <- function(df, y) {
+  estimatr::lm_robust(
+    as.formula(paste0(y, " ~ Retirement_Years_jh")),
+    data = df,
+    clusters = CE_1978,    # Cluster SEs at the 1978 diocese level
+    fixed_effects = ~ UF  # State FEs
+  )
+}
+
+run_cace2 <- function(df, y) {
+  estimatr::iv_robust(
+    as.formula(paste0(y, " ~ Exposure | Retirement_Years_jh")),
+    data = df,
+    clusters = CE_1978,    # Cluster SEs at the 1978 diocese level
+    fixed_effects = ~ UF  # State FEs
+  )
+}
+
+run_cace3 <- function(df, y) {
+  estimatr::iv_robust(
+    as.formula(paste0(y, " ~ TFR | Retirement_Years")),
+    data = df,
+    clusters = CE_1978,    # Cluster SEs at the 1978 diocese level
+    fixed_effects = ~ UF  # State FEs
+  )
+}
+  
+run_cace4 <- function(df, y) {
+  estimatr::iv_robust(
+    as.formula(paste0(y, " ~ log_Exposure | log_Retirement_Years")),
+    data = df,
+    clusters = CE_1978,    # Cluster SEs at the 1978 diocese level
+    fixed_effects = ~ UF  # State FEs
+  )
+}
+
+run_cace5 <- function(df, y) {
+  estimatr::iv_robust(
+    as.formula(paste0(y, " ~ log_TFR | log_Retirement_Years")),
+    data = df,
+    clusters = CE_1978,    # Cluster SEs at the 1978 diocese level
+    fixed_effects = ~ UF  # State FEs
+  )
+}
+
+run_itt3 <- function(df, y) {
+  estimatr::lm_robust(
+    as.formula(paste0(y, " ~ log_Retirement_Years")),
+    data = df,
+    clusters = CE_1978,    # Cluster SEs at the 1978 diocese level
+    fixed_effects = ~ UF  # State FEs
+  )
+}
+
+fmt_mean <- function(x) sprintf("%.3f", x)
+fmt_int  <- function(x) format(as.integer(x), big.mark = " ", trim = TRUE, scientific = FALSE)
+
+keep_cols <- function(df, k) {
+  wanted <- c("term", sprintf("(%d)", seq_len(k)))
+  dplyr::select(df, dplyr::any_of(wanted))
+}
+```
+
+
+#### Experience
+
+```{r}
+#-------------------------------------------------------------------------------
+# Appendix Table C4 Additional Robustness Checks: Experience
+#-------------------------------------------------------------------------------
+
+## Problems with experience code: first_in_date_0 seems wrong for CE_codes 60 and 184
+## Solution: remove these two diocese from my analyses below
+
+# Add variables 
+munidata_panel_election_jh <- munidata_panel_election_jh %>%
+  dplyr::mutate(bish_age = AGEOCT78 + election - 1978,
+                experience = as.numeric(as.Date("1978-10-16") - as.Date(first_in_date_0)) / 365 + election - 1978,
+                experience_new = election - JPIIELEV_YEAR
+  ) %>%
+  filter(experience > 0)
+
+#### Experience of JPII bishops
+ITT_muni_exp_JPII <- list()
+for (i in years_pres){
+  ITT_muni_exp_JPII[[paste0('PT vote ', i)]] <-  lm_robust(vote.sh ~ experience_new, 
+                                                      fixed_effects = ~ UF,
+                                                      clusters = CE_1978,
+                                                      data = filter(munidata_panel_election_jh, 
+                                                                    election == i & 
+                                                                      I_YEAR < i & #Why is this not the actual year of replacement?
+                                                                      partido == "PT" & 
+                                                                      cargo == "Presidente" &
+                                                                      CE_TYPE!="A"))
+  
+}
+
+#### Experience of progressive bishops
+ITT_muni_exp_JPII_log <- list()
+for (i in years_pres){
+  ITT_muni_exp_JPII_log[[paste0('PT vote ', i)]] <-  lm_robust(vote.sh ~ log(experience_new), 
+                                                      fixed_effects = ~ UF,
+                                                      clusters = CE_1978,
+                                                      data = filter(munidata_panel_election_jh, 
+                                                                    election == i & 
+                                                                      experience_new > 0 &
+                                                                      I_YEAR < i & #Why is this not the actual year of replacement?
+                                                                      partido == "PT" & 
+                                                                      cargo == "Presidente" &
+                                                                      CE_TYPE!="A"))
+  
+}
+
+#### Experience of progressive bishops, logged
+ITT_muni_exp_log <- list()
+for (i in years_pres){
+  ITT_muni_exp_log[[paste0('PT vote ', i)]] <-  lm_robust(vote.sh ~ log(experience), 
+                                                      fixed_effects = ~ UF,
+                                                      clusters = CE_1978,
+                                                      data = filter(munidata_panel_election_jh, 
+                                                                    election == i & 
+                                                                      I_YEAR > i & #Why is this not the actual year of replacement?
+                                                                      partido == "PT" & 
+                                                                      cargo == "Presidente" &
+                                                                      CE_TYPE!="A"))
+  
+}
+
+
+# Table
+modelsummary(ITT_muni_exp_JPII, stars = T)
+modelsummary(ITT_muni_exp_JPII_log, stars = T)
+modelsummary(ITT_muni_exp_log, stars = T)
+```
+
+```{r}
+# Far-fetched: no filters, pure regression of experience of sitting bishop with 
+# political support
+
+munidata_panel_election2 <- munidata_panel_election_jh %>%
+  dplyr::mutate(bish_age = AGEOCT78 + election - 1978,
+                experience = as.numeric(as.Date("1978-10-16") - as.Date(first_in_date_0)) / 365 + election - 1978,
+                experience_new = election - JPIIELEV_YEAR,
+                experience_max = ifelse(election >= JPIIELEV_YEAR, experience_new, experience)
+  ) %>%
+  filter(experience > 0)
+
+#### Experience of JPII bishops
+ITT_muni_exp_JPII <- list()
+for (i in years_pres){
+  ITT_muni_exp_JPII[[paste0('PT vote ', i)]] <-  lm_robust(vote.sh ~ experience_max, 
+                                                      fixed_effects = ~ UF,
+                                                      clusters = CE_1978,
+                                                      data = filter(munidata_panel_election2, 
+                                                                    election == i & 
+                                                                      partido == "PT" & 
+                                                                      cargo == "Presidente" &
+                                                                      CE_TYPE!="A"))
+  
+}
+
+modelsummary(ITT_muni_exp_JPII, stars = T)
+```
+
+### Main Results
+
+```{r}
+#-------------------------------------------------------------------------------
+# Table 1: Main results (PT presidential vote, muni level)
+#-------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
+# Sensitivity 1a: Main results, differently defined instrument
+#-------------------------------------------------------------------------------
+
+# Columns = election years (paper layout)
+cols_named <- setNames(as.list(years_pres), paste0("(", years_pres, ")"))
+
+# One df per column (filter once here)
+dfs <- lapply(cols_named, \(yr)
+              munidata_panel_election_jh %>%
+                filter(partido == "PT", cargo == "Presidente", CE_TYPE != "A", election == yr)
+)
+
+# Metadata (computed once)
+meta <- tibble(
+  col = names(dfs),
+  df  = unname(dfs),
+  y   = rep("vote.sh", length(dfs))
+) |>
+  mutate(stats = purrr::map(df, \(d) tibble(
+    outcome_mean = mean(d[[y[1]]], na.rm = TRUE),
+    n_obs        = nrow(d),
+    n_cl         = dplyr::n_distinct(d$CE_1978)
+  ))) %>%
+  unnest(stats)
+
+# Fit models using existing helpers run_cace/run_itt ---------------------------
+CACE_models <- setNames(purrr::map2(meta$df, meta$y, run_cace2), meta$col)
+ITT_models  <- setNames(purrr::map2(meta$df, meta$y, run_itt2),  meta$col)
+
+# Panels as data frames (robust to modelsummary version diffs) -----------------
+df_A <- modelsummary(
+  CACE_models,
+  coef_map = c("Exposure" = "Exposure"),
+  gof_omit = ".*",
+  estimate = "{estimate}{stars}",
+  statistic = "({std.error})",
+  stars = TRUE,
+  output = "data.frame"
+) %>% dplyr::select(-dplyr::any_of(c("part", "statistic")))
+
+df_B <- modelsummary(
+  ITT_models,
+  coef_map = c("Retirement_Years_jh" = "Mandated Exposure JH"),
+  gof_omit = ".*",
+  estimate = "{estimate}{stars}",
+  statistic = "({std.error})",
+  stars = TRUE,
+  output = "data.frame"
+) %>% dplyr::select(-dplyr::any_of(c("part", "statistic")))
+
+# Bottom rows ------------------------------------------------------------------
+fmt2 <- function(x) sprintf("%.2f", x)
+rows <- list(
+  "Outcome Mean"     = fmt2(meta$outcome_mean),
+  "Num. Obs."        = format(meta$n_obs, big.mark = ","),
+  "Num. of Clusters" = format(meta$n_cl,  big.mark = ",")
+)
+
+make_row <- function(label, values_vec, cols = meta$col) {
+  tibble(term = label) %>% bind_cols(as_tibble(setNames(as.list(values_vec), cols)))
+}
+bottom_rows <- purrr::imap_dfr(rows, ~ make_row(.y, .x))
+
+# Stitch with panel separators -------------------------------------------------
+sep_A  <- tibble(term = "\\textbf{Panel A: 2SLS}")
+sep_B  <- tibble(term = "\\textbf{Panel B: Reduced Form (ITT)}")
+full_df <- bind_rows(sep_A, df_A, sep_B, df_B, bottom_rows)
+
+# Render & save LaTeX matching the screenshot style ---------------------------
+tab_title <- "\\textbf{Outcome: PT Presidential Vote Share}"
+hdr <- c(" " = 1, setNames(rep(1, nrow(meta)), gsub("[()]", "", meta$col)))
+
+latex_out <- modelsummary::datasummary_df(
+  full_df,
+  title  = "\\textbf{Outcome: PT Presidential Vote Share}",
+  escape = FALSE,
+  add_header_above = c(" " = 1, setNames(rep(1, nrow(meta)), gsub("[()]", "", meta$col))),
+  fmt = 3
+)
+
+latex_out
+```
+
+
+Further ideas:
+- The main robustness checks I wanted to run did not uncover anything interesting;
+I think they have fairly strong conceptual justification, so I want to include them
+- The alternative specification on the main result is fairly interesting
+- Should think about how exposure is defined, and how to test length of exposure vs. time
+since last progressive bishop; this is probably the most interesting "extension" idea I have at the moment
+- I should look at the turnover specifications too, not because I find the identification assumption violation particularly plausible but because the binary treatments idea might be interesting to mine
+- Functional form also seems important to think about: how do the main results change when looking at log(Exposure)? 
+
+
+### Alternative Specifications
+
+#### Time from Progressive Replacement
+I replace the treatment variable "Exposure" with "Time from Replacement". This takes on the value $0$ if the progressive bishop is still in power, and otherwise takes a value of the number of years since the progressive bishop was replaced. This should have the same level of instrument validity as the main result specification. 
+
+The available data arguably supports this specification more than the main result. The main result suffers from the fact that we have no way of knowing how progressive the outgoing bishop really was. This is a problem because exposure is trying to be a proxy for "progressive exposure", but exposure is defined as the number of years from 1978, which loses information on the true length of exposure. This is a bigger problem if exposure is not a linear phenomenon but instead something like a log (which seems *a priori* more likely). 
+
+```{r}
+#-------------------------------------------------------------------------------
+# Sensitivity 1b: Main results, treatment = time from replacement
+#-------------------------------------------------------------------------------
+
+# Columns = election years (paper layout)
+cols_named <- setNames(as.list(years_pres), paste0("(", years_pres, ")"))
+
+# One df per column (filter once here)
+dfs <- lapply(cols_named, \(yr)
+              munidata_panel_election_jh %>%
+                filter(partido == "PT", cargo == "Presidente", CE_TYPE != "A", election == yr)
+)
+
+# Metadata (computed once)
+meta <- tibble(
+  col = names(dfs),
+  df  = unname(dfs),
+  y   = rep("vote.sh", length(dfs))
+) |>
+  mutate(stats = map(df, \(d) tibble(
+    outcome_mean = mean(d[[y[1]]], na.rm = TRUE),
+    n_obs        = nrow(d),
+    n_cl         = dplyr::n_distinct(d$CE_1978)
+  ))) %>%
+  unnest(stats)
+
+# Fit models using existing helpers run_cace/run_itt ---------------------------
+CACE_models <- setNames(map2(meta$df, meta$y, run_cace3), meta$col)
+ITT_models  <- setNames(map2(meta$df, meta$y, run_itt),  meta$col)
+
+# Panels as data frames (robust to modelsummary version diffs) -----------------
+df_A <- modelsummary(
+  CACE_models,
+  coef_map = c("TFR" = "Time from Replacement"),
+  gof_omit = ".*",
+  estimate = "{estimate}{stars}",
+  statistic = "({std.error})",
+  stars = TRUE,
+  output = "data.frame"
+) %>% dplyr::select(-dplyr::any_of(c("part", "statistic")))
+
+df_B <- modelsummary(
+  ITT_models,
+  coef_map = c("Retirement_Years" = "Mandated Retirement"),
+  gof_omit = ".*",
+  estimate = "{estimate}{stars}",
+  statistic = "({std.error})",
+  stars = TRUE,
+  output = "data.frame"
+) %>% dplyr::select(-dplyr::any_of(c("part", "statistic")))
+
+# Bottom rows ------------------------------------------------------------------
+fmt2 <- function(x) sprintf("%.2f", x)
+rows <- list(
+  "Outcome Mean"     = fmt2(meta$outcome_mean),
+  "Num. Obs."        = format(meta$n_obs, big.mark = ","),
+  "Num. of Clusters" = format(meta$n_cl,  big.mark = ",")
+)
+
+make_row <- function(label, values_vec, cols = meta$col) {
+  tibble(term = label) %>% bind_cols(as_tibble(setNames(as.list(values_vec), cols)))
+}
+bottom_rows <- purrr::imap_dfr(rows, ~ make_row(.y, .x))
+
+# Stitch with panel separators -------------------------------------------------
+sep_A  <- tibble(term = "\\textbf{Panel A: 2SLS}")
+sep_B  <- tibble(term = "\\textbf{Panel B: Reduced Form (ITT)}")
+full_df <- bind_rows(sep_A, df_A, sep_B, df_B, bottom_rows)
+
+# Render & save LaTeX matching the screenshot style ---------------------------
+tab_title <- "\\textbf{Outcome: PT Presidential Vote Share}"
+hdr <- c(" " = 1, setNames(rep(1, nrow(meta)), gsub("[()]", "", meta$col)))
+
+latex_out2 <- modelsummary::datasummary_df(
+  full_df,
+  title  = "\\textbf{Outcome: PT Presidential Vote Share}",
+  escape = FALSE,
+  add_header_above = c(" " = 1, setNames(rep(1, nrow(meta)), gsub("[()]", "", meta$col))),
+  fmt = 3
+)
+latex_out2
+```
+
+Parallel results with this specification, as expected. 
+
+```{r}
+#-------------------------------------------------------------------------------
+# Sensitivity 1d: Main results, treatment = log time from replacement
+#-------------------------------------------------------------------------------
+
+# Columns = election years (paper layout)
+cols_named <- setNames(as.list(years_pres), paste0("(", years_pres, ")"))
+
+# One df per column (filter once here)
+dfs <- lapply(cols_named, \(yr)
+              munidata_panel_election_jh %>%
+                filter(partido == "PT", cargo == "Presidente", CE_TYPE != "A", election == yr)
+)
+
+# Metadata (computed once)
+meta <- tibble(
+  col = names(dfs),
+  df  = unname(dfs),
+  y   = rep("vote.sh", length(dfs))
+) |>
+  mutate(stats = map(df, \(d) tibble(
+    outcome_mean = mean(d[[y[1]]], na.rm = TRUE),
+    n_obs        = nrow(d),
+    n_cl         = dplyr::n_distinct(d$CE_1978)
+  ))) %>%
+  unnest(stats)
+
+# Fit models using existing helpers run_cace/run_itt ---------------------------
+CACE_models <- setNames(map2(meta$df, meta$y, run_cace5), meta$col)
+ITT_models  <- setNames(map2(meta$df, meta$y, run_itt),  meta$col)
+
+# Panels as data frames (robust to modelsummary version diffs) -----------------
+df_A <- modelsummary(
+  CACE_models,
+  coef_map = c("log_TFR" = "Time from Replacement"),
+  gof_omit = ".*",
+  estimate = "{estimate}{stars}",
+  statistic = "({std.error})",
+  stars = TRUE,
+  output = "data.frame"
+) %>% dplyr::select(-dplyr::any_of(c("part", "statistic")))
+
+df_B <- modelsummary(
+  ITT_models,
+  coef_map = c("Retirement_Years" = "Mandated Retirement"),
+  gof_omit = ".*",
+  estimate = "{estimate}{stars}",
+  statistic = "({std.error})",
+  stars = TRUE,
+  output = "data.frame"
+) %>% dplyr::select(-dplyr::any_of(c("part", "statistic")))
+
+# Bottom rows ------------------------------------------------------------------
+fmt2 <- function(x) sprintf("%.2f", x)
+rows <- list(
+  "Outcome Mean"     = fmt2(meta$outcome_mean),
+  "Num. Obs."        = format(meta$n_obs, big.mark = ","),
+  "Num. of Clusters" = format(meta$n_cl,  big.mark = ",")
+)
+
+make_row <- function(label, values_vec, cols = meta$col) {
+  tibble(term = label) %>% bind_cols(as_tibble(setNames(as.list(values_vec), cols)))
+}
+bottom_rows <- purrr::imap_dfr(rows, ~ make_row(.y, .x))
+
+# Stitch with panel separators -------------------------------------------------
+sep_A  <- tibble(term = "\\textbf{Panel A: 2SLS}")
+sep_B  <- tibble(term = "\\textbf{Panel B: Reduced Form (ITT)}")
+full_df <- bind_rows(sep_A, df_A, sep_B, df_B, bottom_rows)
+
+# Render & save LaTeX matching the screenshot style ---------------------------
+tab_title <- "\\textbf{Outcome: PT Presidential Vote Share}"
+hdr <- c(" " = 1, setNames(rep(1, nrow(meta)), gsub("[()]", "", meta$col)))
+
+latex_out3 <- modelsummary::datasummary_df(
+  full_df,
+  title  = "\\textbf{Outcome: PT Presidential Vote Share}",
+  escape = FALSE,
+  add_header_above = c(" " = 1, setNames(rep(1, nrow(meta)), gsub("[()]", "", meta$col))),
+  fmt = 3
+)
+latex_out3
+```
+
+
+```{r}
+#-------------------------------------------------------------------------------
+# Table 1: Main results (PT presidential vote, muni level), no state FEs
+#-------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
+# Sensitivity 1a: Main results, differently defined instrument
+#-------------------------------------------------------------------------------
+
+# Columns = election years (paper layout)
+cols_named <- setNames(as.list(years_pres), paste0("(", years_pres, ")"))
+
+# One df per column (filter once here)
+dfs <- lapply(cols_named, \(yr)
+              munidata_panel_election_jh %>%
+                filter(partido == "PT", cargo == "Presidente", CE_TYPE != "A", election == yr)
+)
+
+# Metadata (computed once)
+meta <- tibble(
+  col = names(dfs),
+  df  = unname(dfs),
+  y   = rep("vote.sh", length(dfs))
+) |>
+  mutate(stats = purrr::map(df, \(d) tibble(
+    outcome_mean = mean(d[[y[1]]], na.rm = TRUE),
+    n_obs        = nrow(d),
+    n_cl         = dplyr::n_distinct(d$CE_1978)
+  ))) %>%
+  unnest(stats)
+
+# Fit models using existing helpers run_cace/run_itt ---------------------------
+CACE_models <- setNames(purrr::map2(meta$df, meta$y, run_cace_nuf), meta$col)
+ITT_models  <- setNames(purrr::map2(meta$df, meta$y, run_itt_nuf),  meta$col)
+
+# Panels as data frames (robust to modelsummary version diffs) -----------------
+df_A <- modelsummary(
+  CACE_models,
+  coef_map = c("Exposure" = "Exposure"),
+  gof_omit = ".*",
+  estimate = "{estimate}{stars}",
+  statistic = "({std.error})",
+  stars = TRUE,
+  output = "data.frame"
+) %>% dplyr::select(-dplyr::any_of(c("part", "statistic")))
+
+df_B <- modelsummary(
+  ITT_models,
+  coef_map = c("Retirement_Years" = "Mandated Exposure"),
+  gof_omit = ".*",
+  estimate = "{estimate}{stars}",
+  statistic = "({std.error})",
+  stars = TRUE,
+  output = "data.frame"
+) %>% dplyr::select(-dplyr::any_of(c("part", "statistic")))
+
+# Bottom rows ------------------------------------------------------------------
+fmt2 <- function(x) sprintf("%.2f", x)
+rows <- list(
+  "Outcome Mean"     = fmt2(meta$outcome_mean),
+  "Num. Obs."        = format(meta$n_obs, big.mark = ","),
+  "Num. of Clusters" = format(meta$n_cl,  big.mark = ",")
+)
+
+make_row <- function(label, values_vec, cols = meta$col) {
+  tibble(term = label) %>% bind_cols(as_tibble(setNames(as.list(values_vec), cols)))
+}
+bottom_rows <- purrr::imap_dfr(rows, ~ make_row(.y, .x))
+
+# Stitch with panel separators -------------------------------------------------
+sep_A  <- tibble(term = "\\textbf{Panel A: 2SLS}")
+sep_B  <- tibble(term = "\\textbf{Panel B: Reduced Form (ITT)}")
+full_df <- bind_rows(sep_A, df_A, sep_B, df_B, bottom_rows)
+
+# Render & save LaTeX matching the screenshot style ---------------------------
+tab_title <- "\\textbf{Outcome: PT Presidential Vote Share}"
+hdr <- c(" " = 1, setNames(rep(1, nrow(meta)), gsub("[()]", "", meta$col)))
+
+latex_out <- modelsummary::datasummary_df(
+  full_df,
+  title  = "\\textbf{Outcome: PT Presidential Vote Share}",
+  escape = FALSE,
+  add_header_above = c(" " = 1, setNames(rep(1, nrow(meta)), gsub("[()]", "", meta$col))),
+  fmt = 3
+)
+
+latex_out
+```
+
+
+Any way to disaggregate the two effects with the current data? 
+
+```{r}
+library(tidyverse)
+library(fixest)   # for state FE residualization
+library(haven)    # if you need it for any .dta files; remove if not
+
+# ---- 1. Load and prep -------------------------------------------------------
+
+muni <- munidata
+elec <- electoral
+
+# PT presidential vote share by municipality-year
+pt <- elec %>%
+  filter(cargo == "Presidente", partido == "PT",
+         election %in% c(1989, 1994, 1998, 2002)) %>%
+  select(cod.2010, election, vote.sh)
+
+# Merge in treatment variables and state
+df <- pt %>%
+  left_join(muni %>% select(cod.2010, UF, CE_code, CE_TYPE,
+                            I_YEAR, JPIIAPT_YEAR),
+            by = "cod.2010") %>%
+  filter(CE_TYPE == "D") %>%               # main sample: dioceses only
+  filter(!is.na(JPIIAPT_YEAR), !is.na(I_YEAR))
+
+# ---- 2. Define replacement cohort ------------------------------------------
+# Cohorts mirror the binning in Table C6 of the supplementary material,
+# so the plot is comparable to results already in the paper.
+
+df <- df %>%
+  mutate(
+    cohort = case_when(
+      JPIIAPT_YEAR <= 1983              ~ "Replaced 1978-1983",
+      JPIIAPT_YEAR %in% 1984:1989       ~ "Replaced 1984-1989",
+      JPIIAPT_YEAR %in% 1990:1994       ~ "Replaced 1990-1994",
+      JPIIAPT_YEAR %in% 1995:1998       ~ "Replaced 1995-1998",
+      JPIIAPT_YEAR %in% 1999:2002       ~ "Replaced 1999-2002",
+      JPIIAPT_YEAR >= 2003              ~ "Replaced post-2002",
+      TRUE                              ~ NA_character_
+    ),
+    cohort = factor(cohort, levels = c(
+      "Replaced 1978-1983", "Replaced 1984-1989", "Replaced 1990-1994",
+      "Replaced 1995-1998", "Replaced 1999-2002", "Replaced post-2002"
+    ))
+  )
+
+# Sanity check: how many dioceses per cohort?
+df %>% distinct(CE_code, cohort) %>% count(cohort)
+
+# ---- 3. Residualize PT vote share on state FE ------------------------------
+# Within each election year, partial out state effects so cohort differences
+# aren't driven by geographic composition.
+
+df <- df %>%
+  filter(!is.na(vote.sh)) %>%
+  group_by(election) %>%
+  mutate(
+    vote.sh_resid = residuals(feols(vote.sh ~ 1 | UF, data = cur_data())) +
+                    mean(vote.sh, na.rm = TRUE)
+  ) %>%
+  ungroup()
+# ---- 4. Compute cohort means with clustered SEs ----------------------------
+# Cluster at diocese level (CE_code) since treatment is assigned there.
+
+cohort_means <- df %>%
+  group_by(cohort, election) %>%
+  summarise(
+    mean_pt = mean(vote.sh_resid, na.rm = TRUE),
+    # clustered SE: use feols with no covariates and cluster at diocese
+    se = {
+      m <- feols(vote.sh_resid ~ 1, data = cur_data(), cluster = ~CE_code)
+      se(m)["(Intercept)"]
+    },
+    n_muni = n(),
+    n_dio  = n_distinct(CE_code),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    lo = mean_pt - 1.96 * se,
+    hi = mean_pt + 1.96 * se
+  )
+
+# ---- 5. Plot ---------------------------------------------------------------
+
+ggplot(cohort_means, aes(x = election, y = mean_pt,
+                         color = cohort, group = cohort)) +
+  geom_ribbon(aes(ymin = lo, ymax = hi, fill = cohort),
+              alpha = 0.12, color = NA) +
+  geom_line(linewidth = 0.9) +
+  geom_point(size = 2.2) +
+  scale_x_continuous(breaks = c(1989, 1994, 1998, 2002)) +
+  labs(
+    x = "Election year",
+    y = "Mean PT presidential vote share (%, residualized on state FE)",
+    color = "Cohort", fill = "Cohort",
+    title = "PT vote share trajectories by bishop-replacement cohort",
+    caption = "Shaded bands: 95% CIs with SEs clustered at the 1978 diocese level. Dioceses only (archdioceses excluded)."
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(legend.position = "right")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

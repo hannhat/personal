@@ -1,0 +1,24 @@
+\begin{table}[H]
+\centering
+\begin{talltblr}[         %% tabularray outer open
+caption={\textbf{Outcome: PT Presidential Vote Share}},
+]                     %% tabularray outer close
+{                     %% tabularray inner open
+colspec={Q[]Q[]Q[]Q[]Q[]},
+hline{2}={1-5}{solid, black, 0.05em},
+hline{1}={1-5}{solid, black, 0.08em},
+hline{11}={1-5}{solid, black, 0.08em},
+column{1-5}={}{halign=l},
+}                     %% tabularray inner close
+term & (1989) & (1994) & (1998) & (2002) \\
+\textbf{Panel A: 2SLS} & NA & NA & NA & NA \\
+Exposure & 0.571** & 0.430** & 0.400** & 0.235* \\
+Exposure & (0.221) & (0.150) & (0.133) & (0.097) \\
+\textbf{Panel B: Reduced Form (ITT)} & NA & NA & NA & NA \\
+Mandated Exposure & 0.385** & 0.302** & 0.271** & 0.154* \\
+Mandated Exposure & (0.138) & (0.100) & (0.090) & (0.064) \\
+Outcome Mean & 13.99 & 21.48 & 24.43 & 42.15 \\
+Num. Obs. & 3,593 & 4,070 & 4,493 & 4,540 \\
+Num. of Clusters & 189 & 189 & 189 & 189 \\
+\end{talltblr}
+\end{table}

@@ -1,0 +1,460 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  9 MAY 2026 15:53
+entering extended mode
+ restricted \write18 enabled.
+ file:line:error style messages enabled.
+ %&-line parsing enabled.
+**/Users/johannhatzius/Desktop/GitHub/MY457_summative/replication_files/output/view_tables.tex
+(/Users/johannhatzius/Desktop/GitHub/MY457_summative/replication_files/output/view_tables.tex
+LaTeX2e <2025-11-01>
+L3 programming layer <2026-01-19>
+(/usr/local/texlive/2026/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
+(/usr/local/texlive/2026/texmf-dist/tex/latex/base/size12.clo
+File: size12.clo 2025/01/22 v1.4n Standard LaTeX file (size option)
+)
+\c@part=\count275
+\c@section=\count276
+\c@subsection=\count277
+\c@subsubsection=\count278
+\c@paragraph=\count279
+\c@subparagraph=\count280
+\c@figure=\count281
+\c@table=\count282
+\abovecaptionskip=\skip49
+\belowcaptionskip=\skip50
+\bibindent=\dimen148
+) (/usr/local/texlive/2026/texmf-dist/tex/latex/tabularray/tabularray.sty
+Package: tabularray 2025-11-27 v2025C Typeset tabulars and arrays with LaTeX3
+\g__tblr_nohyper_int=\count283
+\l__tblr_a_int=\count284
+\l__tblr_c_int=\count285
+\l__tblr_r_int=\count286
+\l__tblr_d_dim=\dimen149
+\l__tblr_h_dim=\dimen150
+\l__tblr_o_dim=\dimen151
+\l__tblr_p_dim=\dimen152
+\l__tblr_q_dim=\dimen153
+\l__tblr_r_dim=\dimen154
+\l__tblr_s_dim=\dimen155
+\l__tblr_t_dim=\dimen156
+\l__tblr_v_dim=\dimen157
+\l__tblr_w_dim=\dimen158
+\l__tblr_a_box=\box53
+\l__tblr_b_box=\box54
+\l__tblr_c_box=\box55
+\l__tblr_d_box=\box56
+\c@tblrcount=\count287
+\c@rownum=\count288
+\c@colnum=\count289
+\c@rowcount=\count290
+\c@colcount=\count291
+\abovesep=\dimen159
+\belowsep=\dimen160
+\leftsep=\dimen161
+\rightsep=\dimen162
+\gTblrLevelInt=\count292
+\g__tblr_data_row_key_count_int=\count293
+\g__tblr_data_column_key_count_int=\count294
+\g__tblr_data_cell_key_count_int=\count295
+\g__tblr_array_int=\count296
+\l__tblr_key_count_int=\count297
+\l__tblr_key_quotient_int=\count298
+\l__tblr_key_quotient_two_int=\count299
+\l__tblr_key_remainder_int=\count300
+\g__tblr_data_str_value_count_int=\count301
+\lTblrChildTotalInt=\count302
+\lTblrChildHtotalInt=\count303
+\lTblrChildVtotalInt=\count304
+\l__child_diff_h_int=\count305
+\l__child_diff_v_int=\count306
+\l__child_sign_h_int=\count307
+\l__child_sign_v_int=\count308
+\l__child_step_int=\count309
+\lTblrDefaultHruleWidthDim=\dimen163
+\lTblrDefaultVruleWidthDim=\dimen164
+\l__tblr_split_balance_int=\count310
+\l__tblr_strut_dp_dim=\dimen165
+\l__tblr_strut_ht_dim=\dimen166
+\g__tblr_cell_wd_dim=\dimen167
+\g__tblr_cell_ht_dim=\dimen168
+\g__tblr_cell_head_dim=\dimen169
+\g__tblr_cell_foot_dim=\dimen170
+\l__tblr_measured_cell_box=\box57
+\g__tblr_last_box=\box58
+\l__tblr_temp_box=\box59
+\l__tblr_column_target_dim=\dimen171
+\l__tblr_hfuzz_dim=\dimen172
+\l__tblr_caption_box=\box60
+\l__tblr_caption_left_box=\box61
+\lTblrRowHeadInt=\count311
+\lTblrRowFootInt=\count312
+\l__tblr_row_head_box=\box62
+\l__tblr_row_foot_box=\box63
+\l__tblr_row_head_foot_dim=\dimen173
+\lTblrTableWidthDim=\dimen174
+\l__tblr_table_firsthead_box=\box64
+\l__tblr_table_middlehead_box=\box65
+\l__tblr_table_lasthead_box=\box66
+\l__tblr_table_firstfoot_box=\box67
+\l__tblr_table_middlefoot_box=\box68
+\l__tblr_table_lastfoot_box=\box69
+\l__tblr_remain_height_dim=\dimen175
+\l__tblr_next_rows_dim=\dimen176
+\l__tblr_page_overfill_dim=\dimen177
+\l__tblr_long_from_int=\count313
+\l__tblr_long_to_int=\count314
+\l__tblr_curr_i_int=\count315
+\l__tblr_prev_i_int=\count316
+\lTblrTablePageInt=\count317
+\l__tblr_table_head_box=\box70
+\l__tblr_table_foot_box=\box71
+\l__tblr_table_head_foot_dim=\dimen178
+\l__tblr_table_head_body_foot_dim=\dimen179
+\l__tblr_table_box=\box72
+\lTblrRowFirstInt=\count318
+\lTblrRowLastInt=\count319
+\l__tblr_cover_box_a_dim=\dimen180
+\l__tblr_cover_box_b_dim=\dimen181
+\l__tblr_table_hlines_box=\box73
+\l__tblr_hline_box=\box74
+\l__tblr_row_box=\box75
+\l__tblr_col_o_wd_dim=\dimen182
+\l__tblr_col_b_wd_dim=\dimen183
+\l__tblr_hline_leftskip_dim=\dimen184
+\l__tblr_hline_rightskip_dim=\dimen185
+\l__tblr_row_ht_dim=\dimen186
+\l__tblr_row_dp_dim=\dimen187
+\l__tblr_row_abovesep_dim=\dimen188
+\l__tblr_row_belowsep_dim=\dimen189
+\l__tblr_row_vlines_box=\box76
+\l__tblr_vline_box=\box77
+\l__tblr_cell_box=\box78
+\l__tblr_row_upper_dim=\dimen190
+\l__tblr_row_lower_dim=\dimen191
+\l__tblr_row_vpace_dim=\dimen192
+\l__tblr_vline_aboveskip_dim=\dimen193
+\l__tblr_vline_belowskip_dim=\dimen194
+\lTblrCellRowSpanInt=\count320
+\lTblrCellColSpanInt=\count321
+\l__tblr_cell_wd_dim=\dimen195
+\l__tblr_cell_ht_dim=\dimen196
+\lTblrCellAboveBorderWidthDim=\dimen197
+\lTblrCellBelowBorderWidthDim=\dimen198
+\lTblrCellLeftBorderWidthDim=\dimen199
+\lTblrCellRightBorderWidthDim=\dimen256
+\l__tblr_diag_box=\box79
+\l__tblr_cell_inner_wd_dim=\dimen257
+\l__tblr_cell_inner_dp_dim=\dimen258
+\l__tblr_cell_hanchor_dim=\dimen259
+\l__tblr_last_cell_table_ht_dim=\dimen260
+\l__tblr_last_cell_table_dp_dim=\dimen261
+\l__tblr_last_vline_wd_dim=\dimen262
+\l__tblr_tikz_node_box=\box80
+) (/usr/local/texlive/2026/texmf-dist/tex/latex/siunitx/siunitx.sty
+Package: siunitx 2025-07-09 v3.4.14 A comprehensive (SI) units package
+\l__siunitx_number_uncert_offset_int=\count322
+\l__siunitx_number_exponent_fixed_int=\count323
+\l__siunitx_number_min_decimal_int=\count324
+\l__siunitx_number_min_integer_int=\count325
+\l__siunitx_number_round_precision_int=\count326
+\l__siunitx_number_lower_threshold_int=\count327
+\l__siunitx_number_upper_threshold_int=\count328
+\l__siunitx_number_group_first_int=\count329
+\l__siunitx_number_group_size_int=\count330
+\l__siunitx_number_group_minimum_int=\count331
+\l__siunitx_angle_tmp_dim=\dimen263
+\l__siunitx_angle_marker_box=\box81
+\l__siunitx_angle_unit_box=\box82
+\l__siunitx_compound_count_int=\count332
+ (/usr/local/texlive/2026/texmf-dist/tex/latex/translations/translations.sty
+Package: translations 2022/02/05 v1.12 internationalization of LaTeX2e packages (CN)
+ (/usr/local/texlive/2026/texmf-dist/tex/latex/etoolbox/etoolbox.sty
+Package: etoolbox 2025/10/02 v2.5m e-TeX tools for LaTeX (JAW)
+\etb@tempcnta=\count333
+) (/usr/local/texlive/2026/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO)
+ (/usr/local/texlive/2026/texmf-dist/tex/generic/infwarerr/infwarerr.sty
+Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
+) (/usr/local/texlive/2026/texmf-dist/tex/generic/iftex/iftex.sty
+Package: iftex 2024/12/12 v1.0g TeX engine tests
+) (/usr/local/texlive/2026/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty
+Package: ltxcmds 2023-12-04 v1.26 LaTeX kernel commands for general use (HO)
+)
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+)) (/usr/local/texlive/2026/texmf-dist/tex/latex/amsmath/amstext.sty
+Package: amstext 2024/11/17 v2.01 AMS text
+ (/usr/local/texlive/2026/texmf-dist/tex/latex/amsmath/amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0 generic functions
+\@emptytoks=\toks17
+\ex@=\dimen264
+))
+\l__siunitx_table_tmp_box=\box83
+\l__siunitx_table_tmp_dim=\dimen265
+\l__siunitx_table_column_width_dim=\dimen266
+\l__siunitx_table_integer_box=\box84
+\l__siunitx_table_decimal_box=\box85
+\l__siunitx_table_uncert_box=\box86
+\l__siunitx_table_before_box=\box87
+\l__siunitx_table_after_box=\box88
+\l__siunitx_table_before_dim=\dimen267
+\l__siunitx_table_carry_dim=\dimen268
+\l__siunitx_unit_tmp_int=\count334
+\l__siunitx_unit_position_int=\count335
+\l__siunitx_unit_total_int=\count336
+ (/usr/local/texlive/2026/texmf-dist/tex/latex/tools/array.sty
+Package: array 2025/09/25 v2.6n Tabular extension package (FMi)
+\col@sep=\dimen269
+\ar@mcellbox=\box89
+\extrarowheight=\dimen270
+\NC@list=\toks18
+\extratabsurround=\skip51
+\backup@length=\skip52
+\ar@cellbox=\box90
+)) (/usr/local/texlive/2026/texmf-dist/tex/latex/xcolor/xcolor.sty
+Package: xcolor 2024/09/29 v3.02 LaTeX color extensions (UK)
+ (/usr/local/texlive/2026/texmf-dist/tex/latex/graphics-cfg/color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package xcolor Info: Driver file: pdftex.def on input line 274.
+ (/usr/local/texlive/2026/texmf-dist/tex/latex/graphics-def/pdftex.def
+File: pdftex.def 2025/09/29 v1.2d Graphics/color driver for pdftex
+) (/usr/local/texlive/2026/texmf-dist/tex/latex/graphics/mathcolor.ltx)
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1349.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1353.
+Package xcolor Info: Model `RGB' extended on input line 1365.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1367.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1368.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1369.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1370.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1371.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1372.
+) (/usr/local/texlive/2026/texmf-dist/tex/latex/ninecolors/ninecolors.sty
+Package: ninecolors 2022-02-13 v2022D Select colors with proper color contrast
+ (/usr/local/texlive/2026/texmf-dist/tex/latex/l3packages/xparse/xparse.sty (/usr/local/texlive/2026/texmf-dist/tex/latex/l3kernel/expl3.sty
+Package: expl3 2026-01-19 L3 programming layer (loader) 
+ (/usr/local/texlive/2026/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
+File: l3backend-pdftex.def 2025-10-09 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count337
+))
+Package: xparse 2025-10-09 L3 Experimental document command parser
+)) (/usr/local/texlive/2026/texmf-dist/tex/latex/float/float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count338
+\float@exts=\toks19
+\float@box=\box91
+\@float@everytoks=\toks20
+\@floatcapt=\box92
+) (/usr/local/texlive/2026/texmf-dist/tex/latex/booktabs/booktabs.sty
+Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
+\heavyrulewidth=\dimen271
+\lightrulewidth=\dimen272
+\cmidrulewidth=\dimen273
+\belowrulesep=\dimen274
+\belowbottomsep=\dimen275
+\aboverulesep=\dimen276
+\abovetopsep=\dimen277
+\cmidrulesep=\dimen278
+\cmidrulekern=\dimen279
+\defaultaddspace=\dimen280
+\@cmidla=\count339
+\@cmidlb=\count340
+\@aboverulesep=\dimen281
+\@belowrulesep=\dimen282
+\@thisruleclass=\count341
+\@lastruleclass=\count342
+\@thisrulewidth=\dimen283
+) (/usr/local/texlive/2026/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2023/08/05 v3.6o Customizing captions (AR)
+ (/usr/local/texlive/2026/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2023/07/31 v2.4d caption3 kernel (AR)
+ (/usr/local/texlive/2026/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
+\KV@toks@=\toks21
+)
+\caption@tempdima=\dimen284
+\captionmargin=\dimen285
+\caption@leftmargin=\dimen286
+\caption@rightmargin=\dimen287
+\caption@width=\dimen288
+\caption@indent=\dimen289
+\caption@parindent=\dimen290
+\caption@hangindent=\dimen291
+Package caption Info: Standard document class detected.
+)
+\c@caption@flags=\count343
+\c@continuedfloat=\count344
+Package caption Info: float package is loaded.
+) (/usr/local/texlive/2026/texmf-dist/tex/latex/geometry/geometry.sty
+Package: geometry 2026/03/07 v6.0 Page Geometry
+ (/usr/local/texlive/2026/texmf-dist/tex/generic/iftex/ifvtex.sty
+Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
+)
+\Gm@cnth=\count345
+\Gm@cntv=\count346
+\c@Gm@tempcnt=\count347
+\Gm@bindingoffset=\dimen292
+\Gm@wd@mp=\dimen293
+\Gm@odd@mp=\dimen294
+\Gm@even@mp=\dimen295
+\Gm@layoutwidth=\dimen296
+\Gm@layoutheight=\dimen297
+\Gm@layouthoffset=\dimen298
+\Gm@layoutvoffset=\dimen299
+\Gm@dimlist=\toks22
+) (/usr/local/texlive/2026/texmf-dist/tex/latex/fancyhdr/fancyhdr.sty
+Package: fancyhdr 2025/02/07 v5.2 Extensive control of page headers and footers
+\f@nch@headwidth=\skip53
+\f@nch@offset@elh=\skip54
+\f@nch@offset@erh=\skip55
+\f@nch@offset@olh=\skip56
+\f@nch@offset@orh=\skip57
+\f@nch@offset@elf=\skip58
+\f@nch@offset@erf=\skip59
+\f@nch@offset@olf=\skip60
+\f@nch@offset@orf=\skip61
+\f@nch@height=\skip62
+\f@nch@footalignment=\skip63
+\f@nch@widthL=\skip64
+\f@nch@widthC=\skip65
+\f@nch@widthR=\skip66
+\@temptokenb=\toks23
+) (/usr/local/texlive/2026/texmf-dist/tex/latex/currfile/currfile.sty
+Package: currfile 2024/03/14 v1.0 Provides the file path elements of the current input file
+ (/usr/local/texlive/2026/texmf-dist/tex/latex/kvoptions/kvoptions.sty
+Package: kvoptions 2022-06-15 v3.15 Key value format for package options (HO)
+ (/usr/local/texlive/2026/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty
+Package: kvsetkeys 2022-10-05 v1.19 Key value parser (HO)
+)) (/usr/local/texlive/2026/texmf-dist/tex/latex/filehook/filehook.sty
+Package: filehook 2022/10/25 v0.8b Hooks for input files
+ (/usr/local/texlive/2026/texmf-dist/tex/latex/filehook/filehook-2020.sty
+Package: filehook-2020 2022/10/25 v0.8b Hooks for input files
+))
+\c@currfiledepth=\count348
+)
+Package translations Info: No language package found. I am going to use `english' as default language. on input line 14.
+ (./view_tables.aux)
+\openout1 = `view_tables.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+ (/usr/local/texlive/2026/texmf-dist/tex/latex/translations/translations-basic-dictionary-english.trsl
+File: translations-basic-dictionary-english.trsl (english translation file `translations-basic-dictionary')
+)
+Package translations Info: loading dictionary `translations-basic-dictionary' for `english'. on input line 14.
+ (/usr/local/texlive/2026/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count349
+\scratchdimen=\dimen300
+\scratchbox=\box93
+\nofMPsegments=\count350
+\nofMParguments=\count351
+\everyMPshowfont=\toks24
+\MPscratchCnt=\count352
+\MPscratchDim=\dimen301
+\MPnumerator=\count353
+\makeMPintoPDFobject=\count354
+\everyMPtoPDFconversion=\toks25
+)
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: End \AtBeginDocument code.
+
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: <default>
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(72.26999pt, 469.75502pt, 72.26999pt)
+* v-part:(T,H,B)=(72.26999pt, 650.43001pt, 72.26999pt)
+* \paperwidth=614.295pt
+* \paperheight=794.96999pt
+* \textwidth=469.75502pt
+* \textheight=650.43001pt
+* \oddsidemargin=0.0pt
+* \evensidemargin=0.0pt
+* \topmargin=-37.0pt
+* \headheight=12.0pt
+* \headsep=25.0pt
+* \topskip=12.0pt
+* \footskip=30.0pt
+* \marginparwidth=44.0pt
+* \marginparsep=10.0pt
+* \columnsep=10.0pt
+* \skip\footins=10.8pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+(./main_paper/Table1.tex
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 23.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 23.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 23.
+) [1
+
+{/usr/local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] (./main_paper/Table2.tex
+Overfull \hbox (33.71748pt too wide) in paragraph at lines 29--30
+ [][] 
+ []
+
+) [2
+
+] (./main_paper/Table3.tex) [3
+
+] (./appendix/Table_C3_ITT.tex) [4
+
+] (./appendix/Table_C4_age.tex) [5] (./appendix/Table_C4_experience.tex) [6] (./appendix/Table_C5_CACE.tex) [7] (./appendix/Table_C6.tex
+Overfull \hbox (27.47604pt too wide) in paragraph at lines 32--33
+ [][] 
+ []
+
+) [8] (./appendix/Table_C7_A.tex) [9] (./appendix/Table_C7_B.tex) [10] (./appendix/Table_C7_C.tex) [11] (./appendix/Table_C8_CACE.tex) [12] (./appendix/Table_C8_ITT.tex) [13] (./appendix/Table_D1.tex
+Overfull \hbox (363.92102pt too wide) in paragraph at lines 21--22
+ [][] 
+ []
+
+) [14] (./view_tables.aux)
+ ***********
+LaTeX2e <2025-11-01>
+L3 programming layer <2026-01-19>
+ ***********
+ ) 
+Here is how much of TeX's memory you used:
+ 12790 strings out of 467525
+ 304469 string characters out of 5418982
+ 706368 words of memory out of 5000000
+ 41603 multiletter control sequences out of 15000+600000
+ 631670 words of font info for 53 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 83i,10n,111p,347b,2226s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
+Output written on view_tables.pdf (14 pages, 63006 bytes).
+PDF statistics:
+ 70 PDF objects out of 1000 (max. 8388607)
+ 45 compressed objects within 1 object stream
+ 0 named destinations out of 1000 (max. 500000)
+ 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+

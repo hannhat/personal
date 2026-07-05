@@ -1,0 +1,709 @@
+---
+title: "Reappraisal of When the Church Votes Left: How Progressive Bishops Supported the Workers' Party in Brazil"
+subtitle: "MY457 | WT 2026 "
+date: today
+author: "Candidate ID: 65770"
+format:
+  html:
+    embed-resources: true
+    toc: false
+---
+
+```{r setup, include = FALSE}
+# this chunk contains code that sets global options for the entire .Rmd.
+# we use include=FALSE to suppress it from the top of the document, but it will still appear in the appendix.
+knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE, linewidth=60)
+
+# you can include your libraries here:
+library(tidyverse)
+library(ggdag)
+
+# sourcing main helper function
+source("analysis_code/main_file_helpers.R")
+
+#  preparing data for figures/tables
+data         <- load_data()
+diodata_REP  <- prepare_diodata(data$diodata)
+munidata_REP <- prepare_munidata(data$munidata, diodata_REP)
+muni_panel   <- prepare_muni_panel(data$munidata, diodata_REP, data$electoral)
+dio_panel    <- prepare_dio_panel(muni_panel, diodata_REP)
+
+# Preparing balance test variables
+panel_A_vars <- c(
+  "IR"                        = "Resident Priests",
+  "NIR"                       = "Resident Priests (Not Incardinated)",
+  "INR"                       = "Non-Resident Priests",
+  "DIAC"                      = "Deacons",
+  "REL"                       = "Religious Priests",
+  "CASASREL_MASC"             = "Nr. of Male Religious Houses",
+  "CASASREL_FEM"              = "Nr. of Female Religious Houses",
+  "NR_PAR"                    = "Nr. of Parishes",
+  "NR_MUNI"                   = "Nr. of Charity Centers",
+  "recursos_nro"              = "Nr. of Charity Initiatives",
+  "recursos_total_activities" = "Nr. of Municipalities",
+  "parish_1980"               = "Municipal Parish Presence"
+)
+panel_B_vars <- c(
+  "pop.tot.1970"          = "Total Population (1970)",
+  "pop.urb.1970"          = "Urban Population (1970)",
+  "pop.rur.1970"          = "Rural Population (1970)",
+  "share_catolico_1970"   = "% Catholic Population (1970)",
+  "share_evangelico_1970" = "% Evangelical Population (1970)",
+  "share_catolico_1978"   = "% Catholic Population (1978)",
+  "share_evangelico_1978" = "% Evangelical Population (1978)",
+  "growth_evangelica"     = "Growth Evangelical Population (1970–1978)"
+)
+panel_C_vars <- c(
+  "ELEITORADO_1976" = "Electorate (1976)",
+  "MDB1976_SH"      = "MDB Vote Share (1976)",
+  "ARENA1976_SH"    = "ARENA Vote Share (1976)",
+  "ELEITORADO_1972" = "Electorate (1972)",
+  "MDB1972_SH"      = "MDB Vote Share (1972)",
+  "ARENA1972_SH"    = "ARENA Vote Share (1972)"
+)
+
+# and any other options in R:
+options(scipen=999)
+
+```
+
+# Introduction
+
+In this paper, the author is interested in whether exposure to religious authorities with economically progressive views can lead to increased support for progressive political parties. In particular, the author examines whether longer exposure to progressive Catholic bishops in Brazil led to increased support for the left-wing Workers' Party (PT) in four consecutive presidential elections from 1989-2002.
+
+To examine this question, the paper leverages the unexpected appointment of the conservative Pope John Paul II (JPII) in 1978 following relatively progressive control of the papacy under John XXIII and Paul VI from 1958-1978. Appointed bishops represent the Church within regional dioceses, which are areas within Brazil that encompass several smaller municipalities. The pope directly controls the appointment and replacement of bishops, and JPII aggressively attempted to appoint conservative bishops to open posts. Using an instrumental variables strategy, the paper exploits exogenous variation in when JPII replaced the sitting bishop of a diocese as a proxy for variation in the diocese's exposure to a progressive bishop. The paper then estimates how this variation in exposure affected PT political support within the municipalities of each diocese. The paper finds a statistically significant relationship between the number of years a municipality spent exposed to a progressive bishop and its support for the Workers' Party: for example, a one-year increase in exposure to a progressive bishop led to a 0.57% increase in PT vote share in the 1989 presidential elections.
+
+```{r}
+cace_res <- run_election_panel(muni_panel, "vote.sh", "Exposure", "Retirement_Years")
+itt_res  <- run_election_panel(muni_panel, "vote.sh", "Retirement_Years")
+
+build_panel_table(
+  cace_res, itt_res,
+  cace_coef_map = c("Exposure"         = "Exposure"),
+  itt_coef_map  = c("Retirement_Years" = "Mandated Retirement"),
+  header = "Table T1: Effects of the Length of Exposure to Progressive Bishops on the PT's Presidential Vote Share",
+  note = "Standard errors clustered at the 1978 diocese level in
+parentheses.  In all models, the unit of analysis is the municipality. 
+All specifications are estimated using ordinary least squares
+(ITT) and 2SLS (LATE) and include state fixed effects. 
+Direct replication of Table 1 in the paper.")
+```
+
+Beyond this headline result, the author conducts supplementary analyses to flesh out the
+link between progressive bishops and social activism (Figure D1 in the paper's Supplementary Material) and to support the idea that JPII bishops attempted to aggressively curb progressive support 
+among local Catholic priests (Tables 2 and 3 in the main paper). The author also conducts heterogeneity analyses
+to characterize the types of regions (geographical, economic, demographic) 
+where the link between progressive bishops and left-wing political support was strongest. She finds that
+exposure to progressive bishops was most important for left-wing political support in areas where
+labor unions were weakest. While I replicated these results (see the .README), I do not
+directly focus on evaluating these supplementary analyses in this reappraisal. 
+
+
+# Empirical Strategy
+
+The author argues that the main issue with evaluating the link between exposure to progressive bishops and left-wing political support is that JPII might have systematically prioritized replacing either more progressive 
+bishops or bishops in larger, more urban dioceses where left-wing parties hold an existing political
+advantage. This would confound the relationship between the length of time until a progressive bishop
+was replaced and municipality-level left-wing political support. 
+
+To address this issue, the author relies on an instrumental variables identification strategy that 
+takes advantage of a Catholic statute making it difficult for bishops to be replaced before they 
+either die or turn 75 years old. After bishops turn 75, the pope is able to request their 
+retirement or resignation. The mandated years of exposure to a progressive bishop --- the number of years after John Paul II's ascension in 1978 before 
+the sitting bishop either dies or turns 75 --- instruments for the actual years of progressive bishop exposure, generating as-if random variation in the years of progressive exposure. 
+
+Additionally, the author adds state-level fixed effects (the Brazilian state level is generally coarser than 
+the diocese level), motivated by the argument that they control for state-level variation in 
+Workers' Party presence and partisan competition. I 
+argue in the next subsection that the (justified) inclusion of these state fixed effects plays a crucial and understated role 
+both in tests of the validity of the instrument and in the results of the analysis
+itself. Finally, since treatment is assigned at the diocese level while political support is measured at the 
+more granular municipality level, standard errors are clustered at the diocese level. 
+
+The empirical strategy outlined above admits a directed acyclic graph (DAG)
+representation of the paper's causal theory (Figure 1), which will be a helpful reference 
+for the rest of this reappraisal. 
+
+```{r}
+#| label: fig-dag
+#| fig-cap: "Baseline Causal Theory"
+
+dag1 <- dagify(
+    Y ~ D + S,
+    D ~ Z,
+    Z ~ A + E,
+    E ~ A,
+    exposure = "D",
+    outcome  = "Y",
+    coords = data.frame(
+        name = c("A",  "E",  "Z", "S",   "D", "Y"),
+        x    = c(0,    2,    1,   3.5,   2.5,   4.5),
+        y    = c(0.5,    0.5,    0,   0.5,     0,   0)
+    ),
+    labels = c(
+        "A" = "Age in 1978",
+        "E" = "Early Death",
+        "Z" = "Mandated Exposure",
+        "S" = "State Characteristics",
+        "D" = "Progressive Exposure",
+        "Y" = "PT Vote Share"
+    )
+)
+
+ggdag(dag1, use_labels = "label", text = FALSE) +
+    theme_dag()
+```
+
+
+## State Fixed Effects
+
+The inclusion of state fixed effects in the main specification is essential to the interpretation of the results, to the tests of instrument validity, and to the results themselves. Without state fixed effects, the main specification would estimate whether differential exposure to progressive bishops itself predicts municipality-level left-wing political support. This would be extremely hard to estimate: regional and demographic variation due to historical factors likely dwarfs even the largest possible effects of progressive bishop exposure (this geographical variation in PT support is illustrated in Figure 1 of the paper). To test this more rigorously, I conduct a randomization F-test of whether average PT electoral support in 1989 was randomly distributed across Brazilian states and find that state-level support for the PT varied significantly (result in Code Appendix). 
+
+With state fixed effects, the paper actually estimates the effect of progressive bishop exposure on within-state variation in PT electoral support. All of the instrument validity checks the author conducts also include state fixed effects. This means that the paper actually pursues a conditional instrumental variables strategy, where instrument validity needs to be verified conditional on state fixed effects, and the instrument only needs to provide exogenous variation in progressive bishop exposure relative to other dioceses in the same state. Interestingly, the difference in average mandated exposure to progressive bishops across states is plausibly driven by random variation: a randomization F-test of whether mandated progressive exposure was randomly distributed across Brazilian states does not reject the null (Code Appendix). However, the large discrepancies in PT support across Brazilian states drive spurious results when combined with this random variation in mandated exposure and no fixed effects, as the 2SLS regressions can pick up patterns that are driven by large differences in PT support and their spurious relationship with mandated exposure rather than by the treatment effect of interest. This is particularly true because the sample size used in this paper is relatively small: there are only 221 dioceses across 25 states. 
+
+```{r}
+cace_res <- run_election_panel(muni_panel, "vote.sh", "Exposure", "Retirement_Years",
+                               state_fe = FALSE)
+itt_res  <- run_election_panel(muni_panel, "vote.sh", "Retirement_Years",
+                               state_fe = FALSE)
+
+build_panel_table(
+  cace_res, itt_res,
+  cace_coef_map = c("Exposure" = "Exposure"),
+  itt_coef_map  = c("Retirement_Years" = "Mandated Retirement"),
+  header = "Table R1: Effects of the Length of Exposure to Progressive Bishops on the PT's Presidential Vote Share - No State Fixed Effects",
+  note = "Standard errors clustered at the 1978 diocese level in
+parentheses.  In all models, the unit of analysis is the municipality. 
+All specifications are estimated using ordinary least squares
+(ITT) and 2SLS (LATE). 
+Alternative specification for Table 1 in the paper.")
+```
+
+The fact that controlling for state characteristics seems so important, and that these characteristics seem to drive variation in the outcome but not the instrument, suggests a natural idea: is it possible to control for this variation in PT support directly and estimate the effect of progressive bishop exposure on the *growth* of that support? I explore this idea in detail in the last section of this reappraisal. 
+
+## Instrument Validity
+
+In order to check that mandatory exposure is a valid instrument, the paper needs to argue that
+the instrument satisfies monotonicity, relevance, exogeneity, and the exclusion restriction. 
+While monotonicity is not addressed explicitly, a violation would require a significant population of bishops who could remain in their post
+beyond their mandatory retirement year; this is not observed in the data (see Table 2 below). 
+
+The instrument is mechanically determined by a bishop's age and their potential death before the age of 75.
+More formally, 
+$\text{Mandated Exposure} = min(\text{current year} - 1978, 75 - \text{age in 1978 }, \text{year of death} - 1978)$. This means that 
+every instrument validity assumption technically needs to be checked both with respect to bishop age and to early death, even if the latter is technically an implausible candidate for violating these assumptions. 
+Because these violations are implausible, the paper does not check instrument validity with respect to early
+death. It is also difficult to postulate confounders and alternative mediators that could exist between the 
+early bishop death and PT electoral outcomes. 
+For due diligence, I run a specification of the headline instrumental variables specification
+procedure where the instrument is determined entirely by bishop age in 1978: $\text{Mandated Exposure} = min(\text{current year} - 1978, 75 - \text{age in 1978 })$. The headline results remain broadly similar. Following the author, I do not discuss potential death-related
+instrument assumption violations in the following sections. 
+
+```{r}
+cace_res <- run_election_panel(muni_panel, "vote.sh", "Exposure", "Retirement_Years_REP")
+itt_res  <- run_election_panel(muni_panel, "vote.sh", "Retirement_Years_REP")
+
+build_panel_table(
+  cace_res, itt_res,
+  cace_coef_map = c("Exposure"         = "Exposure"),
+  itt_coef_map  = c("Retirement_Years_REP" = "Mandated Retirement"),
+  header = "Table R2: Effects of the Length of Exposure to Progressive Bishops on the PT's Presidential Vote Share; Bishop Age-only Instrument",
+  note = "Standard errors clustered at the 1978 diocese level in
+parentheses.  In all models, the unit of analysis is the municipality. 
+All specifications are estimated using ordinary least squares
+(ITT) and 2SLS (LATE) and include state fixed effects. 
+Alternative specification for Table 1 in the paper.")
+```
+
+With the exception of the relevance condition, all tests of exogeneity and the exclusion restriction
+discussed below remain unchanged. For relevance, the plot of F-statistics below shows
+that the relevance condition remains satisfied for this instrument (F-statistics greater than 75 for all relevant election years).
+
+```{r}
+#| label: fig-fs_f_stat_age_only_instrument
+#| fig-cap: "Age-only instrument: First stage F-statistic, by year"
+fs_rep <- compute_first_stage(diodata_REP, instrument_var = "M_YEAR_ND_REP")
+plot_first_stage_fstats(fs_rep)
+```
+
+
+### Relevance
+
+To show relevance, the author plots the relationship between the year of mandated retirement 
+and the year JPII actually replaced the bishop (Figure 2A in the paper), where
+the dotted line illustrates perfect compliance. 
+
+```{r}
+#| label: fig-fs_scatter
+#| fig-cap: "Mandated versus actual exposure"
+plot_first_stage_scatter(diodata_REP)
+```
+
+The scatter plot shows a strong relationship between the year of mandated retirement
+and the year JPII actually made his first appointment. To confirm this,
+the author also plots the first stage F-statistics by year (Figure 2C in the paper) and finds
+a strong relationship between the instrument and the treatment for all years after the mid 1980s. 
+
+```{r}
+#| label: fig-fs_f_stat
+#| fig-cap: "First stage F-statistic, by year"
+fs <- compute_first_stage(diodata_REP)
+plot_first_stage_fstats(fs)
+```
+
+Note that despite the conditional instrumental variables assumptions the paper relies on, relevance of the 
+instrument is checked unconditional on state fixed effects. This still provides evidence that the conditional relevance assumption
+is also satisfied, since state characteristics are unlikely to be a collider on a path between the instrument and the outcome
+given that state borders were historically determined. 
+
+### Exogeneity
+
+The exogeneity assumption requires that there cannot be any confounders of the relationship
+between either the instrument and the treatment or the instrument and the outcome. The instrument
+is mechanically determined by bishop age and death; the actual time 
+a bishop remains in office is determined by a factor other than their death or 
+retirement only if they are transferred to another post. There are no obvious factors that
+would confound the relationship between a bishop's mandatory retirement year and their 
+chances of being transferred. Additionally, only 18% of all dioceses had a bishop that was 
+transferred (Code Appendix), which puts a restrictive upper bound on the size of this potential exogeneity violation
+even if there is a strong unmeasured confounder of the instrument-treatment relationship.
+
+The paper addresses the age-related exogeneity violation by testing for confounders
+of the instrument-outcome relationship in two ways. The main concern here is potential confounding of the 
+bishop age-outcome relationship.
+For example, within-state municipal characteristics (e.g. high levels of poverty relative to other states) 
+could have led to more progressive, systematically younger bishops being appointed while also leading to higher levels of support for the PT. 
+
+To address this concern, balance checks are conducted by regressing various municipal and diocese level characteristics, with state fixed effects included, on the instrument. The balance
+tests find no significant relationships between within-state variation in municipal, diocese, and electoral variables and the instrument. 
+
+```{r}
+build_balance_table(
+  run_balance_test(diodata_REP, munidata_REP),
+  panel_A_vars, panel_B_vars, panel_C_vars,
+  header = "Table T2: Balance Tests",
+  note = "In all models, the outcome is the year of progressives’ mandated retirement. In Panel A and line 1 of
+Panel B the unit of analysis is the diocese. In Panel C and lines 2-4 of Panel B the unit of analysis is
+the municipality and I report clustered standard errors at the diocese level. The number of districts vary
+by specification because of missing information on the corresponding variable. All specifications are
+estimated using ordinary least squares (ITT) and include state fixed effects and robust standard errors.
+Direct replication of Table B1 in paper Supplementary Materials."
+)
+```
+
+Additionally, the author conducts a placebo outcome test where the main instrumental variables specification is estimated for each election year but with PT vote share replaced by vote share for the 
+opposition to the Brazilian dictatorship's party during the 1976 elections. This test examines whether the length of mandated exposure to progressive bishops is related to any other factor that might affect electoral outcomes. If such a relationship existed, the placebo outcome test might return significant results even though the instrument, which only begins to vary in 1978, could not possibly affect the outcome of the 1976 elections. The estimates for all four election year specifications are not statistically significant. 
+
+```{r}
+cace_res <- run_election_panel(muni_panel, "MDB1976_SH", "Exposure", "Retirement_Years", 
+                               extra_filter = !is.na(cod.1970))
+itt_res  <- run_election_panel(muni_panel, "MDB1976_SH", "Retirement_Years",
+                               extra_filter = !is.na(cod.1970))
+build_panel_table(
+  cace_res, itt_res,
+  cace_coef_map = c("Exposure"         = "Exposure"),
+  itt_coef_map  = c("Retirement_Years" = "Mandated Retirement"),
+  header = "Table T3: Effects of the Length of Exposure to Progressive Bishops on the MDB’s 1976 Vote Share",
+  note = "Standard errors clustered at the 1978 diocese level in
+parentheses.  In all models, the unit of analysis is the municipality. All specifications are estimated using ordinary least squares (ITT) and 2SLS (LATE) and include state fixed effects. 
+Direct replication of Table B2 in the paper Supplementary Materials.")
+```
+
+Taken together, these results lend credibility to the idea that the relationship between
+mandatory years of exposure and PT electoral outcomes is unconfounded. 
+
+### Exclusion Restriction
+
+To satisfy the exclusion restriction, the paper tries to show that the only pathway through which mandatory 
+exposure affects PT electoral outcomes is through its effect on actual exposure. The paper runs robustness checks to address two distinct issues. 
+
+The first issue is a bundled treatment problem: the replacement of progressive bishops
+with conservative bishops also implies turnover in diocesan leadership. This turnover itself might be a driver of the diocese's ability to affect electoral outcomes. If so, the instrumental variable estimation would be capturing both the effect of the ideological difference between the outgoing and incoming bishop and the difference between dioceses that had not yet experienced leadership turnover and those that had. To test this, the author presents an alternative specification of the main result that includes only dioceses where the bishop's mandated retirement occurred before the election, which eliminates the variation in whether the diocese had experienced turnover. The author claims the main estimates remain largely consistent with this specification, though there seems to be a large discrepancy in the point estimate for the 1994 elections. 
+
+```{r}
+cace_res <- run_election_panel(muni_panel, "vote.sh", "Exposure", "Retirement_Years", 
+                               extra_filter = I_YEAR < election)
+itt_res  <- run_election_panel(muni_panel, "vote.sh", "Retirement_Years",
+                               extra_filter = I_YEAR < election)
+
+build_panel_table(
+  cace_res, itt_res,
+  cace_coef_map = c("Exposure"         = "Exposure"),
+  itt_coef_map  = c("Retirement_Years" = "Mandated Retirement"),
+  header = "Table T4: Effects of the Length of Exposure to Progressive Bishops on the PT’s Presidential Vote
+Share - Only Dioceses With Mandated Retirement Prior to the Election",
+  note = "Standard errors clustered at the 1978 diocese level in
+parentheses.  In all models, the unit of analysis is the municipality. All specifications are estimated using ordinary least squares (ITT) and 2SLS (LATE) and include state fixed effects. 
+Direct replication of Table C5 in the paper Supplementary Materials.")
+```
+
+The second issue the author tests is whether bishop age, which is mechanically tied to the instrument, or experience, which
+is closely tied to age, has a direct effect on PT electoral outcomes. This would be another bundled treatment concern because the outgoing
+progressive bishops are older and more experienced on average than the incoming JPII bishops, so the estimation might be picking up
+a bishop's increased ability to influence the electorate that comes with age or experience. To test this, the author runs a placebo treatment test where the actual treatment is replaced by the age of the sitting progressive bishop. The sample is restricted to dioceses where the progressive bishop had not been mandated to retire by the election year, which accounts for the fact that bishop age and length of actual exposure are highly correlated. Thus, the test can identify whether variation in bishop age drives variation in electoral outcomes while the instrument is held constant and thus cannot drive variation in the outcome. Similarly, using data on the date the bishop first entered
+office, the effect of progressive bishop experience can be tested with a similar placebo treatment test. 
+
+```{r}
+age <- run_election_panel(muni_panel, "vote.sh", "bish_age", extra_filter = I_YEAR > election)
+experience <- run_election_panel(muni_panel, "vote.sh", "experience", extra_filter = I_YEAR > election)
+build_panel_table(
+  age, experience,
+  cace_coef_map = c("bish_age" = "Age"),
+  itt_coef_map  = c("experience" = "Experience"),
+  first_panel_title = "Panel A: Bishop Age",
+  second_panel_title = "Panel B: Bishop Experience",
+  header = "Table T5: Effects of Bishop Age and Experience on the PT’s Presidential Vote Share",
+  note = "Standard errors clustered at the 1978 diocese level in
+parentheses.  In all models, the unit of analysis is the municipality. All specifications are estimated using ordinary least squares and include state fixed effects. 
+Direct replication of Table C4 in the paper Supplementary Materials.")
+```
+
+Although these placebo treatment tests show that older or more experienced progressive bishops do not seem to systematically
+predict better PT electoral outcomes across elections, they suffer from two issues. The first issue, which
+is a data constraint shared by many of the robustness checks and is noted in the paper's Supplementary Materials for this test, is that the number of unique dioceses included in the analyses is low, which raises concerns about the power of the tests to detect a non-zero effect. Second, with respect to the effect of experience on electoral outcomes especially, this placebo treatment test had limited ability to test the independent effect of experience. This is because for the first year of elections in 1989, all progressive bishops each have at least 11 years of experience by definition. Experience could plausibly affect outcomes in two ways: more experienced progressive bishops may have stronger community ties and political organizing capacity, or bishops' own beliefs may shift over time as they adapt to the situation faced by their parishioners. These non-exposure related mechanisms do not seem obviously linear; we would expect bishops to build political organizing capacity faster with an additional year of experience early in their careers compared to when they have already been in office for decades. Thus, ruling out that differences in experience among progressive bishops with at least 11 years of experience affect electoral outcomes does not rule out the pathway from experience to PT electoral success that we are worried about. 
+
+To supplement the analysis above, I propose an additional placebo treatment test that examines the effect of JPII bishop experience on electoral outcomes. I take advantage of the fact that the experience of an incoming JPII bishop can be partially determined from the year they were assigned to the diocese. Using the time from an election to the appointment date assumes that the first JPII bishop was not replaced before this election. In the data, the average tenure for progressive bishops was 25 years (Code Appendix), while the maximum possible experience for a JPII bishop during the 2002 election was 24 years, so violations of this assumption do not seem likely to significantly bias the results. This test also relies on the fact that the mandated retirement instrument works as an instrument for both progressive bishop exposure and, by symmetry, years of conservative bishop exposure. This also means that defining the treatment in this way gives identical, opposite-signed, results to the main specification (Code Appendix). Thus, I can control for years of mandated exposure for conservative bishops in the same way as the above placebo treatment test by including only dioceses where the progressive bishop has been mandated to retire.
+
+The significant advantage of this placebo treatment test is that the sample includes bishops with low levels of experience, so the potential effect of variation in experience can be observed at low levels of exposure. Additionally, if we are worried about the phenomenon of bishops' political beliefs converging to the beliefs of their constituencies, which would make JPII bishops ideologically converge to the beliefs of the existing, longer tenured bishops over time, we should test the effect of experience on the JPII bishops, not the outgoing progressive bishops. 
+
+```{r}
+experience <- run_election_panel(muni_panel, "vote.sh", "experience_JPII", extra_filter = I_YEAR < election)
+
+build_panel_table(
+  experience,
+  cace_coef_map = c("experience_JPII" = "Experience"),
+  first_panel_title = "Panel A: Bishop Experience",
+  header = "Table R3: Effects of JPII Bishop Experience on the PT’s Presidential Vote Share",
+  note = "Standard errors clustered at the 1978 diocese level in
+parentheses.  In all models, the unit of analysis is the municipality. All specifications are estimated using ordinary least squares and include state fixed effects.")
+```
+
+This placebo treatment test shows small and oppositely signed effect magnitudes of JPII bishop experience on PT electoral outcomes. Interestingly,
+the effect becomes significant for 1998 PT electoral outcomes, where more years of experience are negatively related to electoral outcomes. However, this effect would 
+bias the estimates of the headline specification downwards, meaning that the true effect is larger than the estimated one and the paper's headline result would be strengthened. Taken together, this collection of placebo treatment tests provides encouraging evidence against the existence of a bishop age or experience related causal pathway biasing the paper's main results. 
+
+## Other Robustness Checks
+
+The author runs a number of additional robustness checks that are included in the Supplemental Materials. 
+She tests whether the results are robust to using dioceses instead of municipalities as the unit of analysis 
+(Table C1 in the Supplementary Materials), including archdioceses (Table C2), excluding non-progressive pre-JPII bishops (Table C7), and including only bishops elevated by JPII (Table C8). 
+
+# Dynamic Treatment Effects
+
+While the headline results of the paper provide unified evidence that increased exposure to progressive 
+bishops improves within-state PT electoral outcomes, precisely interpreting the results of this analysis is tricky. The instrumental variables strategy targets the local average treatment effect (LATE), but it is unclear exactly who the compliers are. The interpretation of the LATE here seems to be: the average within-state effect of one additional year of progressive bishop exposure on PT vote share, for dioceses where the bishop's tenure was "determined" by the mandatory retirement rule. Adding to the complication of interpreting these results is that there is not a single unified point estimate of this effect because four specifications, one for each Brazilian election between 1989 and 2002, are presented, and the point estimates decrease over time. 
+
+This interpretation issue motivates my proposal to estimate a difference-in-differences (DiD) design with dynamic treatment effects. For each election year between 1989 and 2002, I create a binary indicator for whether the diocese bishop had been mandated to retire by the election year or not. Using this indicator as the treatment and PT electoral outcomes as the
+outcome (with standard errors clustered at the diocese level), I estimate a staggered adoption DiD using the `did_multiplegt_dyn` R package from de Chaisemartin and d'Haultfoeuille (2025). This design estimates intent-to-treat (ITT) effects instead of the LATE and estimates the dynamic effect of each extra electoral cycle of mandated progressive bishop exposure on the growth of PT electoral support compared to a counterfactual diocese where the progressive bishop should have been replaced for those cycles. These effects are similar to those the author implements in Table C6 of the Supplementary Materials. The advantages of this estimation strategy are the relative ease of interpretation and the direct mapping onto the core research question of the paper. Additionally, because changes instead of levels are being measured, the high regional variation in PT support is in some ways less of an issue for estimation.
+
+We need the no anticipation and parallel trends assumptions to get unbiased results under this estimation strategy. Parallel trends requires that municipalities have the same expected evolution of PT support if their progressive bishop was not mandated to be replaced. This assumption is plausible because the as-if random nature of mandatory exposure means that dioceses with variation in mandatory exposure should be similar in expectation. Even without state fixed effects, a balance test regressing the instrument on diocese, municipality, and electoral characteristics shows mostly non-significant variation in characteristics predicted by mandatory exposure. 
+
+```{r}
+build_balance_table(
+  run_balance_test(diodata_REP, munidata_REP, state_fe = FALSE),
+  panel_A_vars, panel_B_vars, panel_C_vars,
+  header = "Table R4: Balance Tests",
+  note = "In all models, the outcome is the year of progressives’ mandated retirement. In Panel A and line 1 of
+Panel B the unit of analysis is the diocese. In Panel C and lines 2-4 of Panel B the unit of analysis is
+the municipality and I report clustered standard errors at the diocese level. The number of districts vary
+by specification because of missing information on the corresponding variable. All specifications are
+estimated using ordinary least squares (ITT) and include robust standard errors."
+)
+```
+
+No anticipation requires that a municipality's outcome does not depend on its future treatments. This assumption is more complicated because it depends on how bishops and their parishioners react to the mandatory bishop retirement age and whether this is well-known. In particular, a progressive bishop might know they will be replaced by a conservative bishop and become more politically active. Evaluating the effect of this assumption violation requires either better data or a detailed sensitivity analysis and is beyond the scope of this extension. 
+
+Finally, there is a minor issue with the fact that there are 5 years between the 1989 and 1994 elections but only 4 years between the other elections. This means that any comparisons looking at the difference between 1989 and 1994 election results will be slightly biased relative to the other comparisons in the data. 
+
+```{r}
+#| label: fig-fs_did_multiplegt_dyn
+#| fig-cap: "Dynamic treatment effects of mandatory progressive bishop retirement on PT vote share growth"
+
+did_result <- run_did_dynamic(muni_panel)
+did_result$plot + labs(title = NULL, x = "Number of Elections Since Mandatory Progressive Replacement",
+                       y = "PT Vote Share Growth") + scale_y_continuous(labels = function(x) paste0(x, "%"))
+```
+
+The precise regression output (Code Appendix) shows that the $t+1$ and $t+2$ dynamic effects are significant at the $\alpha = 0.05$
+significance level. A pre-trends test is included to check whether parallel pre-trends hold one period before dioceses switch into mandatory replacement. This test should be interpreted with care, as de Chaisemartin and d'Haultfoeuille (2025) state that it should only be used to test pre-trends for the comparison of groups that switch into mandatory replacement for one election and those that do not. Additionally, only groups that were not subject to mandatory bishop replacement before the 1989 elections can be included for this specification (de Chaisemartin and d'Haultfoeuille 2025), which means that the small sample issues that plague the main paper are exacerbated here.
+
+Overall, the results of this analysis align with the main paper's headline result. The DiD specification estimates that municipalities where the bishop is mandated to retire one election earlier experience a 1.68% decrease in PT electoral support growth compared to municipalities where their progressive bishop was not yet mandated to retire. For example, taking the ITT for the headline specification estimated on the 1989 election implies that a 4-year increase in mandatory exposure causes a $0.385*4 = 1.54$ percent increase in PT vote share. The DiD specification provides a unified estimate of the effect of mandatory progressive exposure on PT vote share growth across the 1989-2002 elections. 
+
+\clearpage
+
+# Code appendix
+
+```{r ref.label = knitr::all_labels(), echo=TRUE, eval=FALSE}
+# this chunk generates the complete code appendix.
+
+### Main results used to generate the plots and tables in the reappraisal =====
+
+# sourcing main helper function
+source("analysis_code/main_file_helpers.R")
+
+#  preparing data for figures/tables
+data         <- load_data()
+diodata_REP  <- prepare_diodata(data$diodata)
+munidata_REP <- prepare_munidata(data$munidata, diodata_REP)
+muni_panel   <- prepare_muni_panel(data$munidata, diodata_REP, data$electoral)
+dio_panel    <- prepare_dio_panel(muni_panel, diodata_REP)\
+
+# Preparing balance test variables
+panel_A_vars <- c(
+  "IR"                        = "Resident Priests",
+  "NIR"                       = "Resident Priests (Not Incardinated)",
+  "INR"                       = "Non-Resident Priests",
+  "DIAC"                      = "Deacons",
+  "REL"                       = "Religious Priests",
+  "CASASREL_MASC"             = "Nr. of Male Religious Houses",
+  "CASASREL_FEM"              = "Nr. of Female Religious Houses",
+  "NR_PAR"                    = "Nr. of Parishes",
+  "NR_MUNI"                   = "Nr. of Charity Centers",
+  "recursos_nro"              = "Nr. of Charity Initiatives",
+  "recursos_total_activities" = "Nr. of Municipalities",
+  "parish_1980"               = "Municipal Parish Presence"
+)
+panel_B_vars <- c(
+  "pop.tot.1970"          = "Total Population (1970)",
+  "pop.urb.1970"          = "Urban Population (1970)",
+  "pop.rur.1970"          = "Rural Population (1970)",
+  "share_catolico_1970"   = "% Catholic Population (1970)",
+  "share_evangelico_1970" = "% Evangelical Population (1970)",
+  "share_catolico_1978"   = "% Catholic Population (1978)",
+  "share_evangelico_1978" = "% Evangelical Population (1978)",
+  "growth_evangelica"     = "Growth Evangelical Population (1970–1978)"
+)
+panel_C_vars <- c(
+  "ELEITORADO_1976" = "Electorate (1976)",
+  "MDB1976_SH"      = "MDB Vote Share (1976)",
+  "ARENA1976_SH"    = "ARENA Vote Share (1976)",
+  "ELEITORADO_1972" = "Electorate (1972)",
+  "MDB1972_SH"      = "MDB Vote Share (1972)",
+  "ARENA1972_SH"    = "ARENA Vote Share (1972)"
+)
+
+# Table T1 ---
+cace_res <- run_election_panel(muni_panel, "vote.sh", "Exposure", "Retirement_Years")
+itt_res  <- run_election_panel(muni_panel, "vote.sh", "Retirement_Years")
+
+build_panel_table(
+  cace_res, itt_res,
+  cace_coef_map = c("Exposure"         = "Exposure"),
+  itt_coef_map  = c("Retirement_Years" = "Mandated Retirement"),
+  header = "Table T1: Effects of the Length of Exposure to Progressive Bishops on the PT's Presidential Vote Share",
+  note = "Standard errors clustered at the 1978 diocese level in
+parentheses.  In all models, the unit of analysis is the municipality. 
+All specifications are estimated using ordinary least squares
+(ITT) and 2SLS (LATE) and include state fixed effects. 
+Direct replication of Table 1 in the paper.")
+
+# Figure 1 ---
+dag1 <- dagify(
+    Y ~ D + S,
+    D ~ Z,
+    Z ~ A + E,
+    E ~ A,
+    exposure = "D",
+    outcome  = "Y",
+    coords = data.frame(
+        name = c("A",  "E",  "Z", "S",   "D", "Y"),
+        x    = c(0,    2,    1,   3.5,   2.5,   4.5),
+        y    = c(0.5,    0.5,    0,   0.5,     0,   0)
+    ),
+    labels = c(
+        "A" = "Age in 1978",
+        "E" = "Early Death",
+        "Z" = "Mandated Exposure",
+        "S" = "State Characteristics",
+        "D" = "Progressive Exposure",
+        "Y" = "PT Vote Share"
+    )
+)
+
+ggdag(dag1, use_labels = "label", text = FALSE) +
+    theme_dag()
+
+# Table R1 ---
+cace_res <- run_election_panel(muni_panel, "vote.sh", "Exposure", "Retirement_Years",
+                               state_fe = FALSE)
+itt_res  <- run_election_panel(muni_panel, "vote.sh", "Retirement_Years",
+                               state_fe = FALSE)
+build_panel_table(
+  cace_res, itt_res,
+  cace_coef_map = c("Exposure" = "Exposure"),
+  itt_coef_map  = c("Retirement_Years" = "Mandated Retirement"),
+  header = "Table R1: Effects of the Length of Exposure to Progressive Bishops on the PT's Presidential Vote Share - No State Fixed Effects",
+  note = "Standard errors clustered at the 1978 diocese level in
+parentheses.  In all models, the unit of analysis is the municipality. 
+All specifications are estimated using ordinary least squares
+(ITT) and 2SLS (LATE). 
+Alternative specification for Table 1 in the paper.")
+
+# Table R2 ---
+cace_res <- run_election_panel(muni_panel, "vote.sh", "Exposure", "Retirement_Years_REP")
+itt_res  <- run_election_panel(muni_panel, "vote.sh", "Retirement_Years_REP")
+
+build_panel_table(
+  cace_res, itt_res,
+  cace_coef_map = c("Exposure"         = "Exposure"),
+  itt_coef_map  = c("Retirement_Years_REP" = "Mandated Retirement"),
+  header = "Table R2: Effects of the Length of Exposure to Progressive Bishops on the PT's Presidential Vote Share; Bishop Age-only Instrument",
+  note = "Standard errors clustered at the 1978 diocese level in
+parentheses.  In all models, the unit of analysis is the municipality. 
+All specifications are estimated using ordinary least squares
+(ITT) and 2SLS (LATE) and include state fixed effects. 
+Alternative specification for Table 1 in the paper.")
+
+# Figure 2 ---
+fs_rep <- compute_first_stage(diodata_REP, instrument_var = "M_YEAR_ND_REP")
+plot_first_stage_fstats(fs_rep)
+
+# Figure 3 ---
+plot_first_stage_scatter(diodata_REP)
+
+# Figure 4 ---
+fs <- compute_first_stage(diodata_REP)
+plot_first_stage_fstats(fs)
+
+# Table T2 ---
+build_balance_table(
+  run_balance_test(diodata_REP, munidata_REP),
+  panel_A_vars, panel_B_vars, panel_C_vars,
+  header = "Table T2: Balance Tests",
+  note = "In all models, the outcome is the year of progressives’ mandated retirement. In Panel A and line 1 of
+Panel B the unit of analysis is the diocese. In Panel C and lines 2-4 of Panel B the unit of analysis is
+the municipality and I report clustered standard errors at the diocese level. The number of districts vary
+by specification because of missing information on the corresponding variable. All specifications are
+estimated using ordinary least squares (ITT) and include state fixed effects and robust standard errors.
+Direct replication of Table B1 in paper Supplementary Materials."
+)
+
+# Table T3 ---
+cace_res <- run_election_panel(muni_panel, "MDB1976_SH", "Exposure", "Retirement_Years", 
+                               extra_filter = !is.na(cod.1970))
+itt_res  <- run_election_panel(muni_panel, "MDB1976_SH", "Retirement_Years",
+                               extra_filter = !is.na(cod.1970))
+build_panel_table(
+  cace_res, itt_res,
+  cace_coef_map = c("Exposure"         = "Exposure"),
+  itt_coef_map  = c("Retirement_Years" = "Mandated Retirement"),
+  header = "Table T3: Effects of the Length of Exposure to Progressive Bishops on the MDB’s 1976 Vote Share",
+  note = "Standard errors clustered at the 1978 diocese level in
+parentheses.  In all models, the unit of analysis is the municipality. All specifications are estimated using ordinary least squares (ITT) and 2SLS (LATE) and include state fixed effects. 
+Direct replication of Table B2 in the paper Supplementary Materials.")
+
+# Table T4 ---
+cace_res <- run_election_panel(muni_panel, "vote.sh", "Exposure", "Retirement_Years", 
+                               extra_filter = I_YEAR < election)
+itt_res  <- run_election_panel(muni_panel, "vote.sh", "Retirement_Years",
+                               extra_filter = I_YEAR < election)
+build_panel_table(
+  cace_res, itt_res,
+  cace_coef_map = c("Exposure"         = "Exposure"),
+  itt_coef_map  = c("Retirement_Years" = "Mandated Retirement"),
+  header = "Table T4: Effects of the Length of Exposure to Progressive Bishops on the PT’s Presidential Vote
+Share - Only Dioceses With Mandated Retirement Prior to the Election",
+  note = "Standard errors clustered at the 1978 diocese level in
+parentheses.  In all models, the unit of analysis is the municipality. All specifications are estimated using ordinary least squares (ITT) and 2SLS (LATE) and include state fixed effects. 
+Direct replication of Table C5 in the paper Supplementary Materials.")
+
+# Table T5 ---
+age <- run_election_panel(muni_panel, "vote.sh", "bish_age", extra_filter = I_YEAR > election)
+experience <- run_election_panel(muni_panel, "vote.sh", "experience", extra_filter = I_YEAR > election)
+build_panel_table(
+  age, experience,
+  cace_coef_map = c("bish_age" = "Age"),
+  itt_coef_map  = c("experience" = "Experience"),
+  first_panel_title = "Panel A: Bishop Age",
+  second_panel_title = "Panel B: Bishop Experience",
+  header = "Table T5: Effects of Bishop Age and Experience on the PT’s Presidential Vote Share",
+  note = "Standard errors clustered at the 1978 diocese level in
+parentheses.  In all models, the unit of analysis is the municipality. All specifications are estimated using ordinary least squares and include state fixed effects. 
+Direct replication of Table C4 in the paper Supplementary Materials.")
+
+# Table R3 ---
+experience <- run_election_panel(muni_panel, "vote.sh", "experience_JPII", extra_filter = I_YEAR < election)
+
+build_panel_table(
+  experience,
+  cace_coef_map = c("experience_JPII" = "Experience"),
+  first_panel_title = "Panel A: Bishop Experience",
+  header = "Table R3: Effects of JPII Bishop Experience on the PT’s Presidential Vote Share",
+  note = "Standard errors clustered at the 1978 diocese level in
+parentheses.  In all models, the unit of analysis is the municipality. All specifications are estimated using ordinary least squares and include state fixed effects.")
+
+# Table R4 ---
+build_balance_table(
+  run_balance_test(diodata_REP, munidata_REP, state_fe = FALSE),
+  panel_A_vars, panel_B_vars, panel_C_vars,
+  header = "Table R4: Balance Tests",
+  note = "In all models, the outcome is the year of progressives’ mandated retirement. In Panel A and line 1 of
+Panel B the unit of analysis is the diocese. In Panel C and lines 2-4 of Panel B the unit of analysis is
+the municipality and I report clustered standard errors at the diocese level. The number of districts vary
+by specification because of missing information on the corresponding variable. All specifications are
+estimated using ordinary least squares (ITT) and include robust standard errors."
+)
+
+# Figure 5 ---
+did_result <- run_did_dynamic(muni_panel)
+did_result$plot + labs(title = NULL, x = "Number of Elections Since Mandatory Progressive Replacement",
+                       y = "PT Vote Share Growth") + scale_y_continuous(labels = function(x) paste0(x, "%"))
+
+### Miscellaneous results referenced in the reappraisal =======================
+
+## State Fixed Effects -----
+
+#  State level variation in PT support ---
+state_vote_ra_test(muni_panel) # F-stat: >60
+
+# State level variation in mandatory retirement year ---
+state_instrument_ra_test(diodata_REP) # F-stat: 0.87
+
+# Correlation between state-level instrument and PT support ---
+muni_stats <- muni_panel %>%
+  filter(election == 1989) %>%
+  group_by(UF) %>% 
+  summarize(pt_share = sum(vote.sh) / n())
+states <- diodata_REP %>%
+  group_by(UF_dio) %>%
+  summarize(AVG_I_YEAR = mean(I_YEAR)) %>%
+  inner_join(muni_stats, by = c("UF_dio" = "UF")) %>%
+  drop_na()
+cat("Correlation between state-level mandated retirement year and state-level PT support:", 
+    cor(states$AVG_I_YEAR, states$pt_share))
+
+
+## Instrument Validity -----
+
+# Percentage of diocese that had their bishop transferred before their 75th birthday or death ---
+mean(diodata_REP$out_method_0 == "TRANSFER")  # 0.18
+
+## Average length of tenure for progressive bishops ---
+bishop_years <- munidata_REP %>% 
+  group_by(CE_code) %>% 
+  summarize(year_appointed = year(first(first_in_date_0)), 
+            year_exited = first(JPIIAPT_YEAR))
+mean((bishop_years$year_exited - bishop_years$year_appointed)) # 24.93
+
+## Result that using conservative bishop exposure as a treatment is numerically equivalent to the main specification ---
+cons_cace_res <- run_election_panel(muni_panel, "vote.sh", "TFR", "Retirement_Years")
+cons_itt_res  <- run_election_panel(muni_panel, "vote.sh", "Retirement_Years")
+build_panel_table(
+  cons_cace_res, cons_itt_res,
+  cace_coef_map = c("TFR"         = "Exposure"),
+  itt_coef_map  = c("Retirement_Years" = "Mandated Exposure"),
+  header = "Table R2: Effects of the Length of Exposure to Conservative Bishops on the PT's Presidential Vote Share",
+  note = "Standard errors clustered at the 1978 diocese level in
+parentheses.  In all models, the unit of analysis is the municipality. 
+All specifications are estimated using ordinary least squares
+(ITT) and 2SLS (LATE) and include state fixed effects. 
+The structure of this table is based on Table 1 in the main paper.")
+
+## Dynamic Treatment Effects -----
+did_result <- run_did_dynamic(muni_panel)
+summary(did_result)
+
+# Regression output for dynamic treatment effects specification in Figure 5 ---
+
+# eval=FALSE tells R not to re-run (``evaluate'') the code here.
+```

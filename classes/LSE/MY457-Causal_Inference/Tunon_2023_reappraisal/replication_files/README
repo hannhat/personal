@@ -1,0 +1,85 @@
+
+
+README file for:
+
+WHEN THE CHURCH VOTES LEFT: HOW PROGRESSIVE BISHOPS SUPPORTED THE WORKERS’ PARTY IN BRAZIL
+
+
+---------------------
+Replication notes
+----------------------
+
+To replicate the results you will need to run the scripts in R. The replication files run on "R version 4.4.1 (2024-06-14)." 
+
+Please note that you will need to install several packages. Importantly, the replication files use the package "here" to organize where the data should be retrieved and where the figure outputs will be stored. You can find the package notes at https://here.r-lib.org/. 
+
+
+---------------------
+Setup instructions
+----------------------
+
+Create an R Project in your chosen root directory. Inside it, add a `data/` folder for datasets and a `code/` folder for scripts (this is the default when you download the replication files). When you run the scripts, an `output/` folder will be created automatically to store all figures and tables.
+
+
+root
+ |
+ --- code
+ |
+ --- data
+ |
+ --- output
+
+
+---------------------
+Replication files
+----------------------
+
+- codebook_WCVL.html contains comprehensive documentation for all datasets, including variable definitions and data sources.
+
+- /data/ includes seven datasets:
+    diodata.csv, munidata.csv, and IPEA_electoral_data.csv are the primary datasets used throughout the paper.
+    muni_parish_database.csv supports the priest turnover analysis in Table 2.
+    panel_filiaco_mun_1970_pt.csv is used for the PT local presence analysis in Table 3.
+    NIS_Bishop-class.csv and bishops_all_countries.csv are used for the bishop analysis in the Appendix (Figures D1 and E1).
+
+- /code/ folder contains the seven R scripts used to reproduce the analysis. Although the scripts are numbered to reflect their logical sequence, each can be run independently and does not require execution in a specific order. The following table identifies the script in which each figure and table from the paper and appendix is generated:
+
+
+Main paper
+
+| Fig/Tab number | Fig/Tab name                                                                                                                                                | Code location                  |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------ |
+| Figure 1       | Territorial Expansion of the PT, 1989-2002                                                                                                                  | 1. descriptives.R              |
+| Figure 2       | First Stage: Mandated and Observed Length of Exposure to a Progressive Bishop                                                                               | 2. tests of design.R           |
+| Figure 3       | Mandated Exposure to Progressive Bishops, 1989-2002                                                                                                         | 1. descriptives.R              |
+| Table 1        | Effects of the Length of Exposure to Progressive Bishops on the PT's Presidential Vote Share                                                                | 3. analysis_electoral.R       |
+| Table 2        | The Effect of JPII Bishops on Priest Turnover                                                                                                               | 4. analysis parishdata.R       |
+| Table 3        | The Effect of JPII Bishops on the Local Expansion of the PT                                                                                                 | 5. analysis_localPT.R         |
+| Figure 4       | Marginal Effects of the Length of Exposure to a Progressive Bishop on the PT's Vote Share                                                                   | 6. analysis_electoral_htes.R |
+
+Appendix
+
+| Fig/Tab number | Fig/Tab name                                                                                                                                                | Code location                  |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------ |
+| Table A1       | Summary Statistics                                                                                                                                          | 1. descriptives.R              |
+| Figure B2      | Year of Retirement Age and JPII Bishop Replacements, By Type of Exit                                                                                        | 2. tests of design.R           |
+| Figure B3      | Age distribution of bishops and archbishops in office in October, 1978                                                                                      | 2. tests of design.R           |
+| Table B1       | Balance tests                                                                                                                                               | 2. tests of design.R           |
+| Table B2       | Effects of the Length of Exposure to Progressive Bishops on the MDB's 1976 Vote Share                                                                       | 2. tests of design.R           |
+| Table C1       | Effects of the Length of Exposure to Progressive Bishops on the PT's Presidential Vote Share - Diocese-level Analysis                                       | 3. analysis_electoral.R       |
+| Table C2       | Effects of the Length of Exposure to Progressive Bishops on the PT's Presidential Vote Share - Results Including Archdioceses                               | 3. analysis_electoral.R       |
+| Table C3       | Effects of the Length of Exposure to Progressive Bishops on the PT's Congressional Vote Share                                                               | 3. analysis_electoral.R       |
+| Table C4       | Effects of Bishop Age and Experience on the PT's Presidential Vote Share                                                                                    | 3. analysis_electoral.R       |
+| Table C5       | Effects of the Length of Exposure to Progressive Bishops on the PT's Presidential Vote Share - Only Dioceses With Mandated Retirement Prior to the Election | 3. analysis_electoral.R       |
+| Table C6       | Effects of the Length of Exposure to Progressive Bishops on the PT's Presidential Vote Share - Flexible Treatment Effects                                   | 3. analysis_electoral.R       |
+| Table C7       | Robustness to the Exclusion of Non-Progressive pre-JPII Bishops                                                                                             | 3. analysis_electoral.R       |
+| Table C8       | Only Bishops Elevated by JPII Classified as conservative bishops                                                                                            | 3. analysis_electoral.R       |
+| Table D1       | Effect of Exposure to Progressive Bishops for All Left Wing Parties                                                                                         | 3. analysis_electoral.R       |
+| Figure D1      | Bishop Activism, 1987-1990                                                                                                                                  | 7. bishopclass_analysis.R     |
+| Table D2       | Binning Estimates: Heterogeneous Treatment Effects (Reduced Form - ITT)                                                                                     | 6. analysis_electoral_htes.R |
+| Table D3       | Binning Estimates: Heterogeneous Treatment Effects with Control by Population (Reduced Form - ITT)                                                          | 6. analysis_electoral_htes.R |
+| Table D4       | Binning Estimates: Heterogeneous Treatment Effects (Reduced Form - ITT) - 2002 Election                                                                     | 6. analysis_electoral_htes.R |
+| Figure E1      | Catholic Progressivism in Comparative Perspective                                                                                                           | 8. Figure E1.R                 |
+
+
+

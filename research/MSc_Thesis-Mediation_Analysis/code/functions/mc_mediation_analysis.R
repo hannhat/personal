@@ -215,19 +215,21 @@ mc_estimation <- function(data,
       mu_m1_0 <- predict.glm(model_lst[[1]], 
                            mc_data %>% mutate(!!exposure := reference))   
       sigma_hat_m1_0 <- sigma(model_lst[[1]])
-      m1_0_draw <- rnorm(mc_draws, mean = mu_m1_0, sd = sigma_hat_m1_0)
+      m1_0_draw <- rnorm(mc_draws, mean = mu_m1_0, sd = sigma_hat_m1_0) # default M1
+      m1_0_draw_v2 <- rnorm(mc_draws, mean = mu_m1_0, sd = sigma_hat_m1_0) # default M1
       
       # M1(1)
       mu_m1_1 <- predict.glm(model_lst[[1]], 
                            mc_data %>% mutate(!!exposure := counterfactual))   
       sigma_hat_m1_1 <- sigma(model_lst[[1]])
-      m1_1_draw <- rnorm(mc_draws, mean = mu_m1_1, sd = sigma_hat_m1_1) # default M1
+      m1_1_draw <- rnorm(mc_draws, mean = mu_m1_1, sd = sigma_hat_m1_1) 
+      m1_1_draw_v2 <- rnorm(mc_draws, mean = mu_m1_1, sd = sigma_hat_m1_1) 
       
       # Mediator 2 ---
       # M2(0,M1(0))
       mc_data <- mc_data %>%
         mutate(!!exposure := reference,
-               !!mediators[1] := m1_0_draw)
+               !!mediators[1] := m1_0_draw_v2)
       mu_m2_00 <- predict.glm(model_lst[[2]], mc_data) 
       sigma_hat_m2_00 <- sigma(model_lst[[2]])
       m2_00_draw <- rnorm(mc_draws, mean = mu_m2_00, sd = sigma_hat_m2_00)
@@ -235,7 +237,7 @@ mc_estimation <- function(data,
       # M2(1,M1(0))
       mc_data <- mc_data %>%
         mutate(!!exposure := counterfactual,
-               !!mediators[1] := m1_0_draw)
+               !!mediators[1] := m1_0_draw_v2)
       mu_m2_10 <- predict.glm(model_lst[[2]], mc_data) 
       sigma_hat_m2_10 <- sigma(model_lst[[2]])
       m2_10_draw <- rnorm(mc_draws, mean = mu_m2_10, sd = sigma_hat_m2_10)
@@ -243,7 +245,7 @@ mc_estimation <- function(data,
       # M2(1,M1(1))
       mc_data <- mc_data %>%
         mutate(!!exposure := counterfactual,
-               !!mediators[1] := m1_1_draw)
+               !!mediators[1] := m1_1_draw_v2)
       mu_m2_11 <- predict.glm(model_lst[[2]], mc_data) 
       sigma_hat_m2_11 <- sigma(model_lst[[2]])
       m2_11_draw <- rnorm(mc_draws, mean = mu_m2_11, sd = sigma_hat_m2_11)
@@ -438,18 +440,20 @@ mc_estimation <- function(data,
                              mc_data %>% mutate(!!exposure := reference))   
       sigma_hat_m1_0 <- sigma(model_lst[[1]])
       m1_0_draw <- rnorm(mc_draws, mean = mu_m1_0, sd = sigma_hat_m1_0)
+      m1_0_draw_v2 <- rnorm(mc_draws, mean = mu_m1_0, sd = sigma_hat_m1_0)
       
       # M1(1)
       mu_m1_1 <- predict.glm(model_lst[[1]], 
                              mc_data %>% mutate(!!exposure := counterfactual))   
       sigma_hat_m1_1 <- sigma(model_lst[[1]])
-      m1_1_draw <- rnorm(mc_draws, mean = mu_m1_1, sd = sigma_hat_m1_1) # default M1
+      m1_1_draw <- rnorm(mc_draws, mean = mu_m1_1, sd = sigma_hat_m1_1)
+      m1_1_draw_v2 <- rnorm(mc_draws, mean = mu_m1_1, sd = sigma_hat_m1_1)
       
       # Mediator 2 ---
       # M2(0,M1(0))
       mc_data <- mc_data %>%
         mutate(!!exposure := reference,
-               !!mediators[1] := m1_0_draw)
+               !!mediators[1] := m1_0_draw_v2)
       mu_m2_00 <- predict.glm(model_lst[[2]], mc_data) 
       sigma_hat_m2_00 <- sigma(model_lst[[2]])
       m2_00_draw <- rnorm(mc_draws, mean = mu_m2_00, sd = sigma_hat_m2_00)
@@ -457,7 +461,7 @@ mc_estimation <- function(data,
       # M2(1,M1(0))
       mc_data <- mc_data %>%
         mutate(!!exposure := counterfactual,
-               !!mediators[1] := m1_0_draw)
+               !!mediators[1] := m1_0_draw_v2)
       mu_m2_10 <- predict.glm(model_lst[[2]], mc_data) 
       sigma_hat_m2_10 <- sigma(model_lst[[2]])
       m2_10_draw <- rnorm(mc_draws, mean = mu_m2_10, sd = sigma_hat_m2_10)
@@ -465,7 +469,7 @@ mc_estimation <- function(data,
       # M2(0,M1(1))
       mc_data <- mc_data %>%
         mutate(!!exposure := reference,
-               !!mediators[1] := m1_1_draw)
+               !!mediators[1] := m1_1_draw_v2)
       mu_m2_01 <- predict.glm(model_lst[[2]], mc_data) 
       sigma_hat_m2_01 <- sigma(model_lst[[2]])
       m2_01_draw <- rnorm(mc_draws, mean = mu_m2_01, sd = sigma_hat_m2_01)
@@ -473,7 +477,7 @@ mc_estimation <- function(data,
       # M2(1,M1(1))
       mc_data <- mc_data %>%
         mutate(!!exposure := counterfactual,
-               !!mediators[1] := m1_1_draw)
+               !!mediators[1] := m1_1_draw_v2)
       mu_m2_11 <- predict.glm(model_lst[[2]], mc_data) 
       sigma_hat_m2_11 <- sigma(model_lst[[2]])
       m2_11_draw <- rnorm(mc_draws, mean = mu_m2_11, sd = sigma_hat_m2_11)

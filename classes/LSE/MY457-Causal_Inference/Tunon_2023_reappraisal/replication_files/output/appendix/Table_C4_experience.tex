@@ -1,0 +1,27 @@
+\begin{table}
+\centering
+\begin{talltblr}[         %% tabularray outer open
+entry=none,label=none,
+note{}={+ p \num{< 0.1}, * p \num{< 0.05}, ** p \num{< 0.01}, *** p \num{< 0.001}},
+]                     %% tabularray outer close
+{                     %% tabularray inner open
+colspec={Q[]Q[]Q[]Q[]Q[]},
+hline{2}={1-5}{solid, black, 0.05em},
+hline{4}={1-5}{solid, black, 0.05em},
+hline{1}={1-5}{solid, black, 0.08em},
+hline{11}={1-5}{solid, black, 0.08em},
+column{2-5}={}{halign=c},
+column{1}={}{halign=l},
+}                     %% tabularray inner close
+& PT vote 1989 & PT vote 1994 & PT vote 1998 & PT vote 2002 \\
+experience & \num{-0.072} & \num{0.096} & \num{0.081} & \num{0.531} \\
+& (\num{0.070}) & (\num{0.172}) & (\num{0.367}) & (\num{0.500}) \\
+Num.Obs. & \num{2498} & \num{1812} & \num{1276} & \num{766} \\
+R2 & \num{0.335} & \num{0.282} & \num{0.470} & \num{0.297} \\
+R2 Adj. & \num{0.328} & \num{0.273} & \num{0.461} & \num{0.280} \\
+AIC & \num{24480.9} & \num{16733.2} & \num{11565.1} & \num{5574.8} \\
+BIC & \num{24492.5} & \num{16744.2} & \num{11575.4} & \num{5584.1} \\
+RMSE & \num{32.47} & \num{24.47} & \num{22.45} & \num{9.18} \\
+Std.Errors & by: CE\_1978 & by: CE\_1978 & by: CE\_1978 & by: CE\_1978 \\
+\end{talltblr}
+\end{table}

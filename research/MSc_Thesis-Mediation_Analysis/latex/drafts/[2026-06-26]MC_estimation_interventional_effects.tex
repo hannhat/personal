@@ -1,0 +1,446 @@
+\documentclass[12pt]{article} % Times New Roman, 12pt
+
+% SINGLE OR DOUBLE SPACE
+%\usepackage{gscale_thesis_singlespace} % Single spaced thesis
+\usepackage{../settings/template/gscale_thesis_doublespace} % Double spaced thesis
+
+
+\usepackage{../settings/template/fancyheadings} % Header and footer styling
+
+\usepackage[numbers, sort&compress]{natbib} % Bibliography
+
+\usepackage{setspace} % Allows double spacing but skips headers/footers
+\setcounter{tocdepth}{1} % Limits the TOC to chapter and section names
+
+% Additional packages
+\usepackage{graphicx} % Allows the inclusion of figures
+\usepackage{subcaption} % Allows captions to be added to subfigures
+\usepackage[justification=centering]{caption} % Centres caption text
+\usepackage{array} % Used for table formatting
+\newcolumntype{P}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\usepackage{booktabs} % Fancy-style tables
+\usepackage{longtable} % Allows for tables that are more than one page long
+\usepackage{float} % Better figure placement control
+\usepackage{rotating}
+\usepackage{enumerate} % Numbered lists
+\usepackage[shortlabels]{enumitem} % For controlling enumerate labels
+\usepackage[shortcuts]{extdash} % Allows manual hyphenation of hypenated words
+\usepackage{amsmath} % Non-standard math symbols
+\usepackage{amsfonts} % Extended fonts for mathematics
+\usepackage{multirow}
+
+\usepackage[hidelinks]{hyperref} % Linking to LaTeX labels and external URLs
+
+\numberwithin{equation}{section} % Numbers equations based on their section
+
+\usepackage{tabularx}
+\usepackage{pdflscape}
+\usepackage{booktabs} % for better horizontal lines
+\usepackage{makecell} % for line breaks inside cells
+
+% CUSTOM SETTINGS ********************************
+\input{../settings/custom/packages}
+\input{../settings/custom/settings}
+\input{../settings/custom/commands}
+
+\title{Monte Carlo estimation for interventional effects with multiple mediators}
+\author{Johann Hatzius}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Interventional Effects MC Estimation Code}
+
+The \texttt{mc\_mediation\_analysis.R} code implements Monte Carlo simulation based estimators of
+three distinct approaches to interventional effects described in the literature for one or two 
+mediator problems. The three approaches are that of Lin and Vanderweele (2017) (LV effects), 
+Vansteelandt and Daniel (2017) (VD), and Vanderweele and Robinson (2014)/Jackson and Vanderweele
+(2018) (VR). Each approach requires different underlying assumptions and targets operationally 
+different effects. My understanding of the conceptual machinery underpinning each approach, which
+is implemented in my code, is laid out in Section 2. A comparison of the effect estimates from each
+approach on how the effect of social class mobility is mediated by IQ and education is given in 
+Section 3. I envision integrating Section 2 from this write-up into the section of my dissertation 
+that discusses the theory behind mediation analysis with multiple mediators and integrating Section 3
+into a section that gives the application of my code and Monte Carlo approach to the social mobility
+data. A have produced a table of the arguments for the main MC estimation function I have written
+below. 
+
+\begin{center}
+\begin{tabular}{ |l|l|p{4cm}| } 
+ \hline
+ \textbf{Argument} & \textbf{Options} & \textbf{Notes} \\ 
+ \hline
+ \texttt{data} & dataframe & \\ 
+ \hline
+ \texttt{outcome\_model} & regression formula & \\ 
+ \hline
+ \texttt{outcome\_type} & ``continuous'', ``binary'' & \\ 
+ \hline
+ \texttt{mediator\_models} & vector of formulas & \\ 
+ \hline
+ \texttt{mediator\_types} & vector of ``continuous''/``binary'' & \\ 
+ \hline
+ \texttt{te\_model} & regression formula & model for Y(t) - Y(t*)\\ 
+ \hline
+ \texttt{exposure} & column & \\ 
+ \hline
+ \texttt{mediators} & vector of columns & \\
+ \hline
+ \texttt{outcome} & column & \\ 
+ \hline
+ \texttt{reference} & exposure value & \\
+ \hline
+ \texttt{effect\_type} & ``LV'', ``VD'', ``VR'' & \\ 
+ \hline
+ \texttt{vd\_conditional\_model} & regression formula & for VD effects only\\ 
+ \hline
+ \texttt{estimand} & ``ATE'', ``ATT'', ``ATU'' & ATU should be used for VR efffects \\ 
+ \hline
+ \texttt{mc\_draws} & integer & \\ 
+ \hline
+ \texttt{bootstrap\_reps} & integer & \\ 
+  \hline
+ \texttt{confint} & double (0-1) & \\ 
+ \hline
+
+\end{tabular}
+\end{center}
+
+
+\section{Types of Interventional Effects}
+
+\subsection{Lin and Vanderweele (2017)}
+
+The main idea in Lin and Vanderweele (2017) is to estimate path-specific interventional effects 
+in the multiple mediator setting in a similar way to how such effects are estimated in the single
+mediator case. In the two mediator case, this means that four interventional effects are estimated.
+These effects require that the causal ordering of the mediators is known. These effects will sum up 
+to the total effect in cases where there are no exposure-mediator or mediator-mediator interactions.
+However, these effects will not always sum to the total effect if there are exposure-mediator or 
+mediator-interactions. Instead, they always sum to the interventional total effect (defined below). 
+
+Suppose that $M_{1}$ and $M_{2}$ mediate the relationship between an exposure $A$ and an outcome $Y$
+and that the causal ordering of $M_{1}$ and $M_{2}$ is known. Suppose $a_{i} = \{0, 1\}$. 
+\begin{itemize}
+\item Let $M_{1}(a_{1})$ be the distribution of $M_{1}$ for units that receive exposure level $a_{1}$. 
+\item Let $M_{2}(a_{1},M_{1}(a_{2}))$ be the distribution of $M_{2}$ for units
+that hypothetically receive exposure level $a_{1}$ and a $M_{1}$ level drawn from $M_{1}(a_{2})$.
+\item Let $Y(a_{1},M_{1}(a_{2}),M_2(a_{3},M_{1}(a_{4})))$ be the distribution of $M_{2}$ for units
+that hypothetically receive exposure level $a_{1}$, a $M_{1}$ level drawn from $M_{1}(a_{2})$,
+and an $M_{2}$ level drawn from $M_{2}(a_{3},M_{1}(a_{4}))$.
+\end{itemize}
+
+We can write 
+$$\psi(a_{1},a_{2},a_{3},a_{4}) = \mathbb{E}(Y|a_{1},a_{2},a_{3},a_{4}) = \int \mathbb{E}(Y|a_{1},m_{1},m_{2})\mathbb{P}(M_{2}|a_{3},m_{1}^{*})\mathbb{P}(M_{1}^{*}|a_{4})\mathbb{P}(M_{1}|a_{2})dM_{1}dM_{1}^{*}dM_{2}$$
+where the two versions of $m_{1}$ come from the necessity of separating the $m_{1}$ 
+drawn from $M_{1}$ and the $m_{1}$ used to draw from $M_{2}$.   
+If we have specified models for the conditional distributions of the mediators and
+the outcome, we can use a Monte Carlo approach to estimate $\psi(a_{1},a_{2},a_{3},a_{4})$.
+Lin and Vanderweele (2017) then propose the following path-specific effects: 
+
+\begin{itemize}
+\item \textbf{Total effect} (TE) --- $Y(1) - Y(0)$: This represents the average causal effect of the change in the exposure 
+on changes in the outcome. 
+\item \textbf{Total interventional effect} (rTE) --- $\psi(1,1,1,1) - \psi(0,0,0,0)$: This will be the same quantity as the 
+total effect if all mediator and outcome models are linear, and will diverge otherwise. The four path-specific effects always
+sum to this effect (telescoping). 
+\item \textbf{Direct effect} (rDE) --- $\psi(1,0,0,0) - \psi(0,0,0,0)$: This represents the difference between the average outcome
+for a unit while intervening to fix two different exposure levels and the mediators at a random level from their joint distribution for
+unexposed units.  
+\item \textbf{Indirect effect $A \rightarrow M_{1} \rightarrow Y$} (rIE\_M1) --- $\psi(1,1,0,0) - \psi(1,0,0,0)$: This represents 
+the difference between the average outcome for a unit between draws from the first mediator distribution given exposure level 1
+versus exposure level 0, while holding the exposure fixed at level 1 and drawing the second mediator from its distribution conditional
+on levels 0-0 for the exposure and first mediator, respectively. 
+\item \textbf{Indirect effect $A \rightarrow M_{2} \rightarrow Y$} (rIE\_M2) --- $\psi(1,1,1,0) - \psi(1,1,0,0)$: This represents 
+the difference between the average outcome for a unit between draws from the second mediator distribution given exposure-mediator levels 0-0
+versus 1-0, while holding the exposure fixed at level 1 and drawing the first mediator from its distribution conditional
+on exposure level 1.
+\item \textbf{Indirect effect $A \rightarrow M_{1} \rightarrow M_{2} \rightarrow Y$} (rIE\_M12) --- $\psi(1,1,1,1) - \psi(1,1,1,0)$: This represents 
+the difference between the average outcome for a unit between draws from the second mediator distribution given exposure-mediator levels 1-0
+versus 1-1, while holding the exposure fixed at level 1 and drawing the first mediator from its distribution conditional
+on exposure level 1. 
+\end{itemize}
+
+
+\subsection{Vansteelandt and Daniel (2017)}
+
+The effects in Vansteelandt and Daniel (2017) have the advantage that knowledge of the causal ordering of the mediators is not
+required in order to identify them. Additionally, the total effect can be decomposed into the sum of four effects. 
+
+In a similar setup to Lin and Vanderweele (2017), suppose $M_{1}$ and $M_{2}$ mediate the relationship between $A$ and $Y$ but
+that the causal ordering of these mediators is unknown. Suppose $a_{i} = \{0, 1\}$. 
+\begin{itemize}
+\item Let $M_{1}(a_{1})$ be the marginal distribution of $M_{1}$ for units that receive exposure level $a_{1}$. 
+\item Let $M_{2}(a_{1})$ be the marginal distribution of $M_{2}$ for units
+that receive exposure level $a_{1}$.
+\item Let $Y(a_{1},M_{1}(a_{2}),M_2(a_{3}))$ be the distribution of $Y$ for units
+that hypothetically receive exposure level $a_{1}$, a $M_{1}$ level drawn from $M_{1}(a_{2})$,
+and an $M_{2}$ level drawn from $M_{2}(a_{3})$.
+\item Let $Y(a_{1},(M_{1},M_{2})(a_{2}))$ be the distribution of $M_{2}$ for units
+that hypothetically receive exposure level $a_{1}$ and a $M_{1}$ level drawn from the joint distribution of $M_{1}, M_{2}$ given
+exposure level $a_{2}$. 
+\end{itemize}
+
+We can write the formula for the outcome as a conditional distribution over the product of the marginals of the mediators as 
+$$\phi(a_{1},a_{2},a_{3}) = \mathbb{E}(Y|a_{1},a_{2},a_{3}) = \int \mathbb{E}(Y|a_{1},m_{1},m_{2})\mathbb{P}(M_{2}|a_{3})\mathbb{P}(M_{1}|a_{2})dM_{1}dM_{2}$$
+
+We can write the formula for the outcome as a conditional distribution over the joint distribution of the mediators as 
+$$\tau(a_{1},a_{2}) = \mathbb{E}(Y|a_{1},a_{2}) = \int \mathbb{E}(Y|a_{1},m_{1},m_{2})\mathbb{P}(M_{1}, M_{2}|a_{2})dM_{1}dM_{2}$$
+
+The four effects defined in Vansteelandt and Daniel (2017) are then: 
+
+\begin{itemize}
+\item \textbf{Total effect} (TE) --- $Y(1) - Y(0)$: This represents the average causal effect of the change in the exposure 
+on changes in the outcome. 
+\item \textbf{Direct effect} (rDE) --- $\tau(1,0) - \tau(0,0)$: This represents the difference between the average outcome
+for a unit while intervening to fix two different exposure levels and the mediators at a random level from their joint distribution for
+unexposed units. Note that in addition to models for the marginals of $M_{1}$ and $M_{2}$ given exposure, a model for either the 
+joint distribution of the mediator or for a mediator conditional on the other mediator needs to specified in order to estimate this 
+effect. If the same specified conditional model for $M_{2}$ given $M_{1}$ is specified, this will return the same
+effect estimate as the direct effect from Lin and Vanderweele (2017). 
+\item \textbf{Indirect effect through $M_{1}$} (rIE\_M1) --- $\phi(1,1,0) - \phi(1,0,0)$: This represents 
+the difference between the average outcome for a unit between draws from the first mediator distribution given exposure level 1
+versus exposure level 0, while holding the exposure fixed at level 1 and drawing the second mediator from its distribution conditional
+on level 0 for the exposure.
+\item \textbf{Indirect effect through $M_{2}$} (rIE\_M2) --- $\phi(1,0,1) - \phi(1,0,0)$: This represents 
+the difference between the average outcome for a unit between draws from the second mediator distribution given exposure levels 0
+versus 1, while holding the exposure fixed at level 0 and drawing the first mediator from its distribution conditional
+on exposure level 1.
+\item \textbf{Remainder}: This represents 
+the difference between the total effect and the sum of the direct effect and the two indirect effects. Vansteelandt and Daniel (2017) 
+give an interpretation of this quantity as the amount of the effect that is mediated by the dependence between $M_{1}$ and $M_{2}$. 
+I am still not sure I fully understand what they are intending, as this effect does not necessarily seem to be related to the
+dependence between $M_{1}$ and $M_{2}$. The reason I am unsure on this point is that in the single mediator case, where, using similar
+notation to above, the interventional direct effect is given by $\psi(1,0) - \psi(0,0)$ and the indirect effect by $\psi(1,1) - \psi(1,0)$,
+it is known that these effects do not necessarily sum up to the total effect (for example, if there are exposure-mediator interactions). 
+Then a similar remainder term can be defined, but this would not be interpreted as reflecting dependence between two mediators. Instead,
+the right interpretation of such a discrepancy seems to be closer to the interpretation given in Vanderweele (2014), which in the 
+context of natural effects in a single mediator problem with sufficient assumptions gives a four-way decomposition of the total effect
+in terms of a pure natural direct, a pure indirect effect, an effect of interaction due to presence of the mediator, and an effect of 
+interaction not due to presence of the mediator. 
+\end{itemize}
+
+\subsection{Vanderweele and Robinson (2014)}
+
+Vanderweele and Robinson (2014) and Jackson and Vanderweele (2018), which builds on the ideas of the first paper in a multiple mediator
+situation, give interventional effect estimates for situations in which it does not make substantive sense to consider the exposure as
+as hypothetically manipulable quantitiy (e.g. sex, race, potentially social class). In these situations, no decomposition of a total effect
+of manipulating the exposure is pursued; instead, a number of interventional effects can be defined that map to the effect on the outcome
+for a group with a particular exposure value of equalizing the distribution of that group's mediator value(s) to that of a group with
+a different exposure value. The theoretical setup for these effects follows that of Lin and Vanderweele (2017). Unlike for 
+the previous two interventional effects, which target the average treatment effect (ATE), this interventional effect targets
+the average treatment effect on the untreated (ATU). 
+Following Jackson and Vanderweele (2018), the following interventional effects are defined: 
+
+\begin{itemize}
+\item \textbf{Total effect} (TE) --- $Y(1) - Y(0)$: This represents the average raw disparity between the outcomes of the 
+groups with two different exposure values. It should not be interpreted as a causal effect. 
+\item \textbf{Effect of an intervention to equalize $M_{1}$ and keep $M_{2}$ fixed} 
+(VRE\_M1\_Marginal) --- $\psi(0,1,0,0) - \psi(0,0,0,0)$: This represents the effect of a hypothetical intervention that would set the 
+distribution of $M_{1}$ for a group with exposure level 0 to that of the mediator for a group with exposure 
+level 1, while still drawing $M_{2}$ from the distribution of the group with exposure level 0.  
+\item \textbf{Effect of an intervention to equalize the marginal of $M_{2}$ and keep $M_{1}$ fixed} 
+(VRE\_M2\_Marginal) --- $\psi(0,0,1,1) - \psi(0,0,0,0)$: This represents the effect of a hypothetical intervention that would set the 
+distribution of $M_{2}$ for a group with exposure level 0 to that of the mediator for a group with exposure 
+level 1, while still drawing $M_{1}$ from the distribution of the group with exposure level 0.  
+\item \textbf{Effect of an intervention to equalize $M_{1}$ and draw $M_{2}$ 
+from a hypothetical distribution of units with exposure level 0 and $M_{1}$ at exposure level 1}
+(VRE\_M1\_Conditional) --- $\psi(0,1,0,1) - \psi(0,0,0,0)$: This represents the effect of a hypothetical intervention that would set the 
+distribution of $M_{1}$ for a group with exposure level 0 to that of the mediator for a group with exposure 
+level 1, while still drawing $M_{2}$ from the distribution of the group with exposure level 0.  
+\item \textbf{Effect of an intervention to equalize the distribution of $M_{2}$ conditional on $M_{1}$ and keep $M_{1}$ fixed} 
+(VRE\_M1\_Conditional) --- $\psi(0,0,1,0) - \psi(0,0,0,0)$: This represents the effect of a hypothetical intervention that would set the 
+distribution of $M_{2}$ for a group with exposure level 0 to that of the mediator for a hypothetical group with exposure 
+level 1 and $M_{1}$ drawn from a distribution with exposure 0,
+while still drawing $M_{1}$ from the distribution of the group with exposure level 0.
+\item \textbf{Effect of an intervention to equalize the joint distribution of $M_{1}$ and $M_{2}$} --- 
+(VRE\_Joint) --- $\psi(0,1,1,1) - \psi(0,0,0,0)$: This represents the effect of a hypothetical intervention that would set the 
+joint distribution of the mediators for the group with exposure level 0 to that of the group with exposure level 1. 
+\end{itemize}
+
+
+\section{Application to the Social Mobility Dataset}
+
+I report below the format of my output for the two-mediator interventional effects estimates for the social mobility data for
+men in the 1970 cohort,
+where IQ and education are the two (potentially causally ordered) mediators of the relationship betwen father's social class
+and social class at middle age. Similar to a sensitivity reported in Kuha et al (2021), I create a 5 categories from 
+the 7 categories for social class by combining groups 3-5 into one class. I then treat social class as an ordinal, continuous
+variable for illustrative purposes. 
+
+I treat all mediators and the outcome as continuous, and I estimate the interventional effects between two exposure levels:
+an "untreated" father's social class exposure level of 5 (lowest) and a "treated" father's social class exposure level of 1
+(highest). I estimate linear models for each mediator and outcome. 
+
+For each sensitivity I run, I use 1,000,000 Monte Carlo draws and run 500 bootstrap replications. I construct bootstrap
+confidence intervals at the $\alpha = 0.05$ confidence level using the percentile bootstrap. 
+
+\subsection{Lin and Vanderweele (2017)}
+
+% latex table generated in R 4.6.0 by xtable 1.8-8 package
+% Sat Jun 27 18:56:39 2026
+\begin{table}[ht]
+\centering
+\begin{tabular}{rlrrr}
+  \hline
+ & Effect & Estimate & 95\% CI LB & 95\% CI UB \\ 
+  \hline
+1 & TE & -1.14 & -1.28 & -1.01 \\ 
+  2 & rTE & -1.14 & -1.28 & -1.01 \\ 
+  3 & rDE & -0.56 & -0.69 & -0.42 \\ 
+  4 & rIE\_M1 & -0.21 & -0.24 & -0.16 \\ 
+  5 & rIE\_M2 & -0.22 & -0.28 & -0.17 \\ 
+  6 & r\_IE\_M12 & -0.16 & -0.19 & -0.13 \\ 
+   \hline
+\end{tabular}
+\caption{Linear additive models for mediators, outcome}
+\end{table}
+
+% latex table generated in R 4.6.0 by xtable 1.8-8 package
+% Sat Jun 27 18:58:16 2026
+\begin{table}[ht]
+\centering
+\begin{tabular}{rlrrr}
+  \hline
+ & Effect & Estimate & 95\% CI LB & 95\% CI UB \\ 
+  \hline
+1 & TE & -1.14 & -1.27 & -0.99 \\ 
+  2 & rTE & -1.14 & -1.27 & -0.99 \\ 
+  3 & rDE & -0.57 & -0.72 & -0.42 \\ 
+  4 & rIE\_M1 & -0.19 & -0.27 & -0.12 \\ 
+  5 & rIE\_M2 & -0.22 & -0.28 & -0.17 \\ 
+  6 & r\_IE\_M12 & -0.16 & -0.18 & -0.13 \\ 
+   \hline
+\end{tabular}
+\caption{Father's class-IQ outcome model interaction term}
+\end{table}
+
+% latex table generated in R 4.6.0 by xtable 1.8-8 package
+% Sat Jun 27 18:59:55 2026
+\begin{table}[ht]
+\centering
+\begin{tabular}{rlrrr}
+  \hline
+ & Effect & Estimate & 95\% CI LB & 95\% CI UB \\ 
+  \hline
+1 & TE & -1.14 & -1.27 & -1.01 \\ 
+  2 & rTE & -1.04 & -1.27 & -0.82 \\ 
+  3 & rDE & -0.57 & -0.74 & -0.43 \\ 
+  4 & rIE\_M1 & -0.19 & -0.27 & -0.12 \\ 
+  5 & rIE\_M2 & -0.12 & -0.30 & 0.07 \\ 
+  6 & r\_IE\_M12 & -0.16 & -0.19 & -0.13 \\ 
+   \hline
+\end{tabular}
+\caption{Father's class-IQ outcome + education model interaction}
+\end{table}
+
+\newpage
+
+\subsection{Vansteelandt and Daniel (2017)}
+
+For both sensitivities, a conditional model for education is specified by regressing education on father's class
+and IQ. 
+
+% latex table generated in R 4.6.0 by xtable 1.8-8 package
+% Sat Jun 27 19:00:52 2026
+\begin{table}[ht]
+\centering
+\begin{tabular}{rlrrr}
+  \hline
+ & Effect & Estimate & 95\% CI LB & 95\% CI UB \\ 
+  \hline
+1 & TE & -1.14 & -1.27 & -1.00 \\ 
+  2 & rDE & -0.56 & -0.69 & -0.42 \\ 
+  3 & rIE\_M1 & -0.21 & -0.25 & -0.16 \\ 
+  4 & rIE\_M2 & -0.38 & -0.44 & -0.31 \\ 
+  5 & Remainder & 0.00 & -0.00 & 0.00 \\ 
+   \hline
+\end{tabular}
+\caption{Linear additive models for mediator, outcome}
+\end{table}
+
+% latex table generated in R 4.6.0 by xtable 1.8-8 package
+% Sat Jun 27 19:05:31 2026
+\begin{table}[ht]
+\centering
+\begin{tabular}{rlrrr}
+  \hline
+ & Effect & Estimate & 95\% CI LB & 95\% CI UB \\ 
+  \hline
+1 & TE & -1.14 & -1.29 & -0.98 \\ 
+  2 & rDE & -0.56 & -0.69 & -0.42 \\ 
+  3 & rIE\_M1 & -0.22 & -0.27 & -0.16 \\ 
+  4 & rIE\_M2 & -0.39 & -0.45 & -0.33 \\ 
+  5 & Remainder & 0.02 & -0.01 & 0.06 \\ 
+   \hline
+\end{tabular}
+\caption{Father's class-IQ outcome model interaction term}
+\end{table}
+
+\subsection{Vanderweele and Robinson (2014)}
+
+% latex table generated in R 4.6.0 by xtable 1.8-8 package
+% Sat Jun 27 19:07:39 2026
+\begin{table}[ht]
+\centering
+\begin{tabular}{rlrrr}
+  \hline
+ & Effect & Estimate & 95\% CI LB & 95\% CI UB \\ 
+  \hline
+1 & TE & -1.14 & -1.28 & -1.00 \\ 
+  2 & rTE & -1.14 & -1.28 & -1.00 \\ 
+  3 & VRE\_M1\_Marginal & -0.21 & -0.26 & -0.16 \\ 
+  4 & VRE\_M2\_Marginal & -0.38 & -0.44 & -0.32 \\ 
+  5 & VRE\_M1\_Conditional & -0.36 & -0.42 & -0.30 \\ 
+  6 & VRE\_M2\_Conditional & -0.22 & -0.28 & -0.17 \\ 
+  7 & VRE\_Joint & -0.58 & -0.66 & -0.51 \\ 
+   \hline
+\end{tabular}
+\caption{Linear additive models for mediators, outcome}
+\end{table}
+
+% latex table generated in R 4.6.0 by xtable 1.8-8 package
+% Sat Jun 27 19:08:30 2026
+\begin{table}[ht]
+\centering
+\begin{tabular}{rlrrr}
+  \hline
+ & Effect & Estimate & 95\% CI LB & 95\% CI UB \\ 
+  \hline
+1 & TE & -1.14 & -1.27 & -1.00 \\ 
+  2 & rTE & -1.14 & -1.27 & -1.00 \\ 
+  3 & VRE\_M1\_Marginal & -0.22 & -0.29 & -0.15 \\ 
+  4 & VRE\_M2\_Marginal & -0.38 & -0.45 & -0.32 \\ 
+  5 & VRE\_M1\_Conditional & -0.38 & -0.46 & -0.30 \\ 
+  6 & VRE\_M2\_Conditional & -0.22 & -0.28 & -0.17 \\ 
+  7 & VRE\_Joint & -0.60 & -0.70 & -0.50 \\ 
+   \hline
+\end{tabular}
+\caption{Father's class-IQ outcome model interaction term}
+\end{table}
+
+% latex table generated in R 4.6.0 by xtable 1.8-8 package
+% Sat Jun 27 19:08:54 2026
+\begin{table}[ht]
+\centering
+\begin{tabular}{rlrrr}
+  \hline
+ & Effect & Estimate & 95\% CI LB & 95\% CI UB \\ 
+  \hline
+1 & TE & -1.14 & -1.27 & -1.01 \\ 
+  2 & rTE & -1.14 & -1.27 & -1.01 \\ 
+  3 & VRE\_M1\_Marginal & -0.22 & -0.29 & -0.15 \\ 
+  4 & VRE\_M2\_Marginal & -0.38 & -0.44 & -0.31 \\ 
+  5 & VRE\_M1\_Conditional & -0.35 & -0.43 & -0.26 \\ 
+  6 & VRE\_M2\_Conditional & -0.19 & -0.24 & -0.13 \\ 
+  7 & VRE\_Joint & -0.60 & -0.69 & -0.50 \\ 
+   \hline
+\end{tabular}
+\caption{Father's class-IQ outcome + education model interaction}
+\end{table}
+
+
+\end{document}
+

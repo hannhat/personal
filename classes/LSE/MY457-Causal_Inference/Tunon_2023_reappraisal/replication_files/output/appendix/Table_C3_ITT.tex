@@ -1,0 +1,27 @@
+\begin{table}
+\centering
+\begin{talltblr}[         %% tabularray outer open
+entry=none,label=none,
+note{}={+ p \num{< 0.1}, * p \num{< 0.05}, ** p \num{< 0.01}, *** p \num{< 0.001}},
+]                     %% tabularray outer close
+{                     %% tabularray inner open
+colspec={Q[]Q[]Q[]Q[]},
+hline{2}={1-4}{solid, black, 0.05em},
+hline{4}={1-4}{solid, black, 0.05em},
+hline{1}={1-4}{solid, black, 0.08em},
+hline{11}={1-4}{solid, black, 0.08em},
+column{2-4}={}{halign=c},
+column{1}={}{halign=l},
+}                     %% tabularray inner close
+& PT vote 1994 & PT vote 1998 & PT vote 2002 \\
+Retirement\_Years & \num{0.183}* & \num{0.104}+ & \num{0.119}* \\
+& (\num{0.092}) & (\num{0.062}) & (\num{0.061}) \\
+Num.Obs. & \num{4070} & \num{4493} & \num{4540} \\
+R2 & \num{0.213} & \num{0.258} & \num{0.371} \\
+R2 Adj. & \num{0.208} & \num{0.253} & \num{0.368} \\
+AIC & \num{37001.7} & \num{36552.9} & \num{33627.5} \\
+BIC & \num{37014.3} & \num{36565.7} & \num{33640.4} \\
+RMSE & \num{14.23} & \num{13.55} & \num{9.82} \\
+Std.Errors & by: CE\_1978 & by: CE\_1978 & by: CE\_1978 \\
+\end{talltblr}
+\end{table}
