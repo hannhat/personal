@@ -1,12 +1,11 @@
 \makeatletter
-\oddsidemargin 0.5in \evensidemargin 0.5in
+\oddsidemargin 0.96cm \evensidemargin 0.96cm
 \marginparwidth 40pt \marginparsep 10pt
 \topmargin 0pt \headsep .5in
-%\textheight 8.1in \textwidth 6in
-\textheight 8.5in \textwidth 5.5in
+\textheight 8.5in \textwidth 15.5cm
 \brokenpenalty=10000
 \setlength{\headheight}{14.5pt}
-\renewcommand{\baselinestretch}{1}
+\renewcommand{\baselinestretch}{1.5}
 % 1.5 is double space
 
 \def\cl@chapter{\@elt{section}\@elt{footnote}}
@@ -146,17 +145,17 @@ of \@degree.
         \vspace{1in}
         \noindent
         \begin{tabular}{ll}
-        TITLE:           & \parbox[t]{3.5in}{\@title} \\ \\
-        AUTHOR:          & \parbox[t]{3.5in}{\@author \\ \@prevdegreeone} \\ \\
-        SUPERVISOR:      & \parbox[t]{3.5in}{\@principaladviser} \\ \\
-        NUMBER OF PAGES: & \parbox[t]{3.5in}{\pageref{NumPrefacePages}, \pageref{NumDocumentPages}}
+        TITLE:           & \parbox[t]{4in}{\@title} \\ \\
+        AUTHOR:          & \parbox[t]{4in}{\@author \\ \@prevdegreeone} \\ \\
+        SUPERVISOR:      & \parbox[t]{4in}{\@principaladviser} \\ \\
+        NUMBER OF PAGES: & \parbox[t]{4in}{\pageref{NumPrefacePages}, \pageref{NumDocumentPages}}
         \end{tabular}
 }
 
 
 \def\beforepreface{
-    %\doublespacing
     \hypersetup{pageanchor=false}
+    \onehalfspacing
     \pagenumbering{roman}
     \pagestyle{plain}
     \halftitlep
@@ -170,7 +169,7 @@ of \@degree.
     \addcontentsline{toc}{chapter}{#1}}
 
 \def\referencepages{\newpage
-%\doublespacing
+    \onehalfspacing
     \tableofcontents
 
     \iffigurespage
@@ -181,7 +180,7 @@ of \@degree.
         \listoffigures
         \let\addvspace=\saveaddvspace}
     \fi
-    
+
     \iftablespage
         {\newpage
         \addvspace{10pt}
@@ -197,12 +196,12 @@ of \@degree.
     \input{#1}
     \label{NumPrefacePages}
 }
-    
+
 \def\afterpreface{
     \hypersetup{pageanchor=true}
-    \newpage    
+    \newpage
     \pagenumbering{arabic}
-    %\doublespacing
+    \doublespacing
     \pagestyle{fancy}
 
 \lhead[{\@degreeabbrv~\@doctype---\@shortauthor}]   

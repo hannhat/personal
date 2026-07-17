@@ -1,0 +1,140 @@
+% LSE Department of Statistics MSc dissertation style.
+% Preserves the programme layout spec: A4 paper, 11pt (set in the class),
+% 1.5 line spacing, 3.5cm left / 2cm right margins.
+\makeatletter
+
+% --- Page geometry: A4, 3.5cm left / 2cm right ---
+
+\usepackage{geometry}
+ \geometry{
+ a4paper,
+ left=35mm,
+ right=20mm,
+ top=30mm,
+ bottom=30mm,
+ footskip=20mm,
+ headsep=.5in,
+ }
+
+\setlength{\headheight}{14.5pt}
+
+% --- Line spacing: 1.5 in the body, single inside floats/footnotes ---
+\renewcommand{\baselinestretch}{1.5}
+
+% --- Continuous, document-wide numbering for figures and tables ---
+\renewcommand{\thefigure}{\arabic{figure}}
+\renewcommand{\thetable}{\arabic{table}}
+
+% Force single spacing inside floats so captions/contents aren't 1.5-spaced.
+\def\@xxfloat#1[#2]{\ifhmode \@bsphack\@floatpenalty -\@Mii\else
+   \@floatpenalty-\@Miii\fi\def\@captype{#1}\ifinner
+      \@parmoderr\@floatpenalty\z@
+    \else\@next\@currbox\@freelist{\@tempcnta\csname ftype@#1\endcsname
+       \multiply\@tempcnta\@xxxii\advance\@tempcnta\sixt@@n
+       \@tfor \@tempa :=#2\do
+                        {\if\@tempa h\advance\@tempcnta \@ne\fi
+                         \if\@tempa t\advance\@tempcnta \tw@\fi
+                         \if\@tempa b\advance\@tempcnta 4\relax\fi
+                         \if\@tempa p\advance\@tempcnta 8\relax\fi
+         }\global\count\@currbox\@tempcnta}\@fltovf\fi
+    \global\setbox\@currbox\vbox\bgroup
+    \def\baselinestretch{1}\@normalsize
+    \boxmaxdepth\z@
+    \hsize\columnwidth \@parboxrestore}
+\long\def\@footnotetext#1{\insert\footins{\def\baselinestretch{1}\footnotesize
+    \interlinepenalty\interfootnotelinepenalty
+    \splittopskip\footnotesep
+    \splitmaxdepth \dp\strutbox \floatingpenalty \@MM
+    \hsize\columnwidth \@parboxrestore
+   \edef\@currentlabel{\csname p@footnote\endcsname\@thefnmark}\@makefntext
+    {\rule{\z@}{\footnotesep}\ignorespaces
+      #1\strut}}}
+
+% --- Title-page fields ---
+\def\department#1{\gdef\@department{#1}}
+\def\academicyear#1{\gdef\@academicyear{#1}}
+\def\candidatenumber#1{\gdef\@candidatenumber{#1}}
+\def\degree#1{\gdef\@degree{#1}}
+\def\university#1{\gdef\@university{#1}}
+\def\@department{Statistics}
+\def\@academicyear{}
+\def\@candidatenumber{}
+\def\@degree{Master of Science}
+\def\@university{London School of Economics}
+\def\@title{}
+
+% --- LSE title page ---
+\def\titlep{%
+    \thispagestyle{plain}%
+    \noindent{\normalsize Department of \@department \hfill \@academicyear}\par
+    \vfill
+    \begin{center}
+        {\LARGE\bfseries \@title \par}
+        \vfill
+        {\large Candidate Number: \@candidatenumber \par}
+        \vskip 0.4in
+        {\large Submitted for the \@degree \par}
+        \vskip 0.4in
+        {\large \@university \\[2pt] University of London \par}
+    \end{center}
+    \vfill
+    \newpage}
+
+% --- Compact numbered chapter headings ("1  Introduction") ---
+% Chapter heads at 16pt, larger than \section (\Large = 14pt at the 11pt base).
+\renewcommand{\@makechapterhead}[1]{%
+    \vspace*{20pt}%
+    {\parindent\z@ \raggedright \normalfont
+     \fontsize{16pt}{19pt}\selectfont\bfseries \thechapter\quad #1
+     \par\nobreak \vskip 20pt}}
+\renewcommand{\@makeschapterhead}[1]{%
+    \vspace*{20pt}%
+    {\parindent\z@ \raggedright \normalfont
+     \fontsize{16pt}{19pt}\selectfont\bfseries #1
+     \par\nobreak \vskip 20pt}}
+
+% --- Front-matter helpers ---
+\def\prefacesection#1{%
+    \chapter*{#1}%
+    \addcontentsline{toc}{chapter}{#1}}
+
+\newif\iffigurespage \newif\iftablespage
+\figurespagetrue \tablespagetrue
+
+\def\beforepreface{%
+    \hypersetup{pageanchor=false}%
+    \onehalfspacing
+    \pagenumbering{roman}%
+    \pagestyle{plain}%
+    \titlep}
+
+\def\referencepages{%
+    \newpage
+    \onehalfspacing
+    \tableofcontents
+    \iffigurespage
+        {\newpage
+        \addvspace{10pt}%
+        \let\saveaddvspace=\addvspace
+        \def\addvspace##1{}%
+        \listoffigures
+        \let\addvspace=\saveaddvspace}%
+    \fi
+    \iftablespage
+        {\newpage
+        \addvspace{10pt}%
+        \let\saveaddvspace=\addvspace
+        \def\addvspace##1{}%
+        \listoftables
+        \let\addvspace=\saveaddvspace}%
+    \fi}
+
+\def\afterpreface{%
+    \hypersetup{pageanchor=true}%
+    \newpage
+    \pagenumbering{arabic}%
+    \onehalfspacing
+    \pagestyle{plain}}
+
+\pagestyle{plain}
+\makeatother
