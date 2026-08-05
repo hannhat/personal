@@ -1,13 +1,14 @@
-\chapter{Mediation Analysis with One Mediator}\label{chapter:sample}
+\chapter{Preliminaries}\label{chapter:sample}
 
-We begin by formulating the causal mediation problem in terms of the potential outcomes
-framework~\citep{rubin1974}. We first review the potential outcomes framework for "simple"
+We begin by introducing the potential outcomes framework~\citep{rubin1974} that we will formulate 
+our mediational effects in terms of. We also introduce in more detail the running example 
+from~\cite{morenobetancur2018} introduced in Section~\ref{chapter:intro} that we will use to 
+demonstrate the different types of effects we are interested in estimating for the rest of this
+dissertation. We first review the potential outcomes framework for "simple"
 causal inference problems with no mediation, where the goal is to infer the causal 
-effect of a particular change in a treatment variable on an outcome variable. We then 
+effect of a particular change in a treatment variable on an outcome variable. In later sections, we 
 extend this framework to the case of mediation analysis with one mediator and discuss the 
-various mediational effects that have been proposed in the literature. Throughout this section, we use
-the running example from~\cite{morenobetancur2018} introduced in Section~\ref{chapter:intro} to demonstrate
-the different types of effects we are interested in estimating. 
+various mediational effects that have been proposed in the literature. 
 
 \section{Potential Outcomes}
 
@@ -48,23 +49,25 @@ The ATE represents the average causal effect of the treatment on the outcome in 
 our example, this represents the average difference of patients' severity of depression in worlds where they 
 are induced to take the anti-depressant medication compared to worlds in which they 
 do not take the medication, holding all other relevant factors constant. The ATE, and other 
-important estimands, can be identified given the following two assumptions~\citep{imbens2015}: 
+important estimands, can be identified given the following assumptions~\citep{imbens2015}: 
 
-\begin{assumption}[Stable Unit Treatment Value Assumption]\label{assm:SUTVA}
-\indent
-\begin{enumerate}[noitemsep,topsep=0pt]
-\item \textbf{Consistency:} $Y_{i}(a) = Y_{i}$ if unit $i$ receives treatment level $a \in \mathcal{A}$. 
-\item \textbf{No interference:} $Y_{i}(a)$ depends only on the treatment level $a$ for unit $i$; it does not depend on 
+\begin{assumption}[Consistency]\label{assm:Consistency}
+$Y_{i}(a) = Y_{i}$ if unit $i$ receives treatment level $a \in \mathcal{A}$. 
+\end{assumption}
+
+\begin{assumption}[No interference]\label{assm:no_interference}
+$Y_{i}(a)$ depends only on the treatment level $a$ for unit $i$; in particular, it does not depend on 
 the treatment level for any other unit $j \neq i$. 
-\end{enumerate}
 \end{assumption}
 
 \begin{assumption}[Conditional Ignorability]\label{assm:ignorability} After controlling for some set of 
 observable covariates $C$, treatment level is independent of unit potential 
-outcomes: $Y_{i}(a) \indep A_{i} | C_{i}$ for all $a \in \mathcal{A}$. 
+outcomes: $Y_{i}(a) \indep A_{i} | C_{i} = c$ for all $a \in \mathcal{A}$, where 
+$0 < \mathbb{P}[A_{i} = a | C_{i}] < 1$ for all $a \in \mathcal{A}$. 
 \end{assumption}
 
-The Stable Unit Treatment Value Assumption (SUTVA)~\citep{rubin1980a} gives technical conditions under which
+The first two assumptions are sometimes presented together as the Stable Unit Treatment Value Assumption 
+(SUTVA)~\citep{rubin1980a} and give technical conditions under which
 the ATE can be identified. It requires that there is no interference between units, meaning that a unit's 
 treatment status does not affect the potential outcomes of other units and vice versa. In this example, a violation
 might occur if we believed depression within a household was "contagious", meaning that whether the people a patient
@@ -76,6 +79,7 @@ expired birth control pills that have lower efficacy. Violations can also occur 
 in the mode of treatment assignment itself --- for example, the attitude of the doctor or lab assistant administering 
 treatment --- might affect potential outcomes.
 
+% Think about cutting/moving
 The extension of the SUTVA assumption to mediation analysis is not to be made lightly. In particular,~\cite{imaietal2013} 
 discusses the difficulty of satisfying the consistency assumption in hypothetical 
 experimental designs for identifying natural direct and indirect effects. However, violations of SUTVA are not 
@@ -107,7 +111,7 @@ presented as illustrative aids only.
 \begin{tikzpicture}
 
   % Define nodes
-  \node[obs]                               (A) {$\mathbf{A}$};
+  \node[obs] (A) {$\mathbf{A}$};
   \node[obs, right=1.5cm of A]  (Y) {$\mathbf{Y}$};
   \node[obs, left=1.5cm of A]  (C) {$\mathbf{C}$};
 
@@ -123,143 +127,3 @@ presented as illustrative aids only.
 
 % Potentially add discussion of the difference between randomized experiments and observational studies here; can
 % be used to emphasize the difficulty of justifying the assumptions for natural effect identification
-
-
-\section{Natural Effects}
-
-\subsection{Motivation}
-
-Suppose we now observe a small effect of the anti-depressant on depression and are worried 
-that a deleterious side effect associated with the anti-depressant, chronic headaches, might be interfering 
-with the positive effects of the drug. In this situation, there are two possibilities: 
-
-\begin{itemize}[noitemsep,topsep=0pt]
-	\item The drug is effective at treating existing depressive symptoms, but the chronic pain from the side-effects 
-	cancel out this benefit and provide a new mental health challenge. 
-	\item The headaches are a minor mental health issue, but the drug is not effective at treating the original 
-	symptoms. 
-\end{itemize}
-
-While the observed causal effect of the anti-depressant is the same in both situations, which of the two situations is 
-operative has important implications for evaluating how promising the drug is. If we are in the first world,
-a drug manufacturer might consider investing resources in reducing the side effects of an otherwise promising drug;
-if we are in the second world, the anti-depressant does not seem like a promising treatment to invest in. 
-
-
-\subsection{Model}
-
-We now define a mediator variable $M_{i}$, which represents a continuous measure of whether the intensity of chronic
-headache pain a patient experienced during the study period. Let $\mathcal{M}$ represent the support of $M$. 
-We also define potential outcomes (the definition of which 
-we now extend to include potential values for both mediators and outcomes) over both $M_{i}$ and
-$Y_{i}$:
-\begin{itemize}[noitemsep,topsep=0pt]
-	\item $M_{i}(0)$ --- The level of headache a patient would experience if they did not take anti-depressants.
-	\item $M_{i}(1)$ --- The level of headache a patient would experience if they took anti-depressants.
-	\item $Y_{i}(0,M_{i}(0))$ --- Depressive symptoms a patient would experience if they were untreated and had 
-	the level of headache they would experience if they were not treated. 
-	\item $Y_{i}(1,M_{i}(1))$ --- Depressive symptoms a patient would experience if they were treated and had 
-	the level of headache they would experience if they were treated. 
-	\item $Y_{i}(1,M_{i}(0))$ --- Depressive symptoms a patient would experience if they were treated but had 
-	the level of headache they would experience if they were untreated.
-	\item $Y_{i}(0,M_{i}(1))$ --- Depressive symptoms a patient would experience if they were untreated but had 
-	the level of headache they would experience if they were treated.
-\end{itemize}
-
-If a unit does not receive treatment, we observe their realized outcomes $M_{i}(0)$ and $Y_{i}(0,M_{i}(0))$; if they
-are treated, we observe $M_{i}(1)$ and $Y_{i}(0,M_{i}(1))$. Note that we can never observe $Y_{i}(1,M_{i}(0))$ or
-$Y_{i}(0,M_{i}(1))$ because a unit can only be assigned a treatment level once, but evaluating $Y_{i}(t',M_{i}(t))$ for 
-$t' \neq t$ would require knowing both the unit's outcome under treatment level $t'$ and their mediator value under
-treatment level $t$~\citep{robinsgreenland1992,pearl2001}. Having defined this expanded set of potential outcomes, we
-now define a set of estimands that can help define the path-specific causal effects we are interested in:
-\begin{itemize}[noitemsep,topsep=0pt]
-	\item $\mathbb{E}[Y_{i}(1,M_{i}(0)) - Y_{i}(0,M_{i}(0))]$ --- The \textit{pure direct effect} (PDE)
-	is the average causal effect that receiving treatment has on the outcome, keeping the level of the mediator constant 
-	for each unit at the level of the mediator that would have been realized had the unit not received treatment. 
-	\item $\mathbb{E}[Y_{i}(0,M_{i}(1)) - Y_{i}(0,M_{i}(0))]$ --- The \textit{pure indirect effect} (PIE)
-	is the average causal effect that changes in the mediator that are induced from changes in the treatment level have
-	on the outcome, evaluated at the untreated level of the treatment.  
-	\item $\mathbb{E}[Y_{i}(1,M_{i}(1)) - Y_{i}(1,M_{i}(0))]$ --- The \textit{total indirect effect} (TIE)
-	is the average causal effect that changes in the mediator that are induced from changes in the treatment level have
-	on the outcome, evaluated at the treated level of the treatment.  
-	\item $\mathbb{E}[Y_{i}(1,m) - Y_{i}(0,m)]$ --- The \textit{controlled direct effect} (CDE) at $M=m$ is the 
-	average causal effect that receiving treatment has on the outcome, keeping the level of the mediator fixed at a 
-	particular level $m$ for all units. There is a (potentially different) CDE defined at all possible values of the 
-	mediator. 
-	\item $\mathbb{E}[Y_{i}(1,M_{i}(1)) - Y_{i}(0,M_{i}(0))]$ --- The \textit{total effect} (TE) is 
-	the average causal effect of a change in the treatment on the outcome. This is equal to the ATE and is identified
-	under the same assumptions. 
-
-\end{itemize}
-% Pure vs. total indirect comes from Robins and Greenland 1992
-% Robins and Greenland 1992 interaction example (can drop to binary mediator/outcome if helpful)
-% Potential table of attribution for each effect
-% Vanderweele decomposition
-
-
-% Emphasize that these are rough definitions
-% Main sources for the development of these effects: Robins and Greenland (1992); Pearl (2001)
-% Imai, Keele, Yamamoto 2010: sequential ignorability assumption (read this paper again closely)
-% Imai, Tingley, Yamamoto 2013 on experimental design? Sensitivity analysis?
-% Various citations for issues with natural effects: Vansteelandt and Vanderweele 2009 (interpretation/un-testability), 
-% Vanderweele et al 2014 and Avin et al (exposure-induced confounding) 
-
-% Section 4: look at Robins and Greenland 1992, do a similar breakdown of the types of patients in a binary setting 
-% in the two ordered mediators case; generalize, using Vanderweele 2013/2014, to the interventional effects case
-
-% Should the Vanderweele decomposition framework enter the picture in Section 3? This would allow me to use the framework
-% when discussing natural effects from the beginning, but it also would require a serious re-write as well as an 
-% acknowledgement that some of the effects definitions (which ones?) don't make much sense (except that they do!)
-
-% I should do this, but how to frame?
-
-% Structure:
-% - Potential outcomes framework
-% - Mediation analysis with one mediator 
-%.     - Notation, causal story (informal direct and indirect effects) (Pearl 2001)
-%.     - Natural effects (pure vs. indirect )
-%             - Breakdown of types of patients in the applied example (Robins and Greenland 1992)
-%             - Mapping these types of patients to pure vs. natural direct/indirect effect 
-%               definitions (Robins and Greenland 1992; Pearl 2001)
-%             - Handling interaction terms (Vanderweele 2013/2014)
-%             - Assumptions: standard ones + sequential ignorability, causal graph (Imai et al 2010)
-%             - Problems: interpretational (Vanderweele and Vansteelandt 2009; briefly Robins and Greenland 2003) 
-%               and mathematical (cross-world independence; exposure induced confounding) 
-%               (Imai et al 2010; Avin et al 2005; Vanderweele et al 2014)
-%.            - Mention/define controlled direct effects somewhere; this can be part of the 4-way decomposition from
-%               Vanderweele 2014
-%.            - Emphasize throughout (citing Robins and Greenland, Vanderweele stuff) the importance of the substantive
-%               properties of the problem; this will pre-emptively justify the approach taken in Section 4
-%.     - Interventional effects with one mediator 
-%
-% I should incorporate an applied example (probably medical is easiest) throughout my definition of the effects; will make
-% it easiest to break down the sub-types of effects like in Robins and Greenland and the Vanderweele papers
-% Social mobility example? I don't think this is the best because of the lack of credibility of a causal story. Maybe an
-% epi example? Moreno-Betancur headache/anti-depressant causal story seems the best, because it can generalize to Section 4
-%
-% Differences between Section 3 and Section 4: Section 3 is a pure interpretation of the existing literature while
-% Section 4 attempts to advance a "novel" framework that can clarify/make commensurable the various 
-% multiple mediator effect definitions 
-
-
-
-\begin{figure}[ht]
-\centering
-\begin{tikzpicture}
-
-  % Define nodes
-  \node[obs]                               (A) {$\mathbf{A}$};
-  \node[obs, right=of A, yshift=1.5cm] (M) {$\mathbf{M}$};
-  \node[obs, right=2.5cm of A]  (Y) {$\mathbf{Y}$};
-  \node[obs, left=of A]  (C) {$\mathbf{C}$};
-
-  % Connect the nodes
-  \edge {A,M} {Y} ; %
-  \draw[->] (C) to[out=315, in=225] (Y); %
-  \edge {C,A} {M} ; %
-  \edge {C} {A} ; %
-
-\end{tikzpicture}
-\caption[]{Mediation analysis with one mediator}
-\label{fig:one_mediator_dag}
-\end{figure}

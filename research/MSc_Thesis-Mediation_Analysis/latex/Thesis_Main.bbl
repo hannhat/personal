@@ -1,4 +1,4 @@
-\begin{thebibliography}{12}
+\begin{thebibliography}{31}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -11,6 +11,17 @@ C.~Avin, Ilya Shpitser, and Judea Pearl.
 \newblock In \emph{International Joint Conference on Artificial Intelligence}, 2005.
 \newblock URL \url{https://api.semanticscholar.org/CorpusID:5508817}.
 
+\bibitem[Didelez et~al.(2006)Didelez, Dawid, and Geneletti]{didelez2006}
+Vanessa Didelez, Philip Dawid, and Silvia Geneletti.
+\newblock Direct and indirect effects of sequential treatments.
+\newblock In \emph{Proceedings of the 22nd Annual Conference on Uncertainty in Artificial Intelligence (UAI)}, pages 138--146, 2006.
+
+\bibitem[Geneletti(2007)]{geneletti2007}
+Sara Geneletti.
+\newblock Identifying direct and indirect effects in a non-counterfactual framework.
+\newblock \emph{Journal of the Royal Statistical Society Series B: Statistical Methodology}, 69\penalty0 (2):\penalty0 199--215, 2007.
+\newblock \doi{10.1111/j.1467-9868.2007.00584.x}.
+
 \bibitem[Hernan(2024)]{hernan2024}
 Miguel~A. Hernan.
 \newblock \emph{Causal Inference: What If}.
@@ -22,6 +33,23 @@ Paul~W. Holland.
 \newblock \emph{Journal of the American Statistical Association}, 81\penalty0 (396):\penalty0 945--960, 1986.
 \newblock \doi{10.1080/01621459.1986.10478354}.
 \newblock URL \url{https://doi.org/10.1080/01621459.1986.10478354}.
+
+\bibitem[Imai and Yamamoto(2013)]{imaiyamamoto2013}
+K~Imai and T.~Yamamoto.
+\newblock Identification and sensitivity analysis for multiple causal mechanisms: Revisiting evidence from framing experiments.
+\newblock \emph{Political Analysis}, 21\penalty0 (2):\penalty0 141--171, 2013.
+\newblock \doi{10.1093/pan/mps040}.
+
+\bibitem[Imai et~al.(2010{\natexlab{a}})Imai, Keele, and Tingley]{imaietal2010b}
+Kosuke Imai, Luke Keele, and Dustin Tingley.
+\newblock A general approach to causal mediation analysis.
+\newblock \emph{Psychological Methods}, 15\penalty0 (4):\penalty0 309--334, 2010{\natexlab{a}}.
+\newblock \doi{10.1037/a0020761}.
+
+\bibitem[Imai et~al.(2010{\natexlab{b}})Imai, Keele, and Yamamoto]{imaietal2010a}
+Kosuke Imai, Luke Keele, and Teppei Yamamoto.
+\newblock Identification, inference and sensitivity analysis for causal mediation effects.
+\newblock \emph{Statistical Science}, 25\penalty0 (1):\penalty0 51--71, February 2010{\natexlab{b}}.
 
 \bibitem[Imai et~al.(2013)Imai, Tingley, and Yamamoto]{imaietal2013}
 Kosuke Imai, Dustin Tingley, and Teppei Yamamoto.
@@ -36,6 +64,26 @@ G.~Imbens and D.~Rubin.
 \newblock \emph{Causal inference for statistics, social, and biomedical sciences: {An} introduction}.
 \newblock Cambridge University Press, New York, 2015.
 \newblock \doi{10.1017/CBO9781139025751}.
+
+\bibitem[Jackson and VanderWeele(2018)]{jacksonvanderweele2018}
+John~W. Jackson and Tyler~J. VanderWeele.
+\newblock Decomposition {Analysis} to {Identify} {Intervention} {Targets} for {Reducing} {Disparities}.
+\newblock \emph{Epidemiology}, 29\penalty0 (6), 2018.
+\newblock ISSN 1044-3983.
+\newblock URL \url{https://journals.lww.com/epidem/fulltext/2018/11000/decomposition_analysis_to_identify_intervention.11.aspx}.
+
+\bibitem[Kuha et~al.(2021)Kuha, Bukodi, and Goldthorpe]{kuhaetal2021}
+Jouni Kuha, Erzs{\'e}bet Bukodi, and John~H Goldthorpe.
+\newblock Mediation analysis for associations of categorical variables: The role of education in social class mobility in britain.
+\newblock \emph{The Annals of Applied Statistics}, 15\penalty0 (4):\penalty0 2061--2082, 2021.
+\newblock \doi{10.1214/21-AOAS1467}.
+
+\bibitem[Lin and VanderWeele(2017)]{linvanderweele2017}
+Sheng-Hsuan Lin and Tyler VanderWeele.
+\newblock Interventional approach for path-specific effects.
+\newblock \emph{Journal of Causal Inference}, 5\penalty0 (1):\penalty0 1--10, March 2017.
+\newblock \doi{10.1515/jci-2015-0027}.
+\newblock URL \url{https://ideas.repec.org/a/bpj/causin/v5y2017i1p10n1.html}.
 
 \bibitem[Moreno-Betancur and Carlin(2018)]{morenobetancur2018}
 Margarita Moreno-Betancur and John~B. Carlin.
@@ -54,10 +102,29 @@ Judea Pearl.
 \newblock In \emph{Proceedings of the 17th Conference in Uncertainty in Artificial Intelligence}, UAI '01, page 411–420, San Francisco, CA, USA, 2001. Morgan Kaufmann Publishers Inc.
 \newblock ISBN 1558608001.
 
+\bibitem[Petersen et~al.(2006)Petersen, Sinisi, and van~der Laan]{petersenetal2006}
+ML~Petersen, SE~Sinisi, and MJ~van~der Laan.
+\newblock Estimation of direct causal effects.
+\newblock \emph{Epidemiology}, 17\penalty0 (3):\penalty0 276--84, May 2006.
+\newblock \doi{10.1097/01.ede.0000208475.99429.2d}.
+
+\bibitem[Robins(2003)]{robins2003}
+James~M. Robins.
+\newblock Semantics of causal dag models and the identification of direct and indirect effects.
+\newblock In Peter~J. Green, Nils~Lid Hjort, and Sylvia Richardson, editors, \emph{Highly Structured Stochastic Systems}. Oxford, 2003.
+\newblock \doi{10.1093/oso/9780198510550.003.0007}.
+\newblock Online edn, Oxford Academic, 31 Oct. 2023; accessed 22 July 2026.
+
 \bibitem[Robins and Greenland(1992)]{robinsgreenland1992}
 James~M. Robins and Sander Greenland.
 \newblock Identifiability and exchangeability for direct and indirect effects.
 \newblock \emph{Epidemiology}, 3:\penalty0 143--155, 1992.
+
+\bibitem[Rothman(1976)]{rothman1976}
+KJ~Rothman.
+\newblock Causes.
+\newblock \emph{Am J Epidemiol}, 104\penalty0 (6):\penalty0 587--92, December 1976.
+\newblock \doi{10.1093/oxfordjournals.aje.a112335}.
 
 \bibitem[Rubin(1978)]{rubin1978}
 D.~B. Rubin.
@@ -74,5 +141,55 @@ Donald~B. Rubin.
 \newblock Estimating causal effects of treatments in randomized and nonrandomized studies.
 \newblock \emph{Journal of Educational Psychology}, 66:\penalty0 688--701, 1974.
 \newblock \doi{10.1037/h0037350}.
+
+\bibitem[VanderWeele(2013)]{vanderweele2013}
+TJ~VanderWeele.
+\newblock A three-way decomposition of a total effect into direct, indirect, and interactive effects.
+\newblock \emph{Epidemiology}, 24\penalty0 (2):\penalty0 224--32, March 2013.
+\newblock \doi{10.1097/EDE.0b013e318281a64e}.
+
+\bibitem[VanderWeele(2014)]{vanderweele2014}
+TJ~VanderWeele.
+\newblock A unification of mediation and interaction: a 4-way decomposition.
+\newblock \emph{Epidemiology}, 25\penalty0 (5):\penalty0 749--61, September 2014.
+\newblock \doi{10.1097/EDE.0000000000000121}.
+\newblock Erratum in: Epidemiology. 2016 Sep;27(5):e36. doi: 10.1097/EDE.0000000000000527.
+
+\bibitem[Vanderweele and Robins(2012)]{vanderweelerobins2012}
+TJ~Vanderweele and JM~Robins.
+\newblock Stochastic counterfactuals and stochastic sufficient causes.
+\newblock \emph{Stat Sin}, 22\penalty0 (1):\penalty0 379--392, 1 2012.
+\newblock \doi{10.5705/ss.2008.186}.
+
+\bibitem[VanderWeele and Tchetgen~Tchetgen(2017)]{vanderweeletchetgentchetgen2017}
+TJ~VanderWeele and EJ~Tchetgen~Tchetgen.
+\newblock Mediation analysis with time varying exposures and mediators.
+\newblock \emph{J R Stat Soc Series B Stat Methodol}, 79\penalty0 (3):\penalty0 917--938, June 2017.
+\newblock \doi{10.1111/rssb.12194}.
+\newblock Epub 2016 Jun 27.
+
+\bibitem[Vanderweele et~al.(2014)Vanderweele, Vansteelandt, and Robins]{vanderweeleetal2014}
+Tyler Vanderweele, Stijn Vansteelandt, and James Robins.
+\newblock Effect decomposition in the presence of an exposure-induced mediator-outcome confounder.
+\newblock \emph{Epidemiology (Cambridge, Mass.)}, 25:\penalty0 300--6, 03 2014.
+\newblock \doi{10.1097/EDE.0000000000000034}.
+
+\bibitem[VanderWeele and Robinson(2014)]{vanderweelerobinson2014}
+Tyler~J VanderWeele and Whitney~R Robinson.
+\newblock On the causal interpretation of race in regressions adjusting for confounding and mediating variables.
+\newblock \emph{Epidemiology (Cambridge, Mass.)}, 25\penalty0 (4):\penalty0 473--484, 2014.
+\newblock \doi{10.1097/EDE.0000000000000105}.
+
+\bibitem[VanderWeele and Vansteelandt(2009)]{vanderweelevansteelandt2009}
+Tyler~J VanderWeele and Stijn Vansteelandt.
+\newblock Conceptual issues concerning mediation, interventions and composition.
+\newblock \emph{Statistics and Its Interface}, 2\penalty0 (4):\penalty0 457--468, 2009.
+
+\bibitem[Vansteelandt and Daniel(2017)]{vansteelandtdaniel2017}
+Stijn Vansteelandt and Rhian~M. Daniel.
+\newblock Interventional effects for mediation analysis with multiple mediators.
+\newblock \emph{Epidemiology}, 28\penalty0 (2):\penalty0 pp. 258--265, 2017.
+\newblock ISSN 10443983, 15315487.
+\newblock URL \url{https://www.jstor.org/stable/26512215}.
 
 \end{thebibliography}

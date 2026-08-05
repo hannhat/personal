@@ -5,52 +5,53 @@ A level-1 auxiliary file: sections/0_preamble/0_definitions.aux
 A level-1 auxiliary file: sections/0_preamble/3_abstr.aux
 A level-1 auxiliary file: sections/1_chapters/1_Introduction.aux
 A level-1 auxiliary file: sections/1_chapters/2_Preliminaries.aux
-A level-1 auxiliary file: sections/1_chapters/3_Conclusion.aux
-A level-1 auxiliary file: sections/3_appendix/appendixA.aux
-A level-1 auxiliary file: sections/3_appendix/appendixB.aux
+A level-1 auxiliary file: sections/1_chapters/3_Natural_Effects.aux
+A level-1 auxiliary file: sections/1_chapters/4_Interventional_Effects.aux
+A level-1 auxiliary file: sections/1_chapters/5_Conclusion.aux
 The style file: plainnat.bst
 Database file #1: bib/references.bib
 Database file #2: bib/secondary_references.bib
 Warning--can't use both author and editor fields in hernan2024
-You've used 12 entries,
+Warning--empty publisher in robins2003
+You've used 31 entries,
             2773 wiz_defined-function locations,
-            692 strings with 7187 characters,
-and the built_in function-call counts, 5021 in all, are:
-= -- 475
-> -- 193
-< -- 11
-+ -- 69
-- -- 57
-* -- 360
-:= -- 771
-add.period$ -- 47
-call.type$ -- 12
-change.case$ -- 52
-chr.to.int$ -- 12
-cite$ -- 25
-duplicate$ -- 267
-empty$ -- 459
-format.name$ -- 75
-if$ -- 1073
-int.to.chr$ -- 1
+            829 strings with 11154 characters,
+and the built_in function-call counts, 13947 in all, are:
+= -- 1340
+> -- 602
+< -- 25
++ -- 209
+- -- 177
+* -- 1124
+:= -- 2132
+add.period$ -- 127
+call.type$ -- 31
+change.case$ -- 148
+chr.to.int$ -- 30
+cite$ -- 64
+duplicate$ -- 668
+empty$ -- 1224
+format.name$ -- 230
+if$ -- 2950
+int.to.chr$ -- 2
 int.to.str$ -- 1
-missing$ -- 15
-newline$ -- 78
-num.names$ -- 48
-pop$ -- 103
+missing$ -- 34
+newline$ -- 195
+num.names$ -- 126
+pop$ -- 251
 preamble$ -- 1
-purify$ -- 43
+purify$ -- 120
 quote$ -- 0
-skip$ -- 192
+skip$ -- 475
 stack$ -- 0
-substring$ -- 194
-swap$ -- 34
-text.length$ -- 1
+substring$ -- 641
+swap$ -- 74
+text.length$ -- 2
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 117
-warning$ -- 1
-while$ -- 49
+type$ -- 326
+warning$ -- 2
+while$ -- 140
 width$ -- 0
-write$ -- 185
-(There was 1 warning)
+write$ -- 476
+(There were 2 warnings)

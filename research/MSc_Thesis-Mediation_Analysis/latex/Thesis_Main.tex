@@ -32,6 +32,7 @@
 
 % Custom objects and symbols
 \newtheorem{assumption}{Assumption}
+\newtheorem{experiment}{Experiment}
 \newcommand{\ind}{\mathrel{\perp\!\!\!\perp}}
 
 % Custom packages
@@ -39,6 +40,9 @@
 \usepackage{enumitem}
 
 % Custom style edits
+
+% Table formatting
+\newcolumntype{C}[1]{>{\hsize=#1\hsize\centering\arraybackslash}X}
 
 % Remove extra spacing for equations
 \usepackage{mathtools, nccmath}
@@ -70,14 +74,11 @@
   \include{sections/0_preamble/3_abstr} % Summary
 \afterpreface
 
-  \include{sections/1_chapters/1_Introduction}
-  \include{sections/1_chapters/2_Preliminaries}
-  \include{sections/1_chapters/3_Conclusion}
-
-\begin{appendix}
-    \include{sections/3_appendix/appendixA}
-    \include{sections/3_appendix/appendixB}
-\end{appendix}
+\include{sections/1_chapters/1_Introduction}
+\include{sections/1_chapters/2_Preliminaries}
+\include{sections/1_chapters/3_Natural_Effects}
+\include{sections/1_chapters/4_Interventional_Effects}
+\include{sections/1_chapters/5_Conclusion}
 
 
 \bibliographystyle{plainnat}

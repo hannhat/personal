@@ -1,10 +1,23 @@
 \contentsline {chapter}{Summary}{v}{chapter*.4}%
 \contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
-\contentsline {chapter}{\numberline {2}Mediation Analysis with One Mediator}{2}{chapter.2}%
+\contentsline {chapter}{\numberline {2}Preliminaries}{2}{chapter.2}%
 \contentsline {section}{\numberline {2.1}Potential Outcomes}{2}{section.2.1}%
-\contentsline {section}{\numberline {2.2}Natural Effects}{4}{section.2.2}%
-\contentsline {subsection}{\numberline {2.2.1}Motivation}{4}{subsection.2.2.1}%
-\contentsline {subsection}{\numberline {2.2.2}Model}{5}{subsection.2.2.2}%
-\contentsline {chapter}{\numberline {3}Conclusion}{7}{chapter.3}%
-\contentsline {chapter}{\numberline {A}Your Appendix}{8}{appendix.A}%
-\contentsline {chapter}{\numberline {B}Long Tables}{9}{appendix.B}%
+\contentsline {chapter}{\numberline {3}Natural Effects}{5}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Effect Definitions}{5}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Pure Versus Total Natural Effects}{7}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Identification Assumptions}{9}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Multiple Mediators}{11}{section.3.4}%
+\contentsline {chapter}{\numberline {4}Interventional Effects}{13}{chapter.4}%
+\contentsline {section}{\numberline {4.1}One Mediator}{13}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Effect Definitions}{13}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}Experimental Identification}{15}{subsection.4.1.2}%
+\contentsline {section}{\numberline {4.2}Multiple Mediators}{16}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}A Unified Framework for Interventional Effects with Two Mediators}{17}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Comparison with Previous Definitions of Interventional Effects for Multiple Mediators}{20}{subsection.4.2.2}%
+\contentsline {subsubsection}{~\cite {linvanderweele2017}}{20}{section*.8}%
+\contentsline {subsubsection}{~\cite {vansteelandtdaniel2017}}{21}{section*.9}%
+\contentsline {subsubsection}{~\cite {vanderweelerobinson2014} and~\cite {jacksonvanderweele2018}}{21}{section*.10}%
+\contentsline {subsubsection}{~\cite {vanderweeleetal2014} for Effects Through $M_{2}$}{21}{section*.11}%
+\contentsline {section}{\numberline {4.3}Interpretation of Interventional Effects}{21}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Experimental Manipulability}{21}{subsection.4.3.1}%
+\contentsline {chapter}{\numberline {5}Conclusion}{22}{chapter.5}%
