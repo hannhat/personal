@@ -22,6 +22,7 @@
 
 # Don't ignore subfolders
 !classes/LSE/ST451-Bayesian_ML/project/fg_builds/**/*.csv
+!classes/LSE/ST451-Bayesian_ML/project/**/*.pdf
 
 # Specific files
 .Rproj.user
