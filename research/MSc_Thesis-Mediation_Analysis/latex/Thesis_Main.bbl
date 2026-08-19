@@ -1,195 +1,351 @@
-\begin{thebibliography}{31}
+\begin{thebibliography}{56}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
 
+\bibitem[Andrews and Didelez(2021)]{andrewsdidelez2021}
+R.~M. Andrews and V.~Didelez.
+\newblock {Insights into the Cross-World Independence Assumption of Causal Mediation Analysis}.
+\newblock \emph{Epidemiology}, 32\penalty0 (2):\penalty0 209--219, March 2021.
+\newblock \doi{10.1097/EDE.0000000000001313}.
+
+\bibitem[Arel-Bundock et~al.(2024)Arel-Bundock, Greifer, and Heiss]{areletal2024}
+V.~Arel-Bundock, N.~Greifer, and A.~Heiss.
+\newblock {How to Interpret Statistical Models Using {marginaleffects} for {R} and {Python}}.
+\newblock \emph{Journal of Statistical Software}, 111\penalty0 (9):\penalty0 1--32, 2024.
+\newblock \doi{10.18637/jss.v111.i09}.
+
 \bibitem[Avin et~al.(2005)Avin, Shpitser, and Pearl]{avinetal2005}
-C.~Avin, Ilya Shpitser, and Judea Pearl.
-\newblock Identifiability of path-specific effects.
+C.~Avin, I.~Shpitser, and J.~Pearl.
+\newblock {Identifiability of Path-Specific Effects}.
 \newblock In \emph{International Joint Conference on Artificial Intelligence}, 2005.
 \newblock URL \url{https://api.semanticscholar.org/CorpusID:5508817}.
 
+\bibitem[Baron and Kenny(1986)]{baronkenny1986}
+R.~M. Baron and D.~A. Kenny.
+\newblock {The Moderator--Mediator Variable Distinction in Social Psychological Research: Conceptual, Strategic, and Statistical Considerations}.
+\newblock \emph{Journal of Personality and Social Psychology}, 51\penalty0 (6):\penalty0 1173--1182, 1986.
+\newblock \doi{10.1037/0022-3514.51.6.1173}.
+
+\bibitem[Benkeser and Ran(2021)]{benkeserran2021}
+D.~Benkeser and J.~Ran.
+\newblock {Nonparametric Inference for Interventional Effects with Multiple Mediators}.
+\newblock \emph{Journal of Causal Inference}, 9\penalty0 (1):\penalty0 172--189, 2021.
+\newblock \doi{10.1515/jci-2020-0018}.
+
+\bibitem[Bukodi and Goldthorpe(2016)]{bukodigoldthorpe2016}
+E.~Bukodi and J.~H. Goldthorpe.
+\newblock {Educational Attainment --- Relative or Absolute --- as a Mediator of Intergenerational Class Mobility in Britain}.
+\newblock \emph{Research in Social Stratification and Mobility}, 43:\penalty0 5--15, 2016.
+
+\bibitem[D{\'i}az et~al.(2021)D{\'i}az, Hejazi, Rudolph, and van~der Laan]{diazetal2021}
+I.~D{\'i}az, N.~S. Hejazi, K.~E. Rudolph, and M.~J. van~der Laan.
+\newblock {Nonparametric Efficient Causal Mediation with Intermediate Confounders}.
+\newblock \emph{Biometrika}, 108\penalty0 (3):\penalty0 627--641, September 2021.
+\newblock \doi{10.1093/biomet/asaa085}.
+
+\bibitem[D{\'i}az~Mu{\~n}oz and van~der Laan(2012)]{diazvanderlaan2012}
+I.~D{\'i}az~Mu{\~n}oz and M.~van~der Laan.
+\newblock {Population Intervention Causal Effects Based on Stochastic Interventions}.
+\newblock \emph{Biometrics}, 68\penalty0 (2):\penalty0 541--549, 2012.
+\newblock \doi{https://doi.org/10.1111/j.1541-0420.2011.01685.x}.
+\newblock URL \url{https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1541-0420.2011.01685.x}.
+
 \bibitem[Didelez et~al.(2006)Didelez, Dawid, and Geneletti]{didelez2006}
-Vanessa Didelez, Philip Dawid, and Silvia Geneletti.
-\newblock Direct and indirect effects of sequential treatments.
+V.~Didelez, P.~Dawid, and S.~Geneletti.
+\newblock {Direct and Indirect Effects of Sequential Treatments}.
 \newblock In \emph{Proceedings of the 22nd Annual Conference on Uncertainty in Artificial Intelligence (UAI)}, pages 138--146, 2006.
 
+\bibitem[Gale et~al.(2007)Gale, Deary, Schoon, and Batty]{galeetal2007}
+C.~R. Gale, I.~J. Deary, I.~Schoon, and G.~D. Batty.
+\newblock {{IQ} in Childhood and Vegetarianism in Adulthood: 1970 British Cohort Study}.
+\newblock \emph{BMJ}, 334\penalty0 (7587):\penalty0 245, February 2007.
+\newblock \doi{10.1136/bmj.39030.675069.55}.
+\newblock Epub 2006 Dec 15.
+
+\bibitem[Gelman and Mikhaeil(2025)]{gelmanmikhaeil2025}
+A.~Gelman and J.~M. Mikhaeil.
+\newblock {Russian Roulette: The Need for Stochastic Potential Outcomes When Utilities Depend on Counterfactuals}.
+\newblock \emph{Biometrika}, 112\penalty0 (4):\penalty0 asaf062, October 2025.
+\newblock ISSN 1464-3510.
+\newblock \doi{10.1093/biomet/asaf062}.
+\newblock URL \url{https://doi.org/10.1093/biomet/asaf062}.
+
 \bibitem[Geneletti(2007)]{geneletti2007}
-Sara Geneletti.
-\newblock Identifying direct and indirect effects in a non-counterfactual framework.
+S.~Geneletti.
+\newblock {Identifying Direct and Indirect Effects in a Non-Counterfactual Framework}.
 \newblock \emph{Journal of the Royal Statistical Society Series B: Statistical Methodology}, 69\penalty0 (2):\penalty0 199--215, 2007.
 \newblock \doi{10.1111/j.1467-9868.2007.00584.x}.
 
-\bibitem[Hernan(2024)]{hernan2024}
-Miguel~A. Hernan.
+\bibitem[Hernan and Robins(2024)]{hernan2024}
+M.~A. Hernan and J.~M. Robins.
 \newblock \emph{Causal Inference: What If}.
 \newblock Taylor \& Francis, Boca Raton, 2024.
 
+\bibitem[Hesslow(1976)]{hesslow1976}
+G.~Hesslow.
+\newblock {Two Notes on the Probabilistic Approach to Causality}.
+\newblock \emph{Philosophy of Science}, 43:\penalty0 290--292, June 1976.
+\newblock \doi{10.1086/288684}.
+
+\bibitem[Hill(2005)]{hill2005}
+V.~Hill.
+\newblock {Through the Past Darkly: A Review of the British Ability Scales Second Edition}.
+\newblock \emph{Child and Adolescent Mental Health}, 10:\penalty0 87--98, April 2005.
+\newblock \doi{10.1111/j.1475-3588.2004.00123.x}.
+
 \bibitem[Holland(1986)]{holland1986}
-Paul~W. Holland.
-\newblock Statistics and causal inference.
+P.~W. Holland.
+\newblock {Statistics and Causal Inference}.
 \newblock \emph{Journal of the American Statistical Association}, 81\penalty0 (396):\penalty0 945--960, 1986.
 \newblock \doi{10.1080/01621459.1986.10478354}.
 \newblock URL \url{https://doi.org/10.1080/01621459.1986.10478354}.
 
-\bibitem[Imai and Yamamoto(2013)]{imaiyamamoto2013}
-K~Imai and T.~Yamamoto.
-\newblock Identification and sensitivity analysis for multiple causal mechanisms: Revisiting evidence from framing experiments.
-\newblock \emph{Political Analysis}, 21\penalty0 (2):\penalty0 141--171, 2013.
-\newblock \doi{10.1093/pan/mps040}.
+\bibitem[Hubbard and van~der Laan(2008)]{hubbardvanderlaan2008}
+A.~E. Hubbard and M.~J. van~der Laan.
+\newblock {Population Intervention Models in Causal Inference}.
+\newblock \emph{Biometrika}, 95\penalty0 (1):\penalty0 35--47, March 2008.
+\newblock ISSN 0006-3444.
+\newblock \doi{10.1093/biomet/asm097}.
+\newblock URL \url{https://doi.org/10.1093/biomet/asm097}.
+\newblock \_eprint: https://academic.oup.com/biomet/article-pdf/95/1/35/584818/asm097.pdf.
 
 \bibitem[Imai et~al.(2010{\natexlab{a}})Imai, Keele, and Tingley]{imaietal2010b}
-Kosuke Imai, Luke Keele, and Dustin Tingley.
-\newblock A general approach to causal mediation analysis.
+K.~Imai, L.~Keele, and D.~Tingley.
+\newblock {A General Approach to Causal Mediation Analysis}.
 \newblock \emph{Psychological Methods}, 15\penalty0 (4):\penalty0 309--334, 2010{\natexlab{a}}.
 \newblock \doi{10.1037/a0020761}.
 
 \bibitem[Imai et~al.(2010{\natexlab{b}})Imai, Keele, and Yamamoto]{imaietal2010a}
-Kosuke Imai, Luke Keele, and Teppei Yamamoto.
-\newblock Identification, inference and sensitivity analysis for causal mediation effects.
+K.~Imai, L.~Keele, and T.~Yamamoto.
+\newblock {Identification, Inference and Sensitivity Analysis for Causal Mediation Effects}.
 \newblock \emph{Statistical Science}, 25\penalty0 (1):\penalty0 51--71, February 2010{\natexlab{b}}.
 
 \bibitem[Imai et~al.(2013)Imai, Tingley, and Yamamoto]{imaietal2013}
-Kosuke Imai, Dustin Tingley, and Teppei Yamamoto.
-\newblock Experimental designs for identifying causal mechanisms.
-\newblock \emph{Journal of the Royal Statistical Society Series A: Statistics in Society}, 176\penalty0 (1):\penalty0 5--51, 01 2013.
+K.~Imai, D.~Tingley, and T.~Yamamoto.
+\newblock {Experimental Designs for Identifying Causal Mechanisms}.
+\newblock \emph{Journal of the Royal Statistical Society Series A: Statistics in Society}, 176\penalty0 (1):\penalty0 5--51, January 2013.
 \newblock ISSN 0964-1998.
 \newblock \doi{10.1111/j.1467-985X.2012.01032.x}.
 \newblock URL \url{https://doi.org/10.1111/j.1467-985X.2012.01032.x}.
 
 \bibitem[Imbens and Rubin(2015)]{imbens2015}
 G.~Imbens and D.~Rubin.
-\newblock \emph{Causal inference for statistics, social, and biomedical sciences: {An} introduction}.
+\newblock \emph{Causal Inference for Statistics, Social, and Biomedical Sciences: An Introduction}.
 \newblock Cambridge University Press, New York, 2015.
 \newblock \doi{10.1017/CBO9781139025751}.
 
+\bibitem[Jackson(2021)]{jackson2021}
+J.~W. Jackson.
+\newblock {Meaningful Causal Decompositions in Health Equity Research: Definition, Identification, and Estimation through a Weighting Framework}.
+\newblock \emph{Epidemiology}, 32\penalty0 (2), 2021.
+\newblock ISSN 1044-3983.
+\newblock URL \url{https://journals.lww.com/epidem/fulltext/2021/03000/meaningful_causal_decompositions_in_health_equity.16.aspx}.
+
 \bibitem[Jackson and VanderWeele(2018)]{jacksonvanderweele2018}
-John~W. Jackson and Tyler~J. VanderWeele.
-\newblock Decomposition {Analysis} to {Identify} {Intervention} {Targets} for {Reducing} {Disparities}.
+J.~W. Jackson and T.~J. VanderWeele.
+\newblock {Decomposition Analysis to Identify Intervention Targets for Reducing Disparities}.
 \newblock \emph{Epidemiology}, 29\penalty0 (6), 2018.
 \newblock ISSN 1044-3983.
 \newblock URL \url{https://journals.lww.com/epidem/fulltext/2018/11000/decomposition_analysis_to_identify_intervention.11.aspx}.
 
 \bibitem[Kuha et~al.(2021)Kuha, Bukodi, and Goldthorpe]{kuhaetal2021}
-Jouni Kuha, Erzs{\'e}bet Bukodi, and John~H Goldthorpe.
-\newblock Mediation analysis for associations of categorical variables: The role of education in social class mobility in britain.
+J.~Kuha, E.~Bukodi, and J.~H. Goldthorpe.
+\newblock {Mediation Analysis for Associations of Categorical Variables: The Role of Education in Social Class Mobility in Britain}.
 \newblock \emph{The Annals of Applied Statistics}, 15\penalty0 (4):\penalty0 2061--2082, 2021.
 \newblock \doi{10.1214/21-AOAS1467}.
 
 \bibitem[Lin and VanderWeele(2017)]{linvanderweele2017}
-Sheng-Hsuan Lin and Tyler VanderWeele.
-\newblock Interventional approach for path-specific effects.
+S.-H. Lin and T.~VanderWeele.
+\newblock {Interventional Approach for Path-Specific Effects}.
 \newblock \emph{Journal of Causal Inference}, 5\penalty0 (1):\penalty0 1--10, March 2017.
 \newblock \doi{10.1515/jci-2015-0027}.
 \newblock URL \url{https://ideas.repec.org/a/bpj/causin/v5y2017i1p10n1.html}.
 
+\bibitem[Miles et~al.(2017)Miles, Kanki, Meloni, and Tchetgen~Tchetgen]{milesetal2017}
+C.~Miles, P.~Kanki, S.~Meloni, and E.~Tchetgen~Tchetgen.
+\newblock {On Partial Identification of the Natural Indirect Effect}.
+\newblock \emph{Journal of Causal Inference}, 5\penalty0 (2):\penalty0 20160004, 2017.
+\newblock \doi{10.1515/jci-2016-0004}.
+
+\bibitem[Miles(2023)]{miles2023}
+C.~H. Miles.
+\newblock {On the Causal Interpretation of Randomised Interventional Indirect Effects}.
+\newblock \emph{Journal of the Royal Statistical Society Series B: Statistical Methodology}, 85\penalty0 (4):\penalty0 1154--1172, 2023.
+\newblock \doi{10.1093/jrsssb/qkad066}.
+
 \bibitem[Moreno-Betancur and Carlin(2018)]{morenobetancur2018}
-Margarita Moreno-Betancur and John~B. Carlin.
-\newblock Understanding interventional effects: A more natural approach to mediation analysis?
+M.~Moreno-Betancur and J.~B. Carlin.
+\newblock {Understanding Interventional Effects: A More Natural Approach to Mediation Analysis?}
 \newblock \emph{Epidemiology}, 29\penalty0 (5):\penalty0 614--617, 2018.
 \newblock \doi{10.1097/EDE.0000000000000866}.
 
+\bibitem[{Office for National Statistics}(n.d.)]{onsnd}
+{Office for National Statistics}.
+\newblock {The National Statistics Socio-Economic Classification (NS-SEC)}.
+\newblock \url{https://www.ons.gov.uk/methodology/classificationsandstandards/otherclassifications/thenationalstatisticssocioeconomicclassificationnssecrebasedonsoc2010}, n.d.
+\newblock Accessed: 15 August 2026.
+
 \bibitem[Pearl(2000)]{pearl2000}
-Judea Pearl.
+J.~Pearl.
 \newblock \emph{Causality: Models, Reasoning and Inference}.
 \newblock Cambridge University Press, New York, 2000.
 
 \bibitem[Pearl(2001)]{pearl2001}
-Judea Pearl.
-\newblock Direct and indirect effects.
-\newblock In \emph{Proceedings of the 17th Conference in Uncertainty in Artificial Intelligence}, UAI '01, page 411–420, San Francisco, CA, USA, 2001. Morgan Kaufmann Publishers Inc.
+J.~Pearl.
+\newblock {Direct and Indirect Effects}.
+\newblock In \emph{Proceedings of the 17th Conference in Uncertainty in Artificial Intelligence}, UAI '01, pages 411--420, San Francisco, CA, USA, 2001. Morgan Kaufmann Publishers Inc.
 \newblock ISBN 1558608001.
 
 \bibitem[Petersen et~al.(2006)Petersen, Sinisi, and van~der Laan]{petersenetal2006}
-ML~Petersen, SE~Sinisi, and MJ~van~der Laan.
-\newblock Estimation of direct causal effects.
-\newblock \emph{Epidemiology}, 17\penalty0 (3):\penalty0 276--84, May 2006.
+M.~L. Petersen, S.~E. Sinisi, and M.~J. van~der Laan.
+\newblock {Estimation of Direct Causal Effects}.
+\newblock \emph{Epidemiology}, 17\penalty0 (3):\penalty0 276--284, May 2006.
 \newblock \doi{10.1097/01.ede.0000208475.99429.2d}.
 
 \bibitem[Robins(2003)]{robins2003}
-James~M. Robins.
-\newblock Semantics of causal dag models and the identification of direct and indirect effects.
-\newblock In Peter~J. Green, Nils~Lid Hjort, and Sylvia Richardson, editors, \emph{Highly Structured Stochastic Systems}. Oxford, 2003.
+J.~M. Robins.
+\newblock {Semantics of Causal {DAG} Models and the Identification of Direct and Indirect Effects}.
+\newblock In P.~J. Green, N.~L. Hjort, and S.~Richardson, editors, \emph{Highly Structured Stochastic Systems}. Oxford University Press, Oxford, 2003.
 \newblock \doi{10.1093/oso/9780198510550.003.0007}.
 \newblock Online edn, Oxford Academic, 31 Oct. 2023; accessed 22 July 2026.
 
 \bibitem[Robins and Greenland(1992)]{robinsgreenland1992}
-James~M. Robins and Sander Greenland.
-\newblock Identifiability and exchangeability for direct and indirect effects.
+J.~M. Robins and S.~Greenland.
+\newblock {Identifiability and Exchangeability for Direct and Indirect Effects}.
 \newblock \emph{Epidemiology}, 3:\penalty0 143--155, 1992.
 
+\bibitem[Robins and Richardson(2010)]{robinsrichardson2010}
+J.~M. Robins and T.~S. Richardson.
+\newblock {Alternative Graphical Causal Models and the Identification of Direct Effects}.
+\newblock In P.~Savitsky and M.~van~der Laan, editors, \emph{Causality: Statistical Perspectives and Applications}, pages 123--158. Oxford University Press, Oxford, UK, 2010.
+
 \bibitem[Rothman(1976)]{rothman1976}
-KJ~Rothman.
-\newblock Causes.
-\newblock \emph{Am J Epidemiol}, 104\penalty0 (6):\penalty0 587--92, December 1976.
+K.~J. Rothman.
+\newblock {Causes}.
+\newblock \emph{American Journal of Epidemiology}, 104\penalty0 (6):\penalty0 587--592, December 1976.
 \newblock \doi{10.1093/oxfordjournals.aje.a112335}.
 
-\bibitem[Rubin(1978)]{rubin1978}
-D.~B. Rubin.
-\newblock Bayesian inference for causal effects: The role of randomization.
-\newblock \emph{Annals of Statistics}, 6:\penalty0 34--58, 1978.
-
-\bibitem[Rubin(1980)]{rubin1980a}
-D.~B. Rubin.
-\newblock Discussion of ``randomization analysis of experimental data in the fisher randomization test'' by basu.
-\newblock \emph{The Journal of the American Statistical Association}, 75\penalty0 (371):\penalty0 591--593, 1980.
-
 \bibitem[Rubin(1974)]{rubin1974}
-Donald~B. Rubin.
-\newblock Estimating causal effects of treatments in randomized and nonrandomized studies.
+D.~B. Rubin.
+\newblock {Estimating Causal Effects of Treatments in Randomized and Nonrandomized Studies}.
 \newblock \emph{Journal of Educational Psychology}, 66:\penalty0 688--701, 1974.
 \newblock \doi{10.1037/h0037350}.
 
+\bibitem[Rubin(1978)]{rubin1978}
+D.~B. Rubin.
+\newblock {Bayesian Inference for Causal Effects: The Role of Randomization}.
+\newblock \emph{The Annals of Statistics}, 6:\penalty0 34--58, 1978.
+
+\bibitem[Rubin(1980)]{rubin1980a}
+D.~B. Rubin.
+\newblock {Discussion of ``Randomization Analysis of Experimental Data in the Fisher Randomization Test'' by Basu}.
+\newblock \emph{Journal of the American Statistical Association}, 75\penalty0 (371):\penalty0 591--593, 1980.
+
+\bibitem[Rudolph et~al.(2018)Rudolph, Sofrygin, Zheng, and van~der Laan]{rudolphetal2018}
+K.~E. Rudolph, O.~Sofrygin, W.~Zheng, and M.~J. van~der Laan.
+\newblock {Robust and Flexible Estimation of Stochastic Mediation Effects: A Proposed Method and Example in a Randomized Trial Setting}.
+\newblock \emph{Epidemiology}, 7\penalty0 (1):\penalty0 20170007, 2018.
+\newblock \doi{10.1515/em-2017-0007}.
+\newblock Epub 2017 Dec 13.
+
+\bibitem[Rudolph et~al.(2024)Rudolph, Williams, and D{\'i}az]{rudolphetal2024}
+K.~E. Rudolph, N.~T. Williams, and I.~D{\'i}az.
+\newblock {Practical Causal Mediation Analysis: Extending Nonparametric Estimators to Accommodate Multiple Mediators and Multiple Intermediate Confounders}.
+\newblock \emph{Biostatistics}, 25\penalty0 (4):\penalty0 997--1014, October 2024.
+\newblock \doi{10.1093/biostatistics/kxae012}.
+\newblock Erratum in: Biostatistics. 2024 Dec 31;26(1):kxae029. doi: 10.1093/biostatistics/kxae029.
+
+\bibitem[Sj{\"o}lander(2009)]{sjolander2009}
+A.~Sj{\"o}lander.
+\newblock {Bounds on Natural Direct Effects in the Presence of Confounded Intermediate Variables}.
+\newblock \emph{Statistics in Medicine}, 28\penalty0 (4):\penalty0 558--571, February 2009.
+\newblock \doi{10.1002/sim.3493}.
+
+\bibitem[Smith and VanderWeele(2019)]{smithvanderweele2019}
+L.~H. Smith and T.~J. VanderWeele.
+\newblock {Mediational E-values: Approximate Sensitivity Analysis for Unmeasured Mediator-Outcome Confounding}.
+\newblock \emph{Epidemiology}, 30\penalty0 (6):\penalty0 835--837, November 2019.
+\newblock \doi{10.1097/EDE.0000000000001064}.
+
+\bibitem[Tchetgen~Tchetgen and Phiri(2014)]{tchetgentchetgenphiri2014}
+E.~J. Tchetgen~Tchetgen and K.~Phiri.
+\newblock {Bounds for Pure Direct Effect}.
+\newblock \emph{Epidemiology}, 25\penalty0 (5):\penalty0 775--776, September 2014.
+\newblock \doi{10.1097/EDE.0000000000000154}.
+
+\bibitem[{University College London, UCL Social Research Institute, Centre for Longitudinal Studies}(2026)]{cls2026}
+{University College London, UCL Social Research Institute, Centre for Longitudinal Studies}.
+\newblock 1970 british cohort study: Data series.
+\newblock [Data collection]. 14th Release. UK Data Service. SN: 200001, 2026.
+
+\bibitem[van~der Laan and Petersen(2008)]{vanderlaanpetersen2008}
+M.~van~der Laan and M.~L. Petersen.
+\newblock {Direct Effect Models}.
+\newblock \emph{The International Journal of Biostatistics}, 4\penalty0 (1):\penalty0 1--29, October 2008.
+\newblock \doi{10.2202/1557-4679.1064}.
+
 \bibitem[VanderWeele(2013)]{vanderweele2013}
-TJ~VanderWeele.
-\newblock A three-way decomposition of a total effect into direct, indirect, and interactive effects.
-\newblock \emph{Epidemiology}, 24\penalty0 (2):\penalty0 224--32, March 2013.
+T.~J. VanderWeele.
+\newblock {A Three-Way Decomposition of a Total Effect into Direct, Indirect, and Interactive Effects}.
+\newblock \emph{Epidemiology}, 24\penalty0 (2):\penalty0 224--232, March 2013.
 \newblock \doi{10.1097/EDE.0b013e318281a64e}.
 
 \bibitem[VanderWeele(2014)]{vanderweele2014}
-TJ~VanderWeele.
-\newblock A unification of mediation and interaction: a 4-way decomposition.
-\newblock \emph{Epidemiology}, 25\penalty0 (5):\penalty0 749--61, September 2014.
+T.~J. VanderWeele.
+\newblock {A Unification of Mediation and Interaction: A 4-Way Decomposition}.
+\newblock \emph{Epidemiology}, 25\penalty0 (5):\penalty0 749--761, September 2014.
 \newblock \doi{10.1097/EDE.0000000000000121}.
 \newblock Erratum in: Epidemiology. 2016 Sep;27(5):e36. doi: 10.1097/EDE.0000000000000527.
 
-\bibitem[Vanderweele and Robins(2012)]{vanderweelerobins2012}
-TJ~Vanderweele and JM~Robins.
-\newblock Stochastic counterfactuals and stochastic sufficient causes.
-\newblock \emph{Stat Sin}, 22\penalty0 (1):\penalty0 379--392, 1 2012.
+\bibitem[VanderWeele(2015)]{vanderweele2015}
+T.~J. VanderWeele.
+\newblock \emph{Explanation in Causal Inference: Methods for Mediation and Interaction}.
+\newblock Oxford University Press, Oxford, reprint, revised edition, 2015.
+\newblock ISBN 019932588X, 9780199325887.
+
+\bibitem[VanderWeele and Robins(2012)]{vanderweelerobins2012}
+T.~J. VanderWeele and J.~M. Robins.
+\newblock {Stochastic Counterfactuals and Stochastic Sufficient Causes}.
+\newblock \emph{Statistica Sinica}, 22\penalty0 (1):\penalty0 379--392, January 2012.
 \newblock \doi{10.5705/ss.2008.186}.
 
+\bibitem[VanderWeele and Robinson(2014)]{vanderweelerobinson2014}
+T.~J. VanderWeele and W.~R. Robinson.
+\newblock {On the Causal Interpretation of Race in Regressions Adjusting for Confounding and Mediating Variables}.
+\newblock \emph{Epidemiology}, 25\penalty0 (4):\penalty0 473--484, 2014.
+\newblock \doi{10.1097/EDE.0000000000000105}.
+
 \bibitem[VanderWeele and Tchetgen~Tchetgen(2017)]{vanderweeletchetgentchetgen2017}
-TJ~VanderWeele and EJ~Tchetgen~Tchetgen.
-\newblock Mediation analysis with time varying exposures and mediators.
-\newblock \emph{J R Stat Soc Series B Stat Methodol}, 79\penalty0 (3):\penalty0 917--938, June 2017.
+T.~J. VanderWeele and E.~J. Tchetgen~Tchetgen.
+\newblock {Mediation Analysis with Time Varying Exposures and Mediators}.
+\newblock \emph{Journal of the Royal Statistical Society Series B: Statistical Methodology}, 79\penalty0 (3):\penalty0 917--938, June 2017.
 \newblock \doi{10.1111/rssb.12194}.
 \newblock Epub 2016 Jun 27.
 
-\bibitem[Vanderweele et~al.(2014)Vanderweele, Vansteelandt, and Robins]{vanderweeleetal2014}
-Tyler Vanderweele, Stijn Vansteelandt, and James Robins.
-\newblock Effect decomposition in the presence of an exposure-induced mediator-outcome confounder.
-\newblock \emph{Epidemiology (Cambridge, Mass.)}, 25:\penalty0 300--6, 03 2014.
-\newblock \doi{10.1097/EDE.0000000000000034}.
-
-\bibitem[VanderWeele and Robinson(2014)]{vanderweelerobinson2014}
-Tyler~J VanderWeele and Whitney~R Robinson.
-\newblock On the causal interpretation of race in regressions adjusting for confounding and mediating variables.
-\newblock \emph{Epidemiology (Cambridge, Mass.)}, 25\penalty0 (4):\penalty0 473--484, 2014.
-\newblock \doi{10.1097/EDE.0000000000000105}.
-
 \bibitem[VanderWeele and Vansteelandt(2009)]{vanderweelevansteelandt2009}
-Tyler~J VanderWeele and Stijn Vansteelandt.
-\newblock Conceptual issues concerning mediation, interventions and composition.
+T.~J. VanderWeele and S.~Vansteelandt.
+\newblock {Conceptual Issues Concerning Mediation, Interventions and Composition}.
 \newblock \emph{Statistics and Its Interface}, 2\penalty0 (4):\penalty0 457--468, 2009.
 
+\bibitem[VanderWeele et~al.(2014)VanderWeele, Vansteelandt, and Robins]{vanderweeleetal2014}
+T.~J. VanderWeele, S.~Vansteelandt, and J.~M. Robins.
+\newblock {Effect Decomposition in the Presence of an Exposure-Induced Mediator-Outcome Confounder}.
+\newblock \emph{Epidemiology}, 25:\penalty0 300--306, March 2014.
+\newblock \doi{10.1097/EDE.0000000000000034}.
+
 \bibitem[Vansteelandt and Daniel(2017)]{vansteelandtdaniel2017}
-Stijn Vansteelandt and Rhian~M. Daniel.
-\newblock Interventional effects for mediation analysis with multiple mediators.
-\newblock \emph{Epidemiology}, 28\penalty0 (2):\penalty0 pp. 258--265, 2017.
+S.~Vansteelandt and R.~M. Daniel.
+\newblock {Interventional Effects for Mediation Analysis with Multiple Mediators}.
+\newblock \emph{Epidemiology}, 28\penalty0 (2):\penalty0 258--265, 2017.
 \newblock ISSN 10443983, 15315487.
 \newblock URL \url{https://www.jstor.org/stable/26512215}.
+
+\bibitem[Wright(1934)]{wright1934}
+S.~Wright.
+\newblock {The Method of Path Coefficients}.
+\newblock \emph{The Annals of Mathematical Statistics}, 5\penalty0 (3):\penalty0 161--215, 1934.
 
 \end{thebibliography}

@@ -7,7 +7,7 @@
 \usepackage[round, authoryear]{natbib} % Bibliography (author-year)
 
 \usepackage{setspace} % Allows double spacing but skips headers/footers
-\setcounter{tocdepth}{1} % Limits the TOC to chapter and section names
+\setcounter{tocdepth}{2} % Chapter, section, and subsection names (only Natural Effects/Interventional Effects currently use subsections)
 
 % Additional packages
 \usepackage{graphicx} % Allows the inclusion of figures
@@ -58,6 +58,7 @@
 \usepackage{pdflscape}
 \usepackage{booktabs} % for better horizontal lines
 \usepackage{makecell} % for line breaks inside cells
+\usepackage{url}
 
 % CUSTOM SETTINGS ********************************
 \input{settings/custom/packages}
@@ -75,12 +76,16 @@
 \afterpreface
 
 \include{sections/1_chapters/1_Introduction}
-\include{sections/1_chapters/2_Preliminaries}
-\include{sections/1_chapters/3_Natural_Effects}
-\include{sections/1_chapters/4_Interventional_Effects}
-\include{sections/1_chapters/5_Conclusion}
+\include{sections/1_chapters/2_Literature_Review}
+\include{sections/1_chapters/3_Preliminaries}
+\include{sections/1_chapters/4_Natural_Effects}
+\include{sections/1_chapters/5_Interventional_Effects}
+\include{sections/1_chapters/6_Application}
+\include{sections/1_chapters/7_Conclusion}
 
 
+\phantomsection
+\addcontentsline{toc}{chapter}{Bibliography}
 \bibliographystyle{plainnat}
 \bibliography{bib/references,bib/secondary_references}
 

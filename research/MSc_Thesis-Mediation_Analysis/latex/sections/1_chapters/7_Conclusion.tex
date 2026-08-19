@@ -1,0 +1,57 @@
+\chapter{Conclusion}\label{chapter:conclusion}
+
+This dissertation is centered around giving a comprehensive accounting of the 
+current approaches to mediation analysis with multiple mediators. We 
+discussed the definitions, identification assumptions, and interpretation of natural and 
+interventional effects, the two most popular approaches within the mediation analysis 
+literature. We first reviewed why it has generally been established that identification
+of natural effects is infeasible for mediation analysis with multiple mediators. Having 
+motivated the impetus to search for alternative mediational effect definitions, we then 
+built up the theory for interventional effects for one and two mediators, with a 
+particular focus on defining hypothetical experiments that could correspond to the 
+interventions implied by these effects. We argued that though these effects are 
+theoretically easier to identify, they cannot be interpreted in the same way as 
+natural effects because they do not estimate the strength of causal mechanisms. 
+Additionally, it is difficult to find applications where the value of these 
+effects --- estimating the causal effects of particular joint stochastic 
+interventions --- can be clearly seen. 
+
+Given the problems with both natural and interventional effects in multiple mediator 
+settings, we then propose VanderWeele-Robinson interventional effects as a 
+promising class of mediational effects with clear real-world applications. We 
+formalize and extend these effects to two mediator problems. We then apply 
+these effects to a real-world dataset using a flexible Monte Carlo estimation 
+strategy and discuss how the practical implications of these effect estimates can 
+be thought about. 
+
+A key argument made throughout this dissertation is that there is little conceptual 
+overlap between the interpretation of natural and interventional effects. This means 
+that important features of natural effect definitions --- like the ability to decompose
+total causal effect into path-specific causal mechanisms --- do not hold the same 
+importance for the interpretation of interventional effects. Despite this, the 
+definition of interventional effects for multiple mediator problems in particular 
+seems to have been influenced by attempts to mimic the features of natural effect 
+definitions. Given the recent work of~\cite{miles2023}, which the core arguments of 
+this dissertation owe a large debt to, we believe that interventional
+effects cannot be seen as a ``next-best'' substitute for natural effects and that 
+future work on the theory behind interventional effects should be motivated by 
+the unique prescriptive interpretation of these effects.
+
+The are a number of potentially interesting directions for future work related 
+to the topics of this dissertation. On the development of interventional effects for 
+multiple mediators, it would be interesting to further explore what kinds of unique 
+real-world applications such stochastic joint interventions can have. This 
+dissertation shows that VanderWeele-Robinson style interventional effects already 
+offer one such promising variation. While these effects have recently been popularized 
+in the health disparities literature~\cite{jackson2021}, much interested work 
+remains to be done. Given that the literature on these effects has so for 
+proposed parametric estimation strategies, it would be interesting to see to what 
+extent the semiparametric estimation theory for interventional effects carries 
+over to the efficient estimation of VanderWeele-Robinson effects. Additionally, there
+are potentially interesting connections between the population level intervention 
+framework of~\cite{hubbardvanderlaan2008} and VanderWeele-Robinson effects. Finally, 
+Sections 6 of this dissertation considered an application of VanderWeele-Robinson 
+effects under the simplifying assumption of no covariates. It would be interesting to 
+combine the insights of Section~\ref{subsection:vr_effects_2m} 
+and~\cite{jacksonvanderweele2018} to define these effects for multiple mediator situations
+that properly account for pre-treatment covariates. 

@@ -5,6 +5,7 @@
 library(here)
 library(dplyr)
 library(stats)
+library(marginaleffects)
 
 ## Set working directory -----
 setwd(here::here())
@@ -58,7 +59,6 @@ mc_estimation <- function(data,
                           counterfactual,
                           outcome_type,
                           effect_type,
-                          vd_conditional_model,
                           estimand,
                           mc_draws) {
 # Only configured for 1 or 2 mediators for now
@@ -71,7 +71,20 @@ mc_estimation <- function(data,
     model_data <- data %>% filter(.data[[exposure]] == counterfactual) 
   }
   else {
-    model_data <- data
+    model_data <- data %>% 
+      filter(.data[[exposure]] %in% c(reference, counterfactual)) 
+  }
+  
+  # Total effect estimation ---
+  if (outcome_type == "continuous") {
+    y1 <- mean((data %>% filter(.data[[exposure]] == counterfactual))$class_mod)
+    y0 <- mean((data %>% filter(.data[[exposure]] == reference))$class_mod)
+    te_out <- y1 - y0
+  }
+  else if (outcome_type == "binary") {
+    y1 <- mean((data %>% filter(.data[[exposure]] == counterfactual))$class_mod_bin)
+    y0 <- mean((data %>% filter(.data[[exposure]] == reference))$class_mod_bin)
+    te_out <- y1 - y0
   }
   
   ## Main effect estimation module -----
@@ -79,52 +92,42 @@ mc_estimation <- function(data,
     
     if (effect_type == "VR") {
       ## MC estimation of interventional distribution estimand -----
-      mc_data <- slice_sample(model_data, n = mc_draws, replace = TRUE)
+      mc_data_o <- slice_sample(model_data, n = mc_draws, replace = TRUE)
       
       # Mediator ---
       # M(0)
       mu_m0 <- predict.glm(model_lst[[1]], 
-                           mc_data %>% mutate(!!exposure := reference))   
+                           mc_data_o %>% mutate(!!exposure := reference))   
       sigma_hat_m0 <- sigma(model_lst[[1]])
       m0_draw <- rnorm(mc_draws, mean = mu_m0, sd = sigma_hat_m0)
       
       # M(1)
       mu_m1 <- predict.glm(model_lst[[1]], 
-                           mc_data %>% mutate(!!exposure := counterfactual))   
+                           mc_data_o %>% mutate(!!exposure := counterfactual))   
       sigma_hat_m1 <- sigma(model_lst[[1]])
       m1_draw <- rnorm(mc_draws, mean = mu_m1, sd = sigma_hat_m1)
       
       # Outcome ---
       # Y(0,M(0))
-      mc_data <- mc_data %>%
+      mc_data <- mc_data_o %>%
         mutate(!!exposure := reference,
                !!mediators[1] := m0_draw)
       y00_hat <- mean(predict.glm(model_lst[[2]], mc_data))
       
       # Y(0,M(1))
-      mc_data <- mc_data %>%
+      mc_data <- mc_data_o %>%
         mutate(!!exposure := reference,
                !!mediators[1] := m1_draw)
       y01_hat <- mean(predict.glm(model_lst[[2]], mc_data))
       
       # Y(1,M(1))
-      mc_data <- mc_data %>%
+      mc_data <- mc_data_o %>%
         mutate(!!exposure := counterfactual,
                !!mediators[1] := m1_draw)
       y11_hat <- mean(predict.glm(model_lst[[2]], mc_data))
       
       
       ## Effect estimation -----
-      
-      # Total effect
-      if (outcome_type == "continuous") {
-        te_mod <- glm(formula = te_model, data = data)
-        te_out <- te_mod$coefficients[[2]]*(counterfactual - reference)
-      }
-      else if (outcome_type == "binary") {
-        te_mod <- glm(formula = te_model, data = data, family = binomial)
-        te_out <- te_mod$coefficients[[2]]
-      }
     
       # Interventional total effect (rTE)
       ite_out <- y11_hat - y00_hat
@@ -137,24 +140,24 @@ mc_estimation <- function(data,
       
     else {
       ## MC estimation of interventional distribution estimand -----
-      mc_data <- slice_sample(model_data, n = mc_draws, replace = TRUE)
+      mc_data_o <- slice_sample(model_data, n = mc_draws, replace = TRUE)
       
       # Mediator ---
       # M(0)
       mu_m0 <- predict.glm(model_lst[[1]], 
-                           mc_data %>% mutate(!!exposure := reference))   
+                           mc_data_o %>% mutate(!!exposure := reference))   
       sigma_hat_m0 <- sigma(model_lst[[1]])
       m0_draw <- rnorm(mc_draws, mean = mu_m0, sd = sigma_hat_m0)
       
       # M(1)
       mu_m1 <- predict.glm(model_lst[[1]], 
-                           mc_data %>% mutate(!!exposure := counterfactual))   
+                           mc_data_o %>% mutate(!!exposure := counterfactual))   
       sigma_hat_m1 <- sigma(model_lst[[1]])
       m1_draw <- rnorm(mc_draws, mean = mu_m1, sd = sigma_hat_m1)
       
       # Outcome ---
       # Y(0,M(0))
-      mc_data <- mc_data %>%
+      mc_data <- mc_data_o %>%
         mutate(!!exposure := reference,
                !!mediators[1] := m0_draw)
       mu_y00 <- predict.glm(model_lst[[2]], mc_data) 
@@ -162,7 +165,7 @@ mc_estimation <- function(data,
       y00_hat <- mean(rnorm(mc_draws, mean = mu_y00, sd = sigma_hat_y00))
       
       # Y(1,M(0))
-      mc_data <- mc_data %>%
+      mc_data <- mc_data_o %>%
         mutate(!!exposure := counterfactual,
                !!mediators[1] := m0_draw)
       mu_y10 <- predict.glm(model_lst[[2]], mc_data) 
@@ -170,7 +173,7 @@ mc_estimation <- function(data,
       y10_hat <- mean(rnorm(mc_draws, mean = mu_y10, sd = sigma_hat_y10))
       
       # Y(1,M(1))
-      mc_data <- mc_data %>%
+      mc_data <- mc_data_o %>%
         mutate(!!exposure := counterfactual,
                !!mediators[1] := m1_draw)
       mu_y11 <- predict.glm(model_lst[[2]], mc_data) 
@@ -179,16 +182,6 @@ mc_estimation <- function(data,
       
       
       ## Effect estimation -----
-      
-      # Total effect
-      if (outcome_type == "continuous") {
-        te_mod <- glm(formula = te_model, data = data)
-        te_out <- te_mod$coefficients[[2]]*(counterfactual - reference)
-      }
-      else if (outcome_type == "binary") {
-        te_mod <- glm(formula = te_model, data = data, family = binomial)
-        te_out <- te_mod$coefficients[[2]]
-      }
       
       # Interventional total effect (rTE)
       ite_out <- y11_hat - y00_hat
@@ -208,26 +201,26 @@ mc_estimation <- function(data,
     
     if (effect_type == "LV") {
       ## MC estimation of interventional distribution estimand -----
-      mc_data <- slice_sample(model_data, n = mc_draws, replace = TRUE)
+      mc_data_o <- slice_sample(model_data, n = mc_draws, replace = TRUE)
       
       # Mediator 1 ---
       # M1(0)
       mu_m1_0 <- predict.glm(model_lst[[1]], 
-                           mc_data %>% mutate(!!exposure := reference))   
+                           mc_data_o %>% mutate(!!exposure := reference))   
       sigma_hat_m1_0 <- sigma(model_lst[[1]])
       m1_0_draw <- rnorm(mc_draws, mean = mu_m1_0, sd = sigma_hat_m1_0) # default M1
       m1_0_draw_v2 <- rnorm(mc_draws, mean = mu_m1_0, sd = sigma_hat_m1_0) # default M1
       
       # M1(1)
       mu_m1_1 <- predict.glm(model_lst[[1]], 
-                           mc_data %>% mutate(!!exposure := counterfactual))   
+                           mc_data_o %>% mutate(!!exposure := counterfactual))   
       sigma_hat_m1_1 <- sigma(model_lst[[1]])
       m1_1_draw <- rnorm(mc_draws, mean = mu_m1_1, sd = sigma_hat_m1_1) 
       m1_1_draw_v2 <- rnorm(mc_draws, mean = mu_m1_1, sd = sigma_hat_m1_1) 
       
       # Mediator 2 ---
       # M2(0,M1(0))
-      mc_data <- mc_data %>%
+      mc_data <- mc_data_o %>%
         mutate(!!exposure := reference,
                !!mediators[1] := m1_0_draw_v2)
       mu_m2_00 <- predict.glm(model_lst[[2]], mc_data) 
@@ -235,7 +228,7 @@ mc_estimation <- function(data,
       m2_00_draw <- rnorm(mc_draws, mean = mu_m2_00, sd = sigma_hat_m2_00)
       
       # M2(1,M1(0))
-      mc_data <- mc_data %>%
+      mc_data <- mc_data_o %>%
         mutate(!!exposure := counterfactual,
                !!mediators[1] := m1_0_draw_v2)
       mu_m2_10 <- predict.glm(model_lst[[2]], mc_data) 
@@ -243,7 +236,7 @@ mc_estimation <- function(data,
       m2_10_draw <- rnorm(mc_draws, mean = mu_m2_10, sd = sigma_hat_m2_10)
       
       # M2(1,M1(1))
-      mc_data <- mc_data %>%
+      mc_data <- mc_data_o %>%
         mutate(!!exposure := counterfactual,
                !!mediators[1] := m1_1_draw_v2)
       mu_m2_11 <- predict.glm(model_lst[[2]], mc_data) 
@@ -252,53 +245,43 @@ mc_estimation <- function(data,
       
       # Outcome ---
       # Y(0,M1(0),M2(0,M1(0)))
-      mc_data <- mc_data %>%
+      mc_data <- mc_data_o %>%
         mutate(!!exposure := reference,
                !!mediators[1] := m1_0_draw,
                !!mediators[2] := m2_00_draw)
-      y0000_hat <- mean(predict.glm(model_lst[[3]], mc_data))
+      y0000_hat <- mean(predict.glm(model_lst[[3]], mc_data, type = "response"))
       
       # Y(1,M1(0),M2(0,M1(0)))
-      mc_data <- mc_data %>%
+      mc_data <- mc_data_o %>%
         mutate(!!exposure := counterfactual,
                !!mediators[1] := m1_0_draw,
                !!mediators[2] := m2_00_draw)
-      y1000_hat <- mean(predict.glm(model_lst[[3]], mc_data))
+      y1000_hat <- mean(predict.glm(model_lst[[3]], mc_data, type = "response"))
       
       # Y(1,M1(1),M2(0,M1(0)))
       # 'Recanting witness' problem
-      mc_data <- mc_data %>%
+      mc_data <- mc_data_o %>%
         mutate(!!exposure := counterfactual,
                !!mediators[1] := m1_1_draw,
                !!mediators[2] := m2_00_draw)
-      y1100_hat <- mean(predict.glm(model_lst[[3]], mc_data)) 
+      y1100_hat <- mean(predict.glm(model_lst[[3]], mc_data, type = "response")) 
       
       # Y(1,M1(1),M2(1,M1(0)))
-      mc_data <- mc_data %>%
+      mc_data <- mc_data_o %>%
         mutate(!!exposure := counterfactual,
                !!mediators[1] := m1_1_draw,
                !!mediators[2] := m2_10_draw)
-      y1110_hat <- mean(predict.glm(model_lst[[3]], mc_data))
+      y1110_hat <- mean(predict.glm(model_lst[[3]], mc_data, type = "response"))
       
       # Y(1,M1(1),M2(1,M1(1)))
-      mc_data <- mc_data %>%
+      mc_data <- mc_data_o %>%
         mutate(!!exposure := counterfactual,
                !!mediators[1] := m1_1_draw,
                !!mediators[2] := m2_11_draw)
-      y1111_hat <- mean(predict.glm(model_lst[[3]], mc_data))
+      y1111_hat <- mean(predict.glm(model_lst[[3]], mc_data, type = "response"))
       
       
       ## Effect estimation -----
-      
-      # Total effect
-      if (outcome_type == "continuous") {
-        te_mod <- glm(formula = te_model, data = data)
-        te_out <- te_mod$coefficients[[2]]*(counterfactual - reference)
-      }
-      else if (outcome_type == "binary") {
-        te_mod <- glm(formula = te_model, data = data, family = binomial)
-        te_out <- te_mod$coefficients[[2]]
-      }
       
       # Interventional total effect (rTE)
       ite_out <- y1111_hat - y0000_hat
@@ -321,98 +304,75 @@ mc_estimation <- function(data,
     
     else if (effect_type == "VD") {
       ## MC estimation of interventional distribution estimand -----
-      mc_data <- slice_sample(model_data, n = mc_draws, replace = TRUE)
+      mc_data_o <- slice_sample(model_data, n = mc_draws, replace = TRUE)
       
       # Mediator 1 ---
       # M1(0)
       mu_m1_0 <- predict.glm(model_lst[[1]], 
-                             mc_data %>% mutate(!!exposure := reference))   
+                             mc_data_o %>% mutate(!!exposure := reference))   
       sigma_hat_m1_0 <- sigma(model_lst[[1]])
       m1_0_draw <- rnorm(mc_draws, mean = mu_m1_0, sd = sigma_hat_m1_0)
+      m1_0_draw2 <- rnorm(mc_draws, mean = mu_m1_0, sd = sigma_hat_m1_0)
       
       # M1(1)
       mu_m1_1 <- predict.glm(model_lst[[1]], 
-                             mc_data %>% mutate(!!exposure := counterfactual))   
+                             mc_data_o %>% mutate(!!exposure := counterfactual))   
       sigma_hat_m1_1 <- sigma(model_lst[[1]])
       m1_1_draw <- rnorm(mc_draws, mean = mu_m1_1, sd = sigma_hat_m1_1)
       
       # Mediator 2 ---
-      # M2(0)
-      mu_m2_0 <- predict.glm(model_lst[[2]], 
-                             mc_data %>% mutate(!!exposure := reference))   
-      sigma_hat_m2_0 <- sigma(model_lst[[2]])
-      m2_0_draw <- rnorm(mc_draws, mean = mu_m2_0, sd = sigma_hat_m2_0)
-      
-      # M2(1)
-      mu_m2_1 <- predict.glm(model_lst[[2]], 
-                             mc_data %>% mutate(!!exposure := counterfactual))   
-      sigma_hat_m2_1 <- sigma(model_lst[[2]])
-      m2_1_draw <- rnorm(mc_draws, mean = mu_m2_1, sd = sigma_hat_m2_1)
-      
-      # Joint distribution ---
-      joint_model <- glm(formula = vd_conditional_model, data = data) # WIP: allow for binary mediators
       
       # M2(0)|M1(0)
-      mu_m12_00 <- predict.glm(joint_model, 
-                             mc_data %>% mutate(!!exposure := reference,
+      mu_m12_00 <- predict.glm(model_lst[[2]], 
+                             mc_data_o %>% mutate(!!exposure := reference,
                                                 !!mediators[1] := m1_0_draw))   
-      sigma_hat_m12_00 <- sigma(joint_model)
+      sigma_hat_m12_00 <- sigma(model_lst[[2]])
       m12_00_draw <- rnorm(mc_draws, mean = mu_m12_00, sd = sigma_hat_m12_00)
       
-      # M2(0)|M1(0)
-      mu_m12_11 <- predict.glm(joint_model, 
-                               mc_data %>% mutate(!!exposure := counterfactual,
+      # M2(1)|M1(1)
+      mu_m12_11 <- predict.glm(model_lst[[2]], 
+                               mc_data_o %>% mutate(!!exposure := counterfactual,
                                                   !!mediators[1] := m1_1_draw))   
-      sigma_hat_m12_11 <- sigma(joint_model)
+      sigma_hat_m12_11 <- sigma(model_lst[[2]])
       m12_11_draw <- rnorm(mc_draws, mean = mu_m12_11, sd = sigma_hat_m12_11)
       
       # Outcome ---
       # Joint: Y(0,M1(0),M2(0))
-      mc_data <- mc_data %>%
+      mc_data <- mc_data_o %>%
         mutate(!!exposure := reference,
                !!mediators[1] := m1_0_draw,
                !!mediators[2] := m12_00_draw)
-      y000_hat_joint <- mean(predict.glm(model_lst[[3]], mc_data))
+      y000_hat_joint <- mean(predict.glm(model_lst[[3]], mc_data, , type = "response"))
       
-      # Joint: Y(0,M1(0),M2(0,M1(0)))
-      mc_data <- mc_data %>%
+      # Joint: Y(1,M1(0),M2(0,M1(0)))
+      mc_data <- mc_data_o %>%
         mutate(!!exposure := counterfactual,
                !!mediators[1] := m1_0_draw,
                !!mediators[2] := m12_00_draw)
-      y100_hat_joint <- mean(predict.glm(model_lst[[3]], mc_data))
+      y100_hat_joint <- mean(predict.glm(model_lst[[3]], mc_data, , type = "response"))
       
       # Product of marginals: Y(1,M1(0),M2(0))
-      mc_data <- mc_data %>%
+      mc_data <- mc_data_o %>%
         mutate(!!exposure := counterfactual,
-               !!mediators[1] := m1_0_draw,
-               !!mediators[2] := m2_0_draw)
-      y100_hat_pm <- mean(predict.glm(model_lst[[3]], mc_data))
-      
+               !!mediators[1] := m1_0_draw2, # Independence between M(1), M(2)
+               !!mediators[2] := m12_00_draw)
+      y100_hat_pm <- mean(predict.glm(model_lst[[3]], mc_data, , type = "response"))
+
       # Y(1,M1(1),M2(0))
-      mc_data <- mc_data %>%
+      mc_data <- mc_data_o %>%
         mutate(!!exposure := counterfactual,
                !!mediators[1] := m1_1_draw,
-               !!mediators[2] := m2_0_draw)
-      y110_hat <- mean(predict.glm(model_lst[[3]], mc_data)) 
+               !!mediators[2] := m12_00_draw)
+      y110_hat <- mean(predict.glm(model_lst[[3]], mc_data, , type = "response")) 
       
       # Y(1,M1(0),M2(1))
-      mc_data <- mc_data %>%
+      mc_data <- mc_data_o %>%
         mutate(!!exposure := counterfactual,
                !!mediators[1] := m1_0_draw,
-               !!mediators[2] := m2_1_draw)
-      y101_hat <- mean(predict.glm(model_lst[[3]], mc_data))
+               !!mediators[2] := m12_11_draw)
+      y101_hat <- mean(predict.glm(model_lst[[3]], mc_data, type = "response"))
       
       ## Effect estimation -----
-      
-      # Total effect
-      if (outcome_type == "continuous") {
-        te_mod <- glm(formula = te_model, data = data)
-        te_out <- te_mod$coefficients[[2]]*(counterfactual - reference)
-      }
-      else if (outcome_type == "binary") {
-        te_mod <- glm(formula = te_model, data = data, family = binomial)
-        te_out <- te_mod$coefficients[[2]]
-      }
       
       # Interventional direct effect
       ide_out <- y100_hat_joint - y000_hat_joint
@@ -432,138 +392,89 @@ mc_estimation <- function(data,
     }
     else if (effect_type == "VR") {
       ## MC estimation of interventional distribution estimand -----
-      mc_data <- slice_sample(model_data, n = mc_draws, replace = TRUE)
+      mc_data_o <- slice_sample(model_data, n = mc_draws, replace = TRUE)
       
-      # Mediator 1 ---
+      # Mediator 1 marginal ---
       # M1(0)
       mu_m1_0 <- predict.glm(model_lst[[1]], 
-                             mc_data %>% mutate(!!exposure := reference))   
+                             mc_data_o %>% mutate(!!exposure := reference))   
       sigma_hat_m1_0 <- sigma(model_lst[[1]])
       m1_0_draw <- rnorm(mc_draws, mean = mu_m1_0, sd = sigma_hat_m1_0)
-      m1_0_draw_v2 <- rnorm(mc_draws, mean = mu_m1_0, sd = sigma_hat_m1_0)
       
       # M1(1)
       mu_m1_1 <- predict.glm(model_lst[[1]], 
-                             mc_data %>% mutate(!!exposure := counterfactual))   
+                             mc_data_o %>% mutate(!!exposure := counterfactual))   
       sigma_hat_m1_1 <- sigma(model_lst[[1]])
       m1_1_draw <- rnorm(mc_draws, mean = mu_m1_1, sd = sigma_hat_m1_1)
-      m1_1_draw_v2 <- rnorm(mc_draws, mean = mu_m1_1, sd = sigma_hat_m1_1)
       
-      # Mediator 2 ---
-      # M2(0,M1(0))
-      mc_data <- mc_data %>%
-        mutate(!!exposure := reference,
-               !!mediators[1] := m1_0_draw_v2)
-      mu_m2_00 <- predict.glm(model_lst[[2]], mc_data) 
-      sigma_hat_m2_00 <- sigma(model_lst[[2]])
-      m2_00_draw <- rnorm(mc_draws, mean = mu_m2_00, sd = sigma_hat_m2_00)
+      # Mediator 2 conditional ---
+      # M2(0)|M1
+      mu_m2c_0 <- predict.glm(model_lst[[2]], 
+                             mc_data_o %>% mutate(!!exposure := reference))   
+      sigma_hat_m2c_0 <- sigma(model_lst[[2]])
+      m2c_0_draw <- rnorm(mc_draws, mean = mu_m2c_0, sd = sigma_hat_m2c_0)
       
-      # M2(1,M1(0))
-      mc_data <- mc_data %>%
-        mutate(!!exposure := counterfactual,
-               !!mediators[1] := m1_0_draw_v2)
-      mu_m2_10 <- predict.glm(model_lst[[2]], mc_data) 
-      sigma_hat_m2_10 <- sigma(model_lst[[2]])
-      m2_10_draw <- rnorm(mc_draws, mean = mu_m2_10, sd = sigma_hat_m2_10)
+      # M2(1)|M1
+      mu_m2c_1 <- predict.glm(model_lst[[2]], 
+                              mc_data_o %>% mutate(!!exposure := counterfactual))   
+      sigma_hat_m2c_1 <- sigma(model_lst[[2]])
+      m2c_1_draw <- rnorm(mc_draws, mean = mu_m2c_1, sd = sigma_hat_m2c_1)
       
-      # M2(0,M1(1))
-      mc_data <- mc_data %>%
-        mutate(!!exposure := reference,
-               !!mediators[1] := m1_1_draw_v2)
-      mu_m2_01 <- predict.glm(model_lst[[2]], mc_data) 
-      sigma_hat_m2_01 <- sigma(model_lst[[2]])
-      m2_01_draw <- rnorm(mc_draws, mean = mu_m2_01, sd = sigma_hat_m2_01)
+      # Mediator 2 marginal ---
+      # M2(0)|T=0
+      mu_m2m_0 <- predict.glm(model_lst[[2]], 
+                             mc_data_o %>% mutate(!!exposure := reference,
+                                                !!mediators[1] := m1_1_draw))   
+      sigma_hat_m2m_0 <- sigma(model_lst[[2]])
+      m2m_0_draw <- rnorm(mc_draws, mean = mu_m2m_0, sd = sigma_hat_m2m_0)
       
-      # M2(1,M1(1))
-      mc_data <- mc_data %>%
-        mutate(!!exposure := counterfactual,
-               !!mediators[1] := m1_1_draw_v2)
-      mu_m2_11 <- predict.glm(model_lst[[2]], mc_data) 
-      sigma_hat_m2_11 <- sigma(model_lst[[2]])
-      m2_11_draw <- rnorm(mc_draws, mean = mu_m2_11, sd = sigma_hat_m2_11)
+      # M2(1)|T=1
+      mu_m2m_1 <- predict.glm(model_lst[[2]], 
+                             mc_data_o %>% mutate(!!exposure := counterfactual,
+                                                !!mediators[1] := m1_1_draw))   
+      sigma_hat_m2m_1 <- sigma(model_lst[[2]])
+      m2m_1_draw <- rnorm(mc_draws, mean = mu_m2m_1, sd = sigma_hat_m2m_1)
       
-      # Outcome ---
-      # Y(0,M1(0),M2(0,M1(0)))
-      mc_data <- mc_data %>%
-        mutate(!!exposure := reference,
-               !!mediators[1] := m1_0_draw,
-               !!mediators[2] := m2_00_draw)
-      y0000_hat <- mean(predict.glm(model_lst[[3]], mc_data))
+      # Keeping M1(0) and M2(0)|M1 code snippets for now; if it is determined
+      # I don't need to compute interventional effect for Y(0,0,0) then can drop
       
-      # Y(0,M1(1),M2(0,M1(0)))
-      mc_data <- mc_data %>%
-        mutate(!!exposure := reference,
-               !!mediators[1] := m1_1_draw,
-               !!mediators[2] := m2_00_draw)
-      y0100_hat <- mean(predict.glm(model_lst[[3]], mc_data))
-      
-      # Y(0,M1(1),M2(0,M1(0)))
-      mc_data <- mc_data %>%
-        mutate(!!exposure := reference,
-               !!mediators[1] := m1_1_draw,
-               !!mediators[2] := m2_01_draw)
-      y0101_hat <- mean(predict.glm(model_lst[[3]], mc_data))
-      
-      # Y(0,M1(0),M2(1,M1(1)))
-      mc_data <- mc_data %>%
-        mutate(!!exposure := reference,
-               !!mediators[1] := m1_0_draw,
-               !!mediators[2] := m2_11_draw)
-      y0011_hat <- mean(predict.glm(model_lst[[3]], mc_data)) 
-      
-      # Y(0,M1(0),M2(1,M1(0)))
-      mc_data <- mc_data %>%
-        mutate(!!exposure := reference,
-               !!mediators[1] := m1_0_draw,
-               !!mediators[2] := m2_10_draw)
-      y0010_hat <- mean(predict.glm(model_lst[[3]], mc_data))
-      
-      # Y(0,M1(1),M2(1,M1(1)))
-      mc_data <- mc_data %>%
-        mutate(!!exposure := reference,
-               !!mediators[1] := m1_1_draw,
-               !!mediators[2] := m2_11_draw)
-      y0111_hat <- mean(predict.glm(model_lst[[3]], mc_data))
-      
-      # Y(1,M1(1),M2(1,M1(1)))
-      mc_data <- mc_data %>%
-        mutate(!!exposure := counterfactual,
-               !!mediators[1] := m1_1_draw,
-               !!mediators[2] := m2_11_draw)
-      y1111_hat <- mean(predict.glm(model_lst[[3]], mc_data))
+      # Review joint intervention
       
       ## Effect estimation -----
       
-      # Total effect
-      if (outcome_type == "continuous") {
-        te_mod <- glm(formula = te_model, data = data)
-        te_out <- te_mod$coefficients[[2]]*(counterfactual - reference)
-      }
-      else if (outcome_type == "binary") {
-        te_mod <- glm(formula = te_model, data = data, family = binomial)
-        te_out <- te_mod$coefficients[[2]]
-      }
+      # Interventional indirect effect through equalizing M1 
+      mc_data <- mc_data_o %>%
+        mutate(!!exposure := reference,
+               !!mediators[1] := m1_1_draw,
+               !!mediators[2] := m2m_0_draw)
+      iie_m1 <- mean(predict.glm(model_lst[[3]], mc_data, type = "response"))
       
-      # Interventional total effect (rTE)
-      ite_out <- y1111_hat - y0000_hat
+      # Interventional indirect effect through equalizing marginal of M2 
+      mc_data <- mc_data_o %>%
+        mutate(!!exposure := reference,
+               !!mediators[2] := m2m_1_draw)
+      iie_m2m <- mean(predict.glm(model_lst[[3]], mc_data, type = "response"))
+
       
-      # VR-interventional effect of equalizing M1, fixing marginal M2
-      vre_m1_marg_out <- y0100_hat - y0000_hat
+      # Interventional indirect effect through equalizing M2 conditional on M1
+      mc_data <- mc_data_o %>%
+        mutate(!!exposure := reference,
+               !!mediators[2] := m2c_1_draw)
+      iie_m2c <- mean(predict.glm(model_lst[[3]], mc_data, type = "response"))
       
-      # VR-interventional effect of equalizing M1, fixing M2 conditional on M1
-      vre_m1_cond_out <- y0101_hat - y0000_hat
+      # Interventional indirect effect through jointly equalizing (M1,M2)
+      mc_data <- mc_data_o %>%
+        mutate(!!exposure := reference,
+               !!mediators[1] := m1_1_draw,
+               !!mediators[2] := m2m_1_draw)
+      iie_joint <- mean(predict.glm(model_lst[[3]], mc_data, type = "response"))
       
-      # VR-interventional effect of equalizing marginal M2
-      vre_m2_marg_out <- y0011_hat - y0000_hat
+      iie_m1_out <- iie_m1 - y0
+      iie_m2m_out <- iie_m2m - y0
+      iie_m2c_out <- iie_m2c - y0
+      iie_joint_out <- iie_joint - y0
       
-      # VR-interventional effect of equalizing M2 conditional on M1
-      vre_m2_cond_out <- y0010_hat - y0000_hat
-      
-      # VR-interventional effect of equalizing joint (M1, M2)
-      vre_joint_out <- y0111_hat - y0000_hat
-      
-      results <- c(te_out, ite_out, vre_m1_marg_out, vre_m2_marg_out,
-                   vre_m1_cond_out, vre_m2_cond_out, vre_joint_out)
+      results <- c(te_out, iie_m1_out, iie_m2m_out, iie_m2c_out, iie_joint_out)
       
     }
     
@@ -585,7 +496,6 @@ main <- function(data,
                  reference,
                  counterfactual,
                  effect_type, # natural, LV, VD, VR
-                 vd_conditional_model = NULL, # only relevant for VD effects
                  estimand, # ATE, ATU, ATT 
                  mc_draws,
                  bootstrap_reps,
@@ -606,7 +516,6 @@ main <- function(data,
                        counterfactual,
                        outcome_type,
                        effect_type,
-                      vd_conditional_model,
                        estimand,
                        mc_draws)
    
@@ -633,11 +542,10 @@ main <- function(data,
                                        "rIE_M1", "rIE_M2", "Remainder")) 
     }
     else if (effect_type == "VR") {
-      cols <- 7 # to set later
-      results <- data.frame(Effect = c("TE", "rTE", 
-                                       "VRE_M1_Marginal", "VRE_M2_Marginal", 
-                                       "VRE_M1_Conditional", "VRE_M2_Conditional",
-                                       "VRE_Joint")) 
+      cols <- 5 # to set later
+      results <- data.frame(Effect = c("TE", "IIE_M1", 
+                                       "IIE_M2_Marginal", "IIE_M2_Conditional", 
+                                       "IIE_Joint")) 
     }
   }
   
@@ -661,7 +569,6 @@ main <- function(data,
                         counterfactual,
                         outcome_type,
                         effect_type,
-                        vd_conditional_model,
                         estimand,
                         mc_draws)
     boot_tbl[i,] <- pe_i

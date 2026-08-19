@@ -1,12 +1,124 @@
 \chapter{Introduction}\label{chapter:intro}
 
-Every thesis needs an introductory chapter
+Causal inference methods in the social and biomedical sciences are often motivated by the promise 
+that these methods can identify and isolate the ``effects of causes''~\citep{holland1986}. 
+However, we are often interested not in the total effect of an intervention but instead in 
+the mechanisms through which an intervention induces an effect. This is because there are 
+many situations in which an intervention --- such as a social policy or a drug --- affects 
+an outcome in multiple, sometimes conflicting ways. A canonical example comes from~\cite{hesslow1976}, 
+which discusses a randomized experiment that tested whether a new birth control pill increased the 
+risk of blood clots in women. As discussed in~\cite{pearl2001}, this drug could have a direct effect 
+on the rate of blood clots in women by causing clots to form in some women who would otherwise not 
+have been at risk. However, the drug could also operate through a second pathway whose sign opposes 
+the direct effect: the birth control pill could indirectly reduce the risk of developing blood clots 
+by reducing pregnancies, which are known to lead to higher rates of blood clots in women. A simple 
+causal inference framing asks only: does taking the drug increase the risk of blood clots for women? 
+However, this question does not address our concerns with the drug's safety: it is entirely possible 
+that this drug causes blood clots in some women, but because the women who take the drug get pregnant 
+at a lower rate, there is no observable difference in blood clot rates for women who did and did not 
+take the drug. The policy-relevant question is what the direct effect of the drug on blood clot risk 
+is, after accounting for the indirect effect that operates through the lowered risk of pregnancy. 
 
-While you're here, you need to go into \texttt{definitions.tex} to set all the 
-information needed for the front matter (e.g. title, author) and page 
-header/footer.
+Mediation analysis attempts to elucidate the mechanisms through which an intervention affects an 
+outcome of interest. It does so by decomposing the total causal effect of an intervention on an 
+outcome into the causal effects of distinct pathways through which the intervention affects the 
+outcome. Informally, the total observable causal effect of an intervention on an outcome is typically 
+decomposed into a \textbf{direct effect} that represents the unmediated effect that an intervention 
+has on the outcome and an \textbf{indirect effect} that represents the effect that an intervention 
+has on an outcome only through the way that it affects mediator variables that themselves affect 
+the outcome. 
 
-You will also find the School of Graduate Studies' preparation guide (August 
-2021) for theses and reports. I would give it a quick read so you know what's 
-expected.
+Since statisticians first became interested in formalizing mediation analysis methods in the 1990s 
+and early 2000s, several different versions of mediational effects have been proposed in the literature,
+each with their attendant interpretations, required assumptions, and theoretical issues. Natural effects, 
+which capture the effects of an intervention through a mediator compared to the 
+effect of the intervention had the mediator been set at the level it would have ``naturally'' 
+attained under no intervention, were the first class of effects proposed in the literature
+~\citep{robinsgreenland1992, pearl2001, avinetal2005}. While theoretically appealing, these 
+effects have been controversial because they require an empirically untestable
+assumption for identification, and the practical usefulness of their implications has also 
+been called into question~\citep{vanderweelevansteelandt2009}. 
+A recently developed alternative, interventional 
+effects, require significantly weaker assumptions. Interventional effects estimate the 
+effect of joint interventions on the exposure and the mediator that set the level of the mediator to a 
+random draw from the distribution of the mediator from a group that either did or did not receive 
+treatment. They have the advantage of not requiring the 
+untestable assumptions~\citep{vanderweeleetal2014}. 
 
+With the popularization of interventional effects, recent research in mediation analysis has also 
+attempted to extend the interventional effects framework to problems with multiple 
+mediators~\citep{vanderweeletchetgentchetgen2017, linvanderweele2017, vansteelandtdaniel2017}. This has 
+been seen as an important task because most mediation analysis of practical interest contain more than 
+one mediator~\citep{vansteelandtdaniel2017}. Additionally, natural effect definitions face many issues 
+when dealing with multiple mediators in most situations: even under strong assumptions, it is not 
+possible to identify the causal pathways for natural effects when there exists dependence between
+the mediators~\citep{avinetal2005, vanderweeleetal2014}. 
+
+Despite the appeal of interventional effects definitions, recent work has argued that such effects do 
+not carry the same mediational interpretation that natural effects do~\citep{miles2023}. In this 
+dissertation, I will further develop this insight by analyzing natural and interventional 
+effects in terms of a conceptual distinction between descriptive and prescriptive interpretations of 
+effects~\citep{pearl2001}.~\cite{pearl2001} claims that descriptive effects concerns the action of 
+variables, such as mediators, under ``natural'' conditions where such variables are not being directly
+intervened upon. These descriptive effects can have policy implications for exactly the reason why 
+we would care about the direct and indirect mechanisms in the birth control example. Prescriptive 
+effects, meanwhile, give causal effects under exact hypothetical or actual experimental conditions
+and concern the causal effect of a particular intervention rather than the descriptive properties 
+of causal pathways in the causal system. For example, a joint intervention where we assign both 
+the birth control pill and a blood thinner to a patient may be tried, and we would be interested in 
+if this combination reduces blood clots regardless of the causal pathways at work. 
+
+Given that interventional effects are easier to identify, interventional effects have recently 
+become particularly popular in applied work as conceptual substitutes for natural 
+effects~\citep{miles2023}. Additionally, as I will show in this dissertation, the descriptive 
+intent behind natural effects, which motivates an emphasis on features such as decomposing the total 
+effect into path-specific effects, have also seemed to influence the development of recent
+interventional effect definitions for multiple mediator problems. The results
+of~\cite{miles2023} reinforce this division and argue that interventional effects cannot be 
+interpreted in the way natural effects are. Natural effect estimation is motivated by the 
+descriptive goal of describing mediating pathways, while interventional effects are generally 
+motivated by the prescriptive goal of estimating the causal 
+effects of particular stochastic interventions on the distribution of the mediator. Therefore,
+interventional effects must be interpreted prescriptively. 
+
+In multiple mediator problems, natural effects are plagued by impassable barriers to identification. 
+I will argue that interventional effects, while requiring looser identification assumptions, 
+are also unappealing targets in such problems because of the difficulty of finding practical 
+situations where such effects would be useful quantities to estimate. This stands in contrast to 
+targets like controlled effects and even interventional effects in one mediator problems, where the 
+practical relevance of the interventions these effects map onto is more tractable. 
+
+If neither natural nor interventional effects are appealing targets in multiple mediator problems, 
+what types of effects can be productively pursued for such problems? Following the suggestion
+of~\cite{miles2023}, I argue that a version of interventional effects first proposed
+by~\cite{vanderweelerobinson2014} holds important practical importance. These effects are developed
+for problems where the exposure variable is considered to be non-manipulable 
+(e.g. race, sex, social class) and aim to estimate the effect of hypothetical interventions to 
+equalize the distribution of a mediator between two populations with different values of the 
+``exposure''. Such effects have been productively developed in the health disparities 
+literature~\citep{jacksonvanderweele2018,jackson2021}. I relate the formal framework I use for 
+natural and interventional effects to these effects and use the results of~\citep{jacksonvanderweele2018} 
+for single mediator problems with confounding to propose extensions of these effects to two mediator 
+problems. 
+
+Finally, I demonstrate the practical usefulness and interpretation of these effects 
+through an illustrative application in which I use data from~\cite{kuhaetal2021} to estimate 
+these effects for a problem in which intergenerational social class mobility is mediated by intelligence
+and education. To do this, I develop code to implement a general Monte Carlo estimation strategy that can be
+deployed to flexibly estimate different versions of interventional effects for multiple mediators. The code 
+notably separates the estimation of the conditional distributions for the mediators and outcome --- I use
+linear models in this paper, but this does not have to be so --- from the Monte Carlo estimation procedure 
+that computes interventional effects. The idea of using Monte Carlo estimation for mediation analysis has 
+precursors~\citep{imaietal2010b,vansteelandtdaniel2017}, but previous methods have not been developed for 
+VanderWeele-Robinson effects, and I am also not aware of whether they are able to be used to estimate other 
+interventional effect types. 
+
+Section 2 of this paper gives a brief history of the mediation analysis literature and overview of other 
+active areas of research. Section 3 introduces the potential outcomes framework for causal 
+inference~\citep{rubin1974}, which serves as the formal framework for the rest of the dissertation. 
+Section 4 develops the theory, assumptions, and interpretation of natural effects for one and two mediator
+problems. Section 5 develops the theory, assumptions, and interpretation of interventional effects for one 
+and two mediator problems and additionally develops the theory for VanderWeele-Robinson interventional 
+effects with one and two mediators. Section 6 applies the VanderWeele-Robinson interventional 
+effects developed in Section 5 to analyze the aforementioned social class mobility dataset. Section 7
+concludes. 

@@ -15,7 +15,6 @@ Kuha et al (2021) does not use the intelligence test results and instead investi
 
 ## Setup
 
-
 ```{r,results='hide',warning=FALSE}
 # Loading required packages
 library(dplyr)
@@ -107,15 +106,15 @@ It is still unclear what the relationship between the two ID variables is, and w
 
 As of this point, these are my working definitions of each of the variables:
 
--   `id`, `.id`: The unit of observation/person in the data. Unclear as of now which variable is the relevant one.
--   `educ37`: Ordinal scale from 1-8 indicating the unit's level of education at age 37. The mediating variable in Kuha et al (2021), and one of our variables of interest here.
--   `fclass`: The unit's father's social class, as described in Kuha et al (2021). The "treatment" variable (though it does not exactly admit a causal interpretation here).
--   `class38`: The unit's social class at age 38. The outcome variable.
--   `.imp`: Indicator of whether the data was imputed or not.
--   `cohort`: The year of birth for the unit being measured. There are three cohorts, each 12 years apart, in the data.
--   `sex`: The sex of the unit.
--   `weight`: This is a survey weight for units from the 1946 cohort, described in Section 2 of Kuha et al (2021).
--   `parttime`, `up`: Unknown for now. `weight` might be some kind of adjustment for sample over/under representation of the true population.
+- `id`, `.id`: The unit of observation/person in the data. Unclear as of now which variable is the relevant one.
+- `educ37`: Ordinal scale from 1-8 indicating the unit's level of education at age 37. The mediating variable in Kuha et al (2021), and one of our variables of interest here.
+- `fclass`: The unit's father's social class, as described in Kuha et al (2021). The "treatment" variable (though it does not exactly admit a causal interpretation here).
+- `class38`: The unit's social class at age 38. The outcome variable.
+- `.imp`: Indicator of whether the data was imputed or not.
+- `cohort`: The year of birth for the unit being measured. There are three cohorts, each 12 years apart, in the data.
+- `sex`: The sex of the unit.
+- `weight`: This is a survey weight for units from the 1946 cohort, described in Section 2 of Kuha et al (2021).
+- `parttime`, `up`: Unknown for now. `weight` might be some kind of adjustment for sample over/under representation of the true population.
 
 It is also helpful to describe what each of the 7 levels that the social class variables can take are. This will also help justify the simplifying assumption I will make below for visualization purposes to interpret the class levels at ordered, which is not strictly accurate. From Kuha et al (2021):
 
@@ -516,4 +515,3 @@ Interestingly, there are larger observed discrepancies in IQ test performance fo
 setwd(here::here())
 saveRDS(data_cca, file = "data/build/social_mobility_complete.rds")
 ```
-

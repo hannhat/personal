@@ -4,6 +4,7 @@
 ## Load packages -----
 library(here)
 library(dplyr)
+library(tidyr)
 library(ggplot2)
 
 ## Set working directory -----

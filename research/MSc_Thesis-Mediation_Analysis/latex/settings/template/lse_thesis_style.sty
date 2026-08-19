@@ -24,6 +24,8 @@
 % --- Continuous, document-wide numbering for figures and tables ---
 \renewcommand{\thefigure}{\arabic{figure}}
 \renewcommand{\thetable}{\arabic{table}}
+\@removefromreset{figure}{chapter} % Prevent report.cls from resetting the counter at each \chapter
+\@removefromreset{table}{chapter}  % (otherwise numbering isn't actually continuous, just same-looking per chapter)
 
 % Force single spacing inside floats so captions/contents aren't 1.5-spaced.
 \def\@xxfloat#1[#2]{\ifhmode \@bsphack\@floatpenalty -\@Mii\else

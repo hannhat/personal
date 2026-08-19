@@ -1,0 +1,388 @@
+\chapter{Application}
+
+We now demonstrate how the interventional effects developed in the previous section 
+can be deployed by applying them to the example introduced in 
+Section~\ref{section:vr_int_eff}.~\cite{kuhaetal2021} used data from three British
+cohort studies for individuals born in 1946, 1958, and 1970 to investigate the dynamics
+of intergenerational social class mobility in Britain.~\cite{kuhaetal2021}
+used these cohort studies to investigate the role of level of education in mediating 
+intergenerational social class mobility. They do this by using methods adapted from mediation
+analysis to estimate population associations of variables. We use the same data but
+additionally include the previously unused results of an intelligence test taken by 
+study participants at age 10. This allows us to characterize the intergenerational 
+social class mobility problem as one in which two causally ordered mediators, intelligence 
+and education, mediate the relationship between a class of origin --- the parents' social 
+class --- and a class of destination --- a participant's social class at mid-life. The causal 
+structure we assume is encoded in Figure~\ref{fig:application_DAG}. Additionally, 
+instead of associations, we estimate VanderWeele-Robinson interventional effects. 
+
+For simplicity, we focus on men in the 1970 cohort study~\citep{cls2026} and do not consider any covariates.
+For each observation, we use the following variables:
+
+\begin{itemize}[noitemsep,topsep=0pt]
+\item  The \textit{class of origin} is proxied by the participant's father's recorded social class. 
+Social class is categorized using the NS-SEC classification~\citep{onsnd} for social class as determined by 
+occupation, with 7 different categorizations. The categorizations are: 
+\begin{enumerate}[noitemsep,topsep=0pt]
+    \item Higher managers and professionals
+    \item Lower managers and professionals
+    \item Intermediate occupations
+    \item Small employers and own account workers
+    \item Lower supervisory and technical occupations
+    \item Semiroutine occupations
+    \item Routine occupations 
+\end{enumerate}
+This is generally regarded as an unordered categorical 
+variable~\citep{kuhaetal2021}. ~\cite{kuhaetal2021}, 
+
+
+\item  The \textit{class of destination} is equal to the participant's recorded social class at middle 
+age (age 38). 
+\item Intelligence is measured by a teacher-adapted version of the British Ability Scales~\citep{hill2005} 
+that was administered in schools. Four subscales --- word definitions, word similarities, 
+recall of digits, and matrices --- were used, and a principal components analysis was carried out on the 
+resulting data to derive a general cognitive ability factor ($g$)~\citep{galeetal2007}. This score was 
+then standardized into a z-score to measure ability relative to the rest of the cohort. 
+\item  Education is coded in terms of relative education as defined by~\cite{bukodigoldthorpe2016}. This is
+done by recording an individual's highest level of education attained at age 37 and then grouping the 
+individual's level of education relative to their cohort. Thus, this is an ordered categorical variable,
+which we treat as a continuous variable for simplicity. 
+\end{itemize}
+
+There are several important caveats for our analysis. These cohort studies are observational data, 
+and other than the treatment, mediator, and outcome variables, we have few other possible covariates. 
+This means that the assumptions required to identify even VanderWeele-Robinson interventional effects 
+are not fulfilled, as there are many confounders we would need to control to even plausibly argue
+that these assumptions are satisfied. Thus, the numbers offered in this analysis should be 
+interpreted with caution and cannot readily admit a causal interpretation. The main point of our 
+analysis is to demonstrate how such a multiple mediator mediation analysis problem can be reasoned 
+about using interventional effects. Additionally, we include the other interventional effect measures
+discussed in this dissertation as points of comparison. As will be discussed below, these estimates 
+are entirely illustrative as the treatment (social class) is non-manipulable. However, it is instructive 
+to compare the numerical estimates from these methods to the ``main'' VanderWeele-Robinson estimates 
+we present. Finally, only about 45\% of all observations for men in 1970 have complete data for 
+origin and destination class, IQ, and education; unlike~\cite{kuhaetal2021}, who addresses this issue
+via multiple imputation, we conduct a complete case analysis where we drop any observations with missing 
+data. Overall, this leaves us with 2,730 observations in our dataset. 
+
+We use Monte Carlo estimation to estimate interventional effects. To do this, we fit successive linear models
+for intelligence, education, and child's social class as functions of the variables that causally
+precede them in R~\citep{areletal2024}. We then sample many independent draws from the fitted conditional 
+distributions and apply
+a sequential sampling strategy as needed to estimate the needed g-formula equations for interventional effects
+(e.g. Equations~\ref{eq:RIE_one_mediator_g_comp},~\ref{eq:RIE_two_mediator_g_comp},~\ref{eq:g_formula_vr_1m}). 
+Finally, we use the nonparametric bootstrap for inference and construct percentile bootstrap 
+confidence intervals. A link to the R code used to both estimate the effects shown in this chapter and generate
+the associated tables can be found
+\href{https://github.com/hannhat/personal/tree/main/research/MSc_Thesis-Mediation_Analysis/code/analysis}{here}. 
+
+Such a strategy has been also implemented 
+in~\cite{imaietal2010a} to estimate causal mediation effects, and similar strategies are described 
+in~\cite{vansteelandtdaniel2017} and~\cite{kuhaetal2021}. In general, this method allows for fast and 
+flexible specification of unique models for the conditional distributions of the mediators and outcome 
+without the need to re-derive expressions for each path-specific interventional effect in terms of the 
+regression coefficients~\citep{vansteelandtdaniel2017}. 
+
+Here, we specify linear
+models for the mediators and the outcome. The outcome of interest for our main specification is the 
+probability of the participant's social class at middle age being Class 1. We observe a large disparity in 
+the probability of the participant's social class being Class 1 if their 
+father was in Class 1 compared to if their father was in Class 7. We are therefore interested in what 
+effect various interventions to equalize the distributions of IQ and education for participants with Class 7
+fathers to those with Class 1 fathers would have on their probability of ending up in Class 1. Throughout 
+this analysis, following similar analyses in~\cite{jacksonvanderweele2018}, our binary outcomes are expressed 
+on the risk difference scale. Thus, the observed disparity of $0.301$ between children of Class 1 compared
+to Class 7 in terms of their probability of ending up in Class 1 reflects the fact that children of fathers in 
+Class 7 have a baseline probability (12\%) of ending in Class 1, while children of fathers in Class 1 have 
+probability to end in Class 1 equal to the baseline probability plus 30\% (42\%). 
+
+In our main specification (Table~\ref{tab:app_main_spec}), we specify successive, fully additive linear models for the mediators and the 
+outcome, with IQ a function of father's class, education a function of father's class and IQ, and participant's 
+class a function of father's class, education, and IQ. We find that the interventions to equalize the marginal 
+distribution of IQ only and the marginal 
+distribution of education only result in a 25\% and 23\% reductions, respectively, in the difference in probability 
+of ending up in Class 1; the intervention to equalize the distribution of education within levels of IQ results 
+in a 15\% reduction; and the intervention to equalize the joint distribtion of IQ and education results in a 
+42\% reduction. All estimates are statistically significant relative to a null hypothesis of no effect at the 
+95\% confidence interval. 
+
+\begin{table}[ht]
+\centering
+\sbox0{%
+\begin{tabular}{clcc}
+\hline
+\addlinespace[6pt]
+& & Estimate & \shortstack{95\% Confidence \\ Interval} \\
+\addlinespace[3pt]
+\noalign{\hrule height 1pt}
+\addlinespace[3pt]
+1 & \makecell[l]{Total disparity} & 0.301 & [0.242, 0.359] \\
+\addlinespace[2pt]
+2 & \makecell[l]{Effect of equalizing IQ} & 0.076 & [0.050, 0.099] \\
+\addlinespace[2pt]
+3 & \makecell[l]{Effect of equalizing education} & 0.068 & [0.045, 0.093] \\
+\addlinespace[2pt]
+4 & \makecell[l]{Effect of equalizing education,\\ conditional on IQ} & 0.046 & [0.026, 0.068] \\
+\addlinespace[2pt]
+5 & \makecell[l]{Effect of jointly equalizing\\ IQ and education} & 0.126 & [0.097, 0.154] \\
+\addlinespace[3pt]
+\noalign{\hrule height 1pt}
+\end{tabular}%
+}%
+\captionsetup{width=\wd0}
+\caption{The effect of VanderWeele-Robinson interventions to equalize mediators between
+Class 7 and Class 1 on Class 7 children's probabilities of ending in Class 1  --- fully additive linear models}
+\label{tab:app_main_spec}
+\usebox0 \\[4pt]
+\parbox{\wd0}{\footnotesize
+\emergencystretch=3em
+\setlength{\parindent}{1.5em}
+\textsuperscript{1} Estimates were constructed using 1,000,000 Monte Carlo samples and 500 bootstrap 
+replications.\par}
+\end{table}
+
+We also run an alternative specification (Table~\ref{tab:app_interaction_spec}) where we specify successive linear models for IQ, education,
+and participant's social class but now include all possible mediator-mediator and mediator-outcome interactions 
+in our models. We find broadly similar effect estimates even when including these interactions for the 
+interventions on single mediators, but we do find a substantial increase in the effect of the joint 
+intervention to equalize IQ and education: this intervention now leads to a 50\% reduction in the disparity 
+in the probability of reaching Class 1 between Class 7 and Class 1 children. 
+
+\begin{table}[ht]
+\centering
+\sbox0{%
+\begin{tabular}{clcc}
+\hline
+\addlinespace[6pt]
+& & Estimate & \shortstack{95\% Confidence \\ Interval} \\
+\addlinespace[3pt]
+\noalign{\hrule height 1pt}
+\addlinespace[3pt]
+1 & \makecell[l]{Total disparity} & 0.301 & [0.241, 0.359] \\
+\addlinespace[2pt]
+2 & \makecell[l]{Effect of equalizing IQ} & 0.078 & [0.048, 0.106] \\
+\addlinespace[2pt]
+3 & \makecell[l]{Effect of equalizing education} & 0.064 & [0.033, 0.097] \\
+\addlinespace[2pt]
+4 & \makecell[l]{Effect of equalizing education,\\ conditional on IQ} & 0.045 & [0.021, 0.068] \\
+\addlinespace[2pt]
+5 & \makecell[l]{Effect of jointly equalizing\\ IQ and education} & 0.152 & [0.115, 0.188] \\
+\addlinespace[3pt]
+\noalign{\hrule height 1pt}
+\end{tabular}%
+}%
+\captionsetup{width=\wd0}
+\caption{The effect of VanderWeele-Robinson interventions to equalize mediators between
+Class 7 and Class 1 on Class 7 children's probabilities of ending in Class 1  --- fully interacted linear models}
+\label{tab:app_interaction_spec}
+\usebox0 \\[4pt]
+\parbox{\wd0}{\footnotesize
+\emergencystretch=3em
+\setlength{\parindent}{1.5em}
+\textsuperscript{1} Estimates were constructed using 1,000,000 Monte Carlo samples and 500 bootstrap 
+replications.\par}
+\end{table}
+
+Finally, we conduct an analysis where we now consider a hierarchical ordering of social classes. 
+Following~\cite{kuhaetal2021}, we take Classes 3, 4, and 5 to be on the same level, so classes $c = {1,2,3,4,5,6,7}$
+now map onto hierarchical positions $h_{c} = {1,2,3,3,3,4,5}$. We then consider child's social class as a continuous
+outcome variable instead of a binary variable. Thus, we now analyze how the disparity in the average hierarchical
+social class position changes for children of Class 7 relative to children of Class 1 under various interventions
+to equalize IQ and education among these social classes (Table~\ref{tab:app_hierarchical_spec}). We specify successive,
+fully additive linear models with no interactions for IQ, education, and child's social class. We find 
+% insert interpretation of coefficients here
+
+\begin{table}[ht]
+\centering
+\sbox0{%
+\begin{tabular}{clcc}
+\hline
+\addlinespace[6pt]
+& & Estimate & \shortstack{95\% Confidence \\ Interval} \\
+\addlinespace[3pt]
+\noalign{\hrule height 1pt}
+\addlinespace[3pt]
+1 & \makecell[l]{Total disparity} & 0.301 & [0.241, 0.359] \\
+\addlinespace[2pt]
+2 & \makecell[l]{Effect of equalizing IQ} & 0.078 & [0.048, 0.106] \\
+\addlinespace[2pt]
+3 & \makecell[l]{Effect of equalizing education} & 0.064 & [0.033, 0.097] \\
+\addlinespace[2pt]
+4 & \makecell[l]{Effect of equalizing education,\\ conditional on IQ} & 0.045 & [0.021, 0.068] \\
+\addlinespace[2pt]
+5 & \makecell[l]{Effect of jointly equalizing\\ IQ and education} & 0.152 & [0.115, 0.188] \\
+\addlinespace[3pt]
+\noalign{\hrule height 1pt}
+\end{tabular}%
+}%
+\captionsetup{width=\wd0}
+\caption{The effect of VanderWeele-Robinson interventions to
+equalize mediators between
+Class 7 and Class 1 on Class 7 children's average hierarchical class position}
+\label{tab:app_hierarchical_spec}
+\usebox0 \\[4pt]
+\parbox{\wd0}{\footnotesize
+\emergencystretch=3em
+\setlength{\parindent}{1.5em}
+\textsuperscript{1} Estimates were constructed using 1,000,000 Monte Carlo samples and 500 bootstrap 
+replications.\par}
+\end{table}
+
+Similar to the results of~\cite{kuhaetal2021}, the results of our binary outcome specifications, 
+if causally identified, would provide suggestive 
+evidence that an intervention to make educational distributions between social classes more equal might not 
+make a large difference in reducing the observed discrepancies in intergenerational social class mobility. Any
+similar hypothetical intervention on setting the marginal distribution of intelligence would have about the 
+same effect as intervening to equalize the distribution of education. Finally, an intervention to equalize the 
+joint distribution of IQ and education would lead to a 40-50\% reduction in the social class mobility disparity, 
+which would be a more significant reduction if such an intervention were feasible and ethical. 
+
+As we have argued in the previous sections, given the purely prescriptive interpretation of these effects, the 
+usefulness of these estimates is guided by the feasibility of the posited hypothetical interventions for the 
+substantive problem of interest. In this example, hypothetical interventions to equalize levels of education could be 
+feasibly approximated. For example, if we believe a significant source of the disparity in levels of education is due 
+to more favored social classes (e.g. Class 1) being able to spend more money to send their children to better schools, 
+a proposal to require attendance at state schools that can be tested into via standardized testing might approximate an 
+intervention to equalize education conditional on intelligence. A more involved quota system whereby an equal proportion 
+of students from each social class are alotted spots in schools might correspond to an intervention to equalize the 
+marginal distributions of education. Interventions to affect the distribution of intelligence, meanwhile, are both more 
+difficult to conceive of and ethically less palatable. 
+
+Thus, when weighing the practical implications of these effects, we might be more interested in how effective 
+the interventions to equalize only education might be. Suppose we want to get a more complete picture of how these effects
+would affect the probability of reaching Class 1 for all social classes under a variety of counterfactual interventions to 
+set their education distribution to that of other social classes. 
+
+\begin{table}[ht]
+\centering
+\sbox0{%
+\begin{tabular}{ccrrrrrrr}
+\hline
+\addlinespace[3pt]
+& & \multicolumn{7}{c}{Class} \\
+\addlinespace[3pt]
+& & \multicolumn{1}{c}{(1)} & \multicolumn{1}{c}{(2)} & \multicolumn{1}{c}{(3)} & \multicolumn{1}{c}{(4)} & \multicolumn{1}{c}{(5)} & \multicolumn{1}{c}{(6)} & \multicolumn{1}{c}{(7)} \\
+\addlinespace[3pt]
+\noalign{\hrule height 1pt}
+\addlinespace[3pt]
+\multirow{7}{*}{\shortstack{Class}}
+& (1) & \multicolumn{1}{c}{0.000} & 0.114 & 0.153 & 0.238 & 0.191 & 0.263 & 0.301 \\
+& (2) & & \multicolumn{1}{c}{0.000} & 0.039 & 0.124 & 0.077 & 0.149 & 0.187 \\
+& (3) & & & \multicolumn{1}{c}{0.000} & 0.086 & 0.038 & 0.110 & 0.149 \\
+& (4) & & & & \multicolumn{1}{c}{0.000} & -0.048 & 0.025 & 0.063 \\
+& (5) & & & & & \multicolumn{1}{c}{0.000} & 0.072 & 0.111 \\
+& (6) & & & & & & \multicolumn{1}{c}{0.000} & 0.038 \\
+& (7) & & & & & & & \multicolumn{1}{c}{0.000} \\
+\addlinespace[3pt]
+\noalign{\hrule height 1pt}
+\end{tabular}%
+}%
+\captionsetup{width=\wd0}
+\caption{Differences in the probability of ending up in Class 1 given parents of different classes}
+\label{tab:app_disparity_matrix}
+\usebox0 \\[4pt]
+\parbox{\wd0}{\footnotesize
+\emergencystretch=3em
+\setlength{\parindent}{1.5em}
+\textsuperscript{1} Raw disparity = row class - column class.\par}
+\end{table}
+
+To help visualize what the effects of such interventions might look like, we present a matrix of changes 
+in the probability of ending up in Class 1 for interventions for a reference class to equalize both marginal 
+(Table~\ref{tab:app_marginal_education_matrix}) and conditional (Table~\ref{tab:app_conditional_education_matrix}) distributions of 
+education to those of another class. Table~\ref{tab:app_disparity_matrix} displays the raw
+disparities in probability of ending in Class 1 for all combinations of classes. Compared to the previous tables,
+which gave the effects of equalizing the distribution of education for Class 7 to that of Class 1 only, 
+these tables give a more complete account of the effects of all possible equalizing interventions. 
+
+As we can see from Tables~\ref{tab:app_marginal_education_matrix} and~\ref{tab:app_conditional_education_matrix}, the more aggressive 
+intervention to equalize education marginally as opposed to
+within levels of IQ is a fair amount more impactful in increasing (or decreasing, in the case of ``higher'' social classes
+being set to the education distribution of ``lower'' ones) the probability of ending up in Class 1. An additional point of caution
+for interpreting these numbers, even in a hypothetical scenario in which we had properly controlled for all other unmeasured confounders,
+the effect of equalizing the marginal distribution of education would still not be identified because IQ would be an unmeasured confounder
+for this effect (see Section~\ref{subsection:vr_effects_2m}). Thus, actually directly comparing these two potential interventions would 
+require an experimental setup where children from different origin classes were randomly assigned levels of education from another class. 
+If such an experimental setup were feasible, or if given a method to bound the effect of unmeasured confounding from IQ, these numbers could be 
+used as a data point to determine the benefits of proposed policies compared with the cost of implementing them and other 
+practical and ethical considerations. 
+
+\begin{table}[ht]
+\centering
+\sbox0{%
+\begin{tabular}{ccrrrrrrr}
+\hline
+\addlinespace[3pt]
+& & \multicolumn{7}{c}{Class to draw level of education from} \\
+\addlinespace[3pt]
+& & \multicolumn{1}{c}{(1)} & \multicolumn{1}{c}{(2)} & \multicolumn{1}{c}{(3)} & \multicolumn{1}{c}{(4)} & \multicolumn{1}{c}{(5)} & \multicolumn{1}{c}{(6)} & \multicolumn{1}{c}{(7)} \\
+\addlinespace[3pt]
+\noalign{\hrule height 1pt}
+\addlinespace[3pt]
+\multirow{7}{*}{\shortstack{Reference \\ class}}
+& (1) & -0.049* & -0.068* & -0.087* & -0.105* & -0.124* & -0.141* & -0.158* \\
+& (2) & 0.029\phantom{*} & 0.011\phantom{*} & -0.007\phantom{*} & -0.025\phantom{*} & -0.042* & -0.058* & -0.074* \\
+& (3) & 0.027\phantom{*} & 0.009\phantom{*} & -0.008\phantom{*} & -0.024\phantom{*} & -0.039\phantom{*} & -0.054* & -0.068* \\
+& (4) & 0.073* & 0.057* & 0.042* & 0.027\phantom{*} & 0.013\phantom{*} & 0.000\phantom{*} & -0.013\phantom{*} \\
+& (5) & 0.009\phantom{*} & -0.006\phantom{*} & -0.021\phantom{*} & -0.035\phantom{*} & -0.049* & -0.061* & -0.073* \\
+& (6) & 0.051* & 0.037* & 0.024\phantom{*} & 0.011\phantom{*} & -0.001\phantom{*} & -0.012\phantom{*} & -0.023\phantom{*} \\
+& (7) & 0.068* & 0.055* & 0.043* & 0.031* & 0.020* & 0.010\phantom{*} & 0.000\phantom{*} \\
+\addlinespace[3pt]
+\noalign{\hrule height 1pt}
+\end{tabular}%
+}%
+\captionsetup{width=\wd0}
+\caption{Change in probability of ending in Class 1 between
+two classes induced by setting the marginal distribution of education
+for one class (row) to that of the other (column)}
+\label{tab:app_marginal_education_matrix}
+\usebox0 \\[4pt]
+\parbox{\wd0}{\footnotesize}
+\emergencystretch=3em
+\setlength{\parindent}{1.5em}
+\textsuperscript{1} Each number represents the estimated change in probability of ending in Class 1 as a result of 
+drawing education for the reference class from the class indicated in the column.\par
+\textsuperscript{2} Estimates of the interventional effect were constructed using 1,000,000 Monte Carlo samples and 100 
+bootstrap replications. The presence of a significance star indicates that the 95\% bootstrap confidence interval for the 
+interventional effect did not contain zero. \par
+\end{table}
+
+\begin{table}[ht]
+\centering
+\sbox0{%
+\begin{tabular}{ccrrrrrrr}
+\hline
+\addlinespace[3pt]
+& & \multicolumn{7}{c}{Class to draw level of education from} \\
+\addlinespace[3pt]
+& & \multicolumn{1}{c}{(1)} & \multicolumn{1}{c}{(2)} & \multicolumn{1}{c}{(3)} & \multicolumn{1}{c}{(4)} & \multicolumn{1}{c}{(5)} & \multicolumn{1}{c}{(6)} & \multicolumn{1}{c}{(7)} \\
+\addlinespace[3pt]
+\noalign{\hrule height 1pt}
+\addlinespace[3pt]
+\multirow{7}{*}{\shortstack{Reference \\ class}}
+& (1) & -0.041* & -0.052* & -0.063* & -0.074* & -0.085* & -0.095* & -0.105* \\
+& (2) & 0.029\phantom{*} & 0.019\phantom{*} & 0.009\phantom{*} & -0.002\phantom{*} & -0.012\phantom{*} & -0.021\phantom{*} & -0.031\phantom{*} \\
+& (3) & 0.015\phantom{*} & 0.006\phantom{*} & -0.004\phantom{*} & -0.013\phantom{*} & -0.022\phantom{*} & -0.031\phantom{*} & -0.039\phantom{*} \\
+& (4) & 0.054* & 0.045* & 0.036* & 0.029\phantom{*} & 0.021\phantom{*} & 0.013\phantom{*} & 0.005\phantom{*} \\
+& (5) & -0.008\phantom{*} & -0.017\phantom{*} & -0.025\phantom{*} & -0.033\phantom{*} & -0.041* & -0.048* & -0.055* \\
+& (6) & 0.030* & 0.023\phantom{*} & 0.016\phantom{*} & 0.009\phantom{*} & 0.002\phantom{*} & -0.005\phantom{*} & -0.011\phantom{*} \\
+& (7) & 0.046* & 0.039* & 0.033* & 0.026* & 0.020* & 0.014\phantom{*} & 0.009\phantom{*} \\
+\addlinespace[3pt]
+\noalign{\hrule height 1pt}
+\end{tabular}%
+}%
+\captionsetup{width=\wd0}
+\caption{Change in probability of ending in Class 1 between
+two classes induced by setting the distribution of education, conditional on IQ,
+for one class (row) to that of the other (column)}
+\label{tab:app_conditional_education_matrix}
+\usebox0 \\[4pt]
+\parbox{\wd0}{\footnotesize}
+\emergencystretch=3em
+\setlength{\parindent}{1.5em}
+\textsuperscript{1} Each number represents the estimated change in probability of ending in Class 1 as a result of 
+drawing education for the reference class from the class indicated in the column.\par
+\textsuperscript{2} Estimates of the interventional effect were constructed using 1,000,000 Monte Carlo samples and 100 
+bootstrap replications. The presence of a significance star indicates that the 95\% bootstrap confidence interval for the 
+interventional effect did not contain zero. \par
+\end{table}

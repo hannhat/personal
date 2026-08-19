@@ -1,0 +1,82 @@
+\chapter{Literature Review}\label{chapter:lit_review}
+
+Mediation analysis methods have historically been implemented in the social sciences 
+within the linear structural equation modeling framework~\citep{wright1934,baronkenny1986}.
+This framework even allows one to compute path-specific mediation effects given an 
+arbitrary number of causally related mediators. However, this framework also 
+imposes implausibly stringent assumptions on the functional form 
+and potential interactions between treatment, outcome, and mediators~\citep{pearl2001}. 
+
+More recently, the development of the potential outcomes framework for causal 
+inference~\citep{rubin1974} has led to more flexible formulations of direct and indirect 
+effects for mediation analysis. In particular,~\cite{robinsgreenland1992} leveraged 
+the potential outcomes framework to formulate natural direct and indirect effects as 
+counterfactual quantities that are not bound by the unrealistic relationships imposed by 
+classical mediation analysis. This work was followed by another foundational paper that 
+defined natural effects within the nonparametric structural equation modeling 
+framework~\cite{pearl2001}. 
+
+Despite the conceptual elegance of natural effects, concerns have been raised about the 
+stringent assumptions needed to identify natural 
+effects~\citep{vanderweelevansteelandt2009,imaietal2010b,vanderweele2015}. 
+Of particular concern is the ”cross-world independence” assumption, 
+which is not empirically testable; in fact, there does not even
+exist a hypothetical experiment that could falsify such an assumption~\citep{robinsrichardson2010}. 
+Additionally, the natural effects framework does not generalize well to situations in which
+there is either a treatment-induced mediator-outcome confounder or where there is more than one
+mediator of interest. Situations like these are common in the 
+social and biomedical sciences~\citep{vansteelandtdaniel2017}, 
+but natural effects cannot be identified here even if the cross-world identification assumption 
+otherwise holds~\citep{avinetal2005,vanderweeleetal2014}. Finally, there is debate among 
+researchers about the policy relevance of natural indirect effects because of the 
+difficulty of conceptualizing a hypothetical intervention that could map to the natural 
+indirect effect~\citep{vanderweelevansteelandt2009}.
+
+In response to these issues,~\cite{vanderweele2014} proposed randomized interventional direct
+and indirect effects as alternative, policy relevant effects that do not require untestable cross-world
+independence assumptions for identification. These effects represent the effect of a joint stochastic
+intervention on the treatment and the mediator that could hypothetically be implemented in an
+experiment (see Section~\ref{chapter:interventional_effects}). These effects are similar to a 
+more general version of direct and indirect effects defined without the use of counterfactuals 
+in~\cite{didelez2006},~\cite{geneletti2007}, and~\cite{vanderlaanpetersen2008}. 
+
+There have been two main strands of the theoretical literature on mediation analysis in recent years. 
+The first strand remains committed to the value of natural effects estimation and focuses on developing
+sensitivity analyses and partial identification bounds for natural effects that allow one to relax the 
+stringent cross-world independence assumption. Work on sensitivity analyses for testing unmeasured 
+confounding include work by~\cite{imaietal2010a} and~\cite{smithvanderweele2019}. Work on developing
+bounds for natural effects has been done 
+by~\cite{sjolander2009},~\cite{robinsrichardson2010},~\cite{tchetgentchetgenphiri2014}, 
+and~\cite{milesetal2017}. There has also been interesting work done on developing
+experiments that could, with a strong set of auxilliary assumptions, identify natural 
+effects~\cite{robinsrichardson2010, imaietal2013}. While these experiments still impose strong 
+assumptions, they are instructive for clarifying the conditions under which natural effects can 
+be identified, and we take inspiration from this strand of literature in our approach in 
+later sections. Finally, there have been some attempts to relax the strong independence tied 
+to natural effects~\cite{robins2003,petersenetal2006}. 
+
+The other strand of the literature has focused on developing theory for the identification and 
+estimation of interventional effects. We cover the literature on the extension of interventional 
+effects with multiple mediators in Section~\ref{chapter:interventional_effects} in 
+greater detail. What we do not focus on is the recent literature on efficient semiparametric 
+estimation of interventional 
+effects for one and multiple mediator 
+problems~\cite{rudolphetal2018,diazetal2021,benkeserran2021,rudolphetal2024}, which has been one 
+of the most active areas of the mediation analysis literature in recent years. In general, a number
+of other parametric strategies for estimating interventional effects have been proposed, including 
+weighting~\citep{vanderweeleetal2014}, regression~\citep{vansteelandtdaniel2017}, and simulation 
+methods~\citep{vansteelandtdaniel2017}. 
+
+The interventional effects literature also has natural connections to the literature on stochastic
+interventions~\citep{vanderweelerobins2012} and potential 
+outcomes~\citep{gelmanmikhaeil2025}. Also in the tradition of population-level 
+interventions,~\cite{hubbardvanderlaan2008} developed a framework for estimating the causal 
+effects of potentially stochastic population-level interventions. A problem where such 
+effect definitions might be useful would be a problem where we are interested in the health effects 
+of a blanket smoking ban, but the health effects of such a policy themselves depend on the 
+pre-existing distribution of smoking in the population.~\cite{diazvanderlaan2012} extended this 
+framework to problems where the intervention is stochastic (for example, a policy to deter rather 
+than to ban smoking). There is an interesting potential direct connection between these effects
+and the VanderWeele-Robinson interventional effects we discuss in Section~\ref{section:vr_int_eff}, 
+and it would be interesting to explore these connections further in future work. 
+

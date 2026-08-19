@@ -4,54 +4,53 @@ The top-level auxiliary file: Thesis_Main.aux
 A level-1 auxiliary file: sections/0_preamble/0_definitions.aux
 A level-1 auxiliary file: sections/0_preamble/3_abstr.aux
 A level-1 auxiliary file: sections/1_chapters/1_Introduction.aux
-A level-1 auxiliary file: sections/1_chapters/2_Preliminaries.aux
-A level-1 auxiliary file: sections/1_chapters/3_Natural_Effects.aux
-A level-1 auxiliary file: sections/1_chapters/4_Interventional_Effects.aux
-A level-1 auxiliary file: sections/1_chapters/5_Conclusion.aux
+A level-1 auxiliary file: sections/1_chapters/2_Literature_Review.aux
+A level-1 auxiliary file: sections/1_chapters/3_Preliminaries.aux
+A level-1 auxiliary file: sections/1_chapters/4_Natural_Effects.aux
+A level-1 auxiliary file: sections/1_chapters/5_Interventional_Effects.aux
+A level-1 auxiliary file: sections/1_chapters/6_Application.aux
+A level-1 auxiliary file: sections/1_chapters/7_Conclusion.aux
 The style file: plainnat.bst
 Database file #1: bib/references.bib
 Database file #2: bib/secondary_references.bib
-Warning--can't use both author and editor fields in hernan2024
-Warning--empty publisher in robins2003
-You've used 31 entries,
+You've used 56 entries,
             2773 wiz_defined-function locations,
-            829 strings with 11154 characters,
-and the built_in function-call counts, 13947 in all, are:
-= -- 1340
-> -- 602
-< -- 25
-+ -- 209
-- -- 177
-* -- 1124
-:= -- 2132
-add.period$ -- 127
-call.type$ -- 31
-change.case$ -- 148
-chr.to.int$ -- 30
-cite$ -- 64
-duplicate$ -- 668
-empty$ -- 1224
-format.name$ -- 230
-if$ -- 2950
+            987 strings with 16094 characters,
+and the built_in function-call counts, 25442 in all, are:
+= -- 2460
+> -- 1137
+< -- 45
++ -- 392
+- -- 335
+* -- 2085
+:= -- 3910
+add.period$ -- 234
+call.type$ -- 56
+change.case$ -- 275
+chr.to.int$ -- 55
+cite$ -- 112
+duplicate$ -- 1166
+empty$ -- 2203
+format.name$ -- 435
+if$ -- 5349
 int.to.chr$ -- 2
 int.to.str$ -- 1
-missing$ -- 34
-newline$ -- 195
-num.names$ -- 126
-pop$ -- 251
+missing$ -- 58
+newline$ -- 351
+num.names$ -- 228
+pop$ -- 449
 preamble$ -- 1
-purify$ -- 120
+purify$ -- 222
 quote$ -- 0
-skip$ -- 475
+skip$ -- 834
 stack$ -- 0
-substring$ -- 641
-swap$ -- 74
-text.length$ -- 2
+substring$ -- 1213
+swap$ -- 109
+text.length$ -- 3
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 326
-warning$ -- 2
-while$ -- 140
+type$ -- 596
+warning$ -- 0
+while$ -- 261
 width$ -- 0
-write$ -- 476
-(There were 2 warnings)
+write$ -- 865

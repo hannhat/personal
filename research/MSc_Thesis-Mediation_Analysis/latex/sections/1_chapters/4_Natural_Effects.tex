@@ -1,4 +1,4 @@
-\chapter{Natural Effects}
+\chapter{Natural Effects}\label{chapter:natural_effects}
 
 Suppose we now observe a small effect of the anti-depressant on depression and are worried 
 that a deleterious side effect associated with the anti-depressant, chronic headaches, might be interfering 
@@ -14,12 +14,15 @@ with the positive effects of the drug. In this situation, there are two possibil
 While the observed causal effect of the anti-depressant is the same in both situations, which of the two situations is 
 operative has important implications for evaluating how promising the drug is. If we are in the first world,
 a drug manufacturer might consider investing resources in reducing the side effects of an otherwise promising drug;
-if we are in the second world, the anti-depressant does not seem like a promising treatment to invest in. 
+if we are in the second world, the anti-depressant does not seem like a promising treatment to invest in. In this 
+situation, we are interested here in a descriptive question: which causal mechanisms are operative in this causal 
+process and the relative strength of these mechanisms, independent of any specific interventions on the mediator.
 
 
 \section{Effect Definitions}\label{subsection:natural_effect_defs}
 
-We now define a mediator variable $M_{i}$, which represents a continuous measure of whether the intensity of chronic
+We now define a mediator variable $M_{i}$, drawn from $M$, which represents a continuous measure of whether the 
+intensity of chronic
 headache pain a patient experienced during the study period. Let $\mathcal{M}$ represent the support of $M$. 
 We also define potential mediators over $M_{i}$ and potential outcomes over $Y_{i}$:
 \begin{itemize}[noitemsep,topsep=0pt]
@@ -36,48 +39,54 @@ We also define potential mediators over $M_{i}$ and potential outcomes over $Y_{
 \end{itemize}
 
 If a unit does not receive treatment, we observe their realized mediators $M_{i}(0)$ and outcomes $Y_{i}(0,M_{i}(0))$;
-if they are treated, we observe $M_{i}(1)$ and $Y_{i}(0,M_{i}(1))$. Note that we can never observe $Y_{i}(1,M_{i}(0))$ or
+if they are treated, we observe $M_{i}(1)$ and $Y_{i}(1,M_{i}(1))$. Note that we can never observe $Y_{i}(1,M_{i}(0))$ or
 $Y_{i}(0,M_{i}(1))$ because a unit can only be assigned a treatment level once, but evaluating $Y_{i}(t',M_{i}(t))$ for 
 $t' \neq t$ would require knowing both the unit's outcome under treatment level $t'$ and their mediator value under
 treatment level $t$~\citep{robinsgreenland1992}. There does not exist an experimental procedure to identify 
-these cross-world counterfactual~\citep{pearl2001} without making an additional set of hard-to-satisfy 
+these cross-world counterfactuals~\citep{pearl2001} without making an additional set of hard-to-satisfy 
 assumptions~\citep{imaietal2013}. Having defined this expanded set of potential mediators and outcomes, we
 now define a set of estimands that can help define the path-specific causal effects we are interested in. Note that 
-these effects are also defined at the unit-specific level but are never identified at the level, so the 
-definitions we provide correspond to the corresponding population average estimands for these effects. Note that
+these effects are also defined at the unit-specific level but are never identified at the individual level, so the 
+definitions we provide correspond to the corresponding population average estimands for these effects. Note also that
 we define average effects across the entire study population as opposed to a treated or untreated subset of the 
 population. 
 
 \begin{itemize}[noitemsep,topsep=0pt]
-	\item $\mathbb{E}[Y_{i}(1,M_{i}(0)) - Y_{i}(0,M_{i}(0))]$ --- The \textit{pure direct effect} (PDE)
+	\item $\mathbb{E}[Y(1,M(0)) - Y(0,M(0))]$ --- The \textit{pure direct effect}
 	is the average causal effect that receiving treatment has on the outcome, keeping the level of the mediator constant 
 	for each unit at the level of the mediator that would have been realized had the unit not received treatment. 
-	\item $\mathbb{E}[Y_{i}(1,M_{i}(0)) - Y_{i}(0,M_{i}(0))]$ --- The \textit{total direct effect} (TDE)
+	\item $\mathbb{E}[Y(1,M(0)) - Y(0,M(0))]$ --- The \textit{total direct effect}
 	is the average causal effect that receiving treatment has on the outcome, keeping the level of the mediator constant 
 	for each unit at the level of the mediator that would have been realized had the unit received treatment. 
-	\item $\mathbb{E}[Y_{i}(0,M_{i}(1)) - Y_{i}(0,M_{i}(0))]$ --- The \textit{pure indirect effect} (PIE)
+	\item $\mathbb{E}[Y(0,M(1)) - Y(0,M(0))]$ --- The \textit{pure indirect effect}
 	is the average causal effect that changes in the mediator that are induced from changes in the treatment level have
 	on the outcome, evaluated at the untreated level of the treatment.  
-	\item $\mathbb{E}[Y_{i}(1,M_{i}(1)) - Y_{i}(1,M_{i}(0))]$ --- The \textit{total indirect effect} (TIE)
+	\item $\mathbb{E}[Y(1,M(1)) - Y(1,M(0))]$ --- The \textit{total indirect effect}
 	is the average causal effect that changes in the mediator that are induced from changes in the treatment level have
 	on the outcome, evaluated at the treated level of the treatment.  
-	\item $\mathbb{E}[Y_{i}(1,m^{*}) - Y_{i}(0,m^{*})]$ --- The \textit{controlled direct effect} (CDE) at $M=m^{*}$ is the 
-	average causal effect that receiving treatment has on the outcome, keeping the level of the mediator fixed at a 
-	particular level $m$ for all units. There is a (potentially different) CDE defined at all possible values of the 
-	mediator. 
-	\item $\mathbb{E}[Y_{i}(1,M_{i}(1)) - Y_{i}(0,M_{i}(0))]$ --- The \textit{total effect} (TE) is 
+	\item $\mathbb{E}[Y(1,M(1)) - Y(0,M(0))]$ --- The \textit{total effect} is 
 	the average causal effect of a change in the treatment on the outcome. This is equal to the ATE and is identified
 	under the same assumptions. 
 \end{itemize}
 
 The pure and total direct and indirect effects are known in the literature as 
 \textit{natural effects}~\citep{robinsgreenland1992,pearl2001} because 
-they attempt to measure causal effects while allowing for the "natural relationship"~\citep{pearl2001} between the treatment 
+they attempt to measure causal effects while allowing for the ``natural relationship''~\citep{pearl2001} between the treatment 
 and the mediator to be expressed.
 
-In the running example, the \textit{natural direct effect} measures what the average effect of 
+
+\section{Interpretation of Natural Effects}\label{subsection:natural_effects_interpretation}
+
+In addition to the set of natural effect definitions given above,~\cite{robinsgreenland1992} and~\cite{pearl2001} introduce an 
+additional effect definition with a very different interpretation from the natural effects. The \textit{controlled direct effect}
+at $M=m^{*}$ is the average causal effect that receiving treatment has on the outcome, keeping the level of the mediator fixed at a 
+particular level $m$ for all units. There is a (potentially different) CDE defined at all possible values of the 
+mediator. This effect actually has a closer relationship to the interventional effects we will introduce later, but we
+introduce it here to clarify the conceptual differences between natural and controlled and interventional effects.
+
+In the running example, the natural direct effect measures what the average effect of 
 the anti-depressant on depression would be in a counterfactual world in which the drug had no side effect of headache. 
-This would mean that each patient would experience the same patient-specific, "natural" level of headache 
+This would mean that each patient would experience the same patient-specific, ``natural'' level of headache 
 that they would have if they had not taken the drug. Thus, this effect
 gives the effect of the anti-depressant on depression without any of the effects that result from the treatment's 
 side effects. The PDE operationalizes this idea by comparing a world in which the patient does not receive treatment with 
@@ -85,7 +94,7 @@ another where the patient receives treatment but it is imagined that the mediato
 attained in the first world. 
 
 The crucial difference between the pure and total direct effects and the controlled direct effect is that the level of the 
-mediator is allowed to vary between units and is set to an unobservable "natural" level in the definition of the pure and
+mediator is allowed to vary between units and is set to an unobservable ``natural'' level in the definition of the pure and
 total effects while it is externally fixed 
 for all units at some level $M = m^{*}$ for all units for the controlled effect. These two effects are equivalent when there 
 is no interaction between the treatment and mediator levels that affects the outcome~\citep{pearl2001}, and the controlled 
@@ -105,19 +114,20 @@ but it is imagined that their mediator level is taken from a world in which they
 
 \section{Pure Versus Total Natural Effects}\label{subsection:pure_total_natural_effects}
 
-Following~\cite{pearl2001}, many papers in the literature do not make a distinction between a "pure" and "total"
+Following~\cite{pearl2001}, some papers in the literature do not make a distinction between a ``pure'' and ``total''
 effect, instead defining a natural direct effect in an equivalent way to how we have defined the 
 pure direct effect and a natural indirect effect in an equivalent way to how we have defined the total indirect effect.
-Defining direct and indirect effects in this way allows one to decompose the total effect into these two effects, which
-is naturally of interest given that the development of natural effects was motivated in part by an attempt to attribute 
+Defining direct and indirect effects in this way allows one to decompose the total effect into these two effects. 
+Decompositions of this sort are naturally of interest given that the development of natural effects was motivated 
+in part by an attempt to attribute 
 responsibility for a causal effect to different causal mechanisms~\citep{pearl2001}.~\cite{pearl2001} gives an exact 
-decomposition of the total effect in terms of (in our terms) the pure direct effect and the total indirect effect:
+decomposition of the total effect in terms of the pure direct effect and the total indirect effect:
 
 \begin{equation}
 \begin{aligned}
-	\mathbb{E}[Y_{i}(1,M_{i}(1)] - \mathbb{E}[Y_{i}(0,M_{i}(0))] = 
-	\{\mathbb{E}[Y_{i}(1,M_{i}(0))] - \mathbb{E}[Y_{i}(0,M_{i}(0))]\}\\ 
-	+ \{\mathbb{E}[Y_{i}(1,M_{i}(1))] - \mathbb{E}[Y_{i}(1,M_{i}(0))]\}
+	\mathbb{E}[Y(1,M(1)] - \mathbb{E}[Y(0,M(0))] = 
+	\{\mathbb{E}[Y(1,M(0))] - \mathbb{E}[Y(0,M(0))]\}\\ 
+	+ \{\mathbb{E}[Y(1,M(1))] - \mathbb{E}[Y(1,M(0))]\}
 \end{aligned}
 \end{equation}
 
@@ -126,7 +136,7 @@ exact decomposition in terms of the total direct effect and the pure indirect ef
 in terms of the pure direct and total indirect effects is the more common one in the literature~\citep{vanderweele2014}. 
 As detailed in
 ~\cite{robinsgreenland1992}, the pure and total natural effects are not in general equivalent. In these situations, 
-the choice of which decomposition "correctly" represents the direct and indirect effects is unclear.
+the choice of which decomposition ``correctly'' represents the direct and indirect effects is unclear.
 
 To illustrate this point,~\cite{robinsgreenland1992} analyzes an example with a binary mediator and binary
 outcome from the perspective of the sufficient-component causes framework~\citep{rothman1976}. We briefly assume 
@@ -144,8 +154,8 @@ of patient types based on hypothetical answers for that patient to the following
 \end{enumerate}
 
 We also assume for now that patients who would develop headache when not taking the anti-depressant but do not in the 
-drug's absence exist. Given this typology, we can say that for patients for whom 5 and 6 are true and 3 and 4 are
-false, we can say that the drug has had a direct effect on the patient's depression: depression occurs for the 
+drug's absence do not exist. Given this typology, we can say that for patients for whom 5 and 6 are true and 3 and 4 are
+false, the drug has had a direct effect on the patient's depression: depression occurs for the 
 patient only in the absence of the drug, regardless of whether they experience headache. 
 For patients for whom 1, 4, and 6 are true and 2, 3, and 5 are false (here, the additional condition that 1 is 
 true and 2 is false ensure that the treatment actually has an effect on the level of headahce), we can say
@@ -169,13 +179,13 @@ term that can be interpreted as the causal effect of interactions between the tr
 
 \begin{equation}
 \begin{aligned}
-	\mathbb{E}[Y_{i}(1,M_{i}(1))] - \mathbb{E}[Y_{i}(0,M_{i}(0))] = 
-	\{\mathbb{E}[Y_{i}(1,M_{i}(0))] - \mathbb{E}[Y_{i}(0,M_{i}(0))]\}\\ 
-	+ \{\mathbb{E}[Y_{i}(1,M_{i}(1))] - \mathbb{E}[Y_{i}(1,M_{i}(0))]\}\\
-	= \{\mathbb{E}[Y_{i}(1,M_{i}(0))] - \mathbb{E}[Y_{i}(0,M_{i}(0))]\}
-	+ \{\mathbb{E}[Y_{i}(0,M_{i}(1))] - \mathbb{E}[Y_{i}(0,M_{i}(0))]\} + \\
-	\{(\mathbb{E}[Y_{i}(1,M_{i}(1))] - \mathbb{E}[Y_{i}(1,M_{i}(0))]) - 
-	(\mathbb{E}[Y_{i}(0,M_{i}(1))] - \mathbb{E}[Y_{i}(0,M_{i}(0))])\}
+	\mathbb{E}[Y(1,M(1))] - \mathbb{E}[Y_{i}(0,M(0))] = 
+	\{\mathbb{E}[Y(1,M(0))] - \mathbb{E}[Y_{i}(0,M(0))]\}\\ 
+	+ \{\mathbb{E}[Y(1,M(1))] - \mathbb{E}[Y(1,M(0))]\}\\
+	= \{\mathbb{E}[Y(1,M(0))] - \mathbb{E}[Y(0,M(0))]\}
+	+ \{\mathbb{E}[Y(0,M(1))] - \mathbb{E}[Y(0,M(0))]\} + \\
+	\{(\mathbb{E}[Y(1,M(1))] - \mathbb{E}[Y(1,M(0))]) - 
+	(\mathbb{E}[Y(0,M(1))] - \mathbb{E}[Y(0,M(0))])\}
 \end{aligned}
 \end{equation}
 
@@ -188,15 +198,16 @@ term that can be interpreted as the causal effect of interactions between the tr
 the sum of the controlled direct effect and the component of the total effect that is due to interaction but not 
 mediation (in our example, this would correspond to patients who would experience headache no matter what, but 
 develop depression only when both the anti-depressant and headache are present). We do not focus further on this 
-more granular decomposition in this paper. However, an analogue to the 3-way decomposition for interventional
-effects exists, and this decomposition provides the conceptual foundation for our discussion of interventional 
-effects with multiple causally ordered mediators in Section~\ref{chapter:sample}. 
+more granular decomposition in this paper. However, we emphasize that the choice of which decomposition to use 
+when presenting natural effects has potentially important implications for descriptions of the relative strength
+of the operative causal mechanisms. The fact that the natural effects can sum to the total effect is a result of 
+the necessary connection between the path-specific causal mechanisms and the overall total causal effect. 
 
-\section{Identification Assumptions}
+\section{Identification Assumptions}\label{subsection:natural_effects_assm}
 
 In order to identify most of the effects discussed in section~\ref{subsection:natural_effect_defs}, a number of 
 additional identification assumptions are required. The one exception is the total effect, which is both mathematically 
-and conceptually equivalent to the average treatment effect in the "simple" causal inference problem with no mediators 
+and conceptually equivalent to the average treatment effect in the ``simple'' causal inference problem with no mediators 
 and is thus identified under only the SUTVA and conditional ignorability assumptions 
 from Section~\ref{subsection:natural_effect_defs}. 
 
@@ -205,27 +216,26 @@ from Section~\ref{subsection:natural_effect_defs}.
 % be presenting the controlled effect here at all? Or can we actually move this definition to the next section? The 
 % argument for keeping it here is the strong discussion of Pearl's descriptive vs. prescriptive distinction, which 
 % requires the introduction of the controlled effect here. So maybe we can still introduce these assumptions here. 
-We now introduce a generalized SUTVA assumption that gives consistency of both the treatment and mediator and 
-no interference between units~\citep{imaietal2013}. This background technical assumption is assumed in most of the 
+We now introduce generalized consistency assumptions that give consistency of both the 
+treatment and mediator~\citep{imaietal2013}. These background technical assumptions are assumed in most of the 
 causal mediation analysis literature~\citep{pearl2001,imaietal2010a}.
 
-\begin{assumption}[Consistency]\label{assm:composition}
+\begin{assumption}[Consistency]\label{assm:consistency}
 $M_{i}(a) = M_{i}$ if unit $i$ receives treatment level $a$. 
-$Y_{i}(a,m) = Y_{i}$ if unit $i$ receives treatment level $a \in \mathcal{A}$ and 
-has mediator level
+$Y_{i}(a,m) = Y_{i}$ if unit $i$ receives treatment level $a \in \mathcal{T}$ and 
+has mediator level $m$. 
 \end{assumption}
 
 \begin{assumption}[Composition]\label{assm:composition}
-$M_{i}(a) = m$. $Y_{i}(a) = Y_{i}(a,m)$ if $M_{i}(a) = m$. 
+$Y_{i}(a,M_{i}(a)) = Y_{i}(a,m)$ if $M_{i}(a) = m$. 
 \end{assumption}
 
-The consistency portion of the assumption, which is the more contentious assumption in this context~\citep{imaietal2013}, 
+The consistency assumption
 states that each combination of treatment and mediator for a unit maps to one potential outcome for that unit, 
-regardless of how those values are set. In particular, it is assumed that an intervention to set the mediator to the 
+regardless of how those values are set. The composition assumption states that an intervention to set the mediator to the 
 natural level of the mediator given a treatment $a$ will lead to the same potential outcome for a unit as if that 
-mediator had not been set but instead allowed to attain its natural level. 
-
-% --------
+mediator had not been set but instead allowed to attain its natural level. When we generalize mediation analysis to
+two mediators, we assume that these assumptions hold with the additional mediator incorporated without further comment. 
 
 We also introduce a series of ignorability assumptions from the literature~\cite{pearl2001,imaietal2010a} that generalize
 Assumption~\ref{assm:ignorability}.
@@ -233,13 +243,13 @@ Assumption~\ref{assm:ignorability}.
 \begin{assumption}[Sequential Ignorability]\label{assm:seq_ignorability} 
 \indent
 \begin{enumerate}[noitemsep,topsep=0pt,label=(\roman*)]
-	\item $Y_{i}(a,m) \indep A_{i} | C_{i}$ for all $a \in \mathcal{A}$, $m \in \mathcal{M}$. 
-	\item $M_{i}(a) \indep A_{i} | C_{i}$ for all $a \in \mathcal{A}$. 
-	\item $Y_{i}(a,m) \indep M_{i} | C_{i}$ for all $a \in \mathcal{A}$, $m \in \mathcal{M}$. 
-	\item $Y_{i}(a,m) \indep M_{i}(a^{*}) | A_{i} = a, C_{i} = c$ for all $a,a^{*} \in \mathcal{A}$, $m \in \mathcal{M}$. 
+	\item $Y_{i}(a,m) \indep T_{i} | C_{i}$ for all $a \in \mathcal{T}$, $m \in \mathcal{M}$. 
+	\item $M_{i}(a) \indep T_{i} | C_{i}$ for all $a \in \mathcal{T}$. 
+	\item $Y_{i}(a,m) \indep M_{i} | C_{i}$ for all $a \in \mathcal{T}$, $m \in \mathcal{M}$. 
+	\item $Y_{i}(a,m) \indep M_{i}(a^{*}) | T_{i} = a, C_{i} = c$ for all $a,a^{*} \in \mathcal{T}$, $m \in \mathcal{M}$. 
 \end{enumerate}
-where $0 < \mathbb{P}[A_{i} = a | C_{i}] < 1$ and $0 < \mathbb{P}[M_{i} = m | A_{i} = a, C_{i}]$
- for all $a \in \mathcal{A}$, $m \in \mathcal{M}$. 
+where $0 < \mathbb{P}[T = a | C] < 1$ and $0 < \mathbb{P}[M = m | T = a, C]$
+ for all $a \in \mathcal{T}$, $m \in \mathcal{M}$. 
 \end{assumption}
 
 Parts (i)-(ii) of Assumption~\ref{assm:seq_ignorability} state that conditional on some covariates $C_{i}$, the 
@@ -259,26 +269,26 @@ An alternative interpretation is that, among units that
 share a set of covariates $C_{i}$ and treatment assignment $a$, the natural level of the mediator for each unit 
 can be treated as if it were randomized~\citep{imaietal2010a}. Unlike the first ignorability assumption, there does not 
 exist an experiment that can fulfill this assumption without difficult-to-satisfy 
-auxilliary assumptions~\citep{imaietal2013}. A representative violation of this condition would occur if there were a 
-post-treatment confounder $L$ of the relationship between $M$ and $Y$.
+auxilliary assumptions~\citep{imaietal2013}. 
 
 The hypothetical experiment outlined above would not fulfill the cross-world independence assumption 
 because the randomization of the mediator does not give any information about the potential mediators
 given treatment. In general, the cross-world independence assumption involves an assumption about the 
 independence of $Y_{i}(a,m)$ and $M_{i}(a^{*})$, which can never be seen for the same unit because it would involve
 seeing the mediator at one treatment level and the outcome at another. Thus, it is considered to be empirically 
-unfalsifiable~\citep{vanderweelevansteelandt2009, vanderweeleetal2014}. 
+unfalsifiable~\citep{vanderweelevansteelandt2009, vanderweeleetal2014}. Importantly, a violation of this 
+condition would occur if there were a 
+post-treatment confounder $L$ of the relationship between $M$ and $Y$, even if $L$ were observed. Even though it is 
+possible to test for the presence of such a post-treatment confounder, the absence of such a confounder actually
+does not help verify the cross-world independence assumption.~\cite{andrewsdidelez2021} gives an example of a 
+situation in which post-treatment confounder does not exist but the cross-world independence assumption is still not
+true. 
 
-% -------
-% More discussion of controlled direct effect
-The controlled direct effect is identifiable under generalized SUTVA and the first part of the sequential
-ignorability assumption~\citep{hernan2024}. 
-% -------
-
-All forms of the natural direct and indirect effects require 
-that the cross-world independence assumption holds in addition to (non-generalized) SUTVA and the first part of the 
+The controlled direct effect is identifiable under technical conditions of consistency and composition and part (i) of 
+the sequential ignorability assumption~\citep{imaietal2010b}. All forms of the natural direct and indirect effects require 
+that the cross-world independence assumption holds in addition to SUTVA and parts (i)-{iii} of the
 sequential ignorability assumption~\citep{pearl2001, imaietal2010a}. The implied DAG representing
-the relationships between $C$, $A$, $M$, and $Y$ under these identification assumptions is given in 
+the relationships between $C$, $T$, $M$, and $Y$ under these identification assumptions is given in 
 Figure~\ref{fig:one_mediator_dag}. 
 
 
@@ -287,7 +297,7 @@ Figure~\ref{fig:one_mediator_dag}.
 \begin{tikzpicture}
 
   % Define nodes
-  \node[obs]                               (A) {$\mathbf{A}$};
+  \node[obs]                               (A) {$\mathbf{T}$};
   \node[obs, right=of A, yshift=1.5cm] (M) {$\mathbf{M}$};
   \node[obs, right=2.5cm of A]  (Y) {$\mathbf{Y}$};
   \node[obs, left=of A]  (C) {$\mathbf{C}$};
@@ -299,7 +309,7 @@ Figure~\ref{fig:one_mediator_dag}.
   \edge {C} {A} ; %
 
 \end{tikzpicture}
-\caption[]{Mediation analysis with one mediator}
+\caption{Mediation analysis with one mediator}
 \label{fig:one_mediator_dag}
 \end{figure}
 
@@ -311,15 +321,35 @@ interaction assumption and still identify natural effects~\citep{petersenetal200
 for identification are not generally regarded as being meaningfully weaker than sequential ignorability in practical 
 situations are more difficult to interpret~\citep{petersenetal2006, imaietal2010a}. 
 
-\section{Multiple Mediators}
+\section{Multiple Mediators}\label{subsection:natural_effects_mm}
 
-In addition to being empirically unfalsifiable, a key limitation of the cross-world independence assumption is that it 
-concretely rules out the existence of treatment-induced confounders. 
-These are variables that might be affected by the treatment and themselves confound the relationship between the mediator 
-of interest and the outcome. The natural direct and indirect effects can in general not be identified in these 
-situations without alternative strong assumptions, even if these treatment-induced confounders can be 
-measured~\citep{vanderweelevansteelandt2009}. Figure~\ref{fig:exposure_induced_confounder} shows an example of such a 
-situation.
+The key limitation of natural effects for the purposes of this dissertation lies in the necessity of the cross-world 
+independence assumption for identification. With one mediator, there is controversy over this assumption because it
+cannot be empirically tested. With two or more causally related mediators, however, the necessity of this assumption
+prevents the identification of natural effects and their multiple mediator natural effect analogues (in particular, 
+path specific effects $T \rightarrow Y$, $T \rightarrow M_{1} \rightarrow Y$, $T \rightarrow M_{2} \rightarrow Y$ and 
+$T \rightarrow M_{1} \rightarrow M_{2} \rightarrow Y$) altogether. This 
+is because the cross-world independence assumption rules out any post-treatment confounders. In 
+Figure~\ref{fig:exposure_induced_confounder}, $L$ would be such a post-treatment confounder, so natural effects would
+not be identified in this situation. Now suppose we have a two mediator mediation analysis problem where we know 
+that one mediator causally precedes the other. This means that we have a first mediator that is affected by 
+treatment, a second mediator that is affected by both treatment and the first mediator, and an outcome that is 
+affected by all three preceding variables. Such a situation describes exactly the causal structure represented 
+in Figure~\ref{fig:exposure_induced_confounder}: reframed, any multiple mediator mediation analysis with 
+dependence between at least some of the mediators cannot be identified because one of the mediators will itself 
+be a post-treatment confounder for another mediator. 
+
+In causal structures like the one represented in 
+Figure~\ref{fig:exposure_induced_confounder},~\cite{avinetal2005} showed that it is possible to 
+decompose the total effect into three path-specific natural effects, $T \rightarrow Y$, 
+$T \rightarrow M \rightarrow Y$, and the sum of $T \rightarrow L \rightarrow M \rightarrow Y$ and
+$T \rightarrow L \rightarrow Y$ given an expanded set of sequential ignorability assumptions is fulfilled. 
+Relatedly, one can treat the mediators as a single mediator and decompose the total effect into effects through
+$T \rightarrow Y$ versus all other pathways~\citep{vanderweeleetal2014}. However, neither option retains the notion
+of natural direct and indirect effects that we are interested in. In summary, if we are interested in problems with 
+multiple mediators that exist in some known or unknown causal ordering with each other, the goal of using natural 
+effects to attribute portions of an observed total causal effect to effects through specific causal pathways will 
+generally not be a fruitful one. 
 
 \begin{figure}
 \centering
@@ -343,28 +373,11 @@ situation.
   \edge {C} {T} ; %
 
 \end{tikzpicture}
-\caption[]{One mediator, exposure-induced confounding}
+\caption{One mediator, exposure-induced confounding}
 \label{fig:exposure_induced_confounder}
 \end{figure}
 
-The assumption of no treatment-induced confounding is difficult to rule out and limits the space of situations
-were natural mediational effects can be credibly identified. Crucially for the focus of this dissertation, it also means
-that in situations with multiple mediators that are not assumed to be independent of each other,
-traditional direct and indirect effects cannot be identified~\citep{avinetal2005,imaiyamamoto2013}. To see this, consider 
-Figure~\ref{fig:exposure_induced_confounder} with $L$ as a mediator of interest as opposed to a 
-confounder. 
 
-In causal structures like the one represented in 
-Figure~\ref{fig:exposure_induced_confounder},~\cite{avinetal2005} showed that it is possible to 
-decompose the total effect into three path-specific natural effects, $A \rightarrow Y$, 
-$A \rightarrow M \rightarrow Y$, and the sum of $A \rightarrow L \rightarrow M \rightarrow Y$ and
-$A \rightarrow L \rightarrow Y$ given an expanded set of sequential ignorability assumptions is fulfilled. 
-Relatedly, one can treat the mediators as a single mediator and decompose the total effect into effects through
-$A \rightarrow Y$ versus all other pathways~\citep{vanderweeleetal2014}. However, neither option retains the notion
-of natural direct and indirect effects that we are interested in. In summary, if we are interested in problems with 
-multiple mediators that exist in some known or unknown causal ordering with each other, the goal of using natural 
-effects to attribute portions of an observed total causal effect to effects through specific causal pathways will 
-generally not be a fruitful one. 
 
 % Notes:
 % - Add a discussion of the fact that an exact decomposition of the total effect is of interest given the 

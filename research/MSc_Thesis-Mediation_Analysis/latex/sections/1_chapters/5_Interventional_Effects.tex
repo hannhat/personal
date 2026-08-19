@@ -1,0 +1,902 @@
+\chapter{Interventional Effects}\label{chapter:interventional_effects}
+
+Motivated by the problems presented by situations with treatment-induced confounding,~\cite{vanderweeleetal2014} 
+proposed a randomized-interventional analogue of natural effects that are identified without 
+requiring the cross-world independence assumption. Instead of defining 
+a unit-level direct and indirect effect estimand as in the case of natural effects, interventional effects
+target population-level average outcomes from a hypothetical joint intervention on the treatment and the 
+mediator. A key difference between natural and interventional effects
+is that interventional effects can still be identified given a set of reasonable assumptions in cases where
+there is either treatment-induced confounding or when there are multiple mediators of interest. We begin by
+reviewing the definition and interpretation of interventional effects in one mediator problems before 
+extending our analysis to the two mediator case. We then discuss what we
+view as the practical use and interpretation of interventional effects and the difficulties with 
+interpretation in multiple mediator settings specifically. In response to the issues with interpretation 
+we raise, we propose an extension of the interventional effects definitions from~\cite{vanderweelerobinson2014}
+as a promising avenue for future exploration of interventional effects. 
+
+\section{One Mediator}
+
+\subsection{Effect Definitions}\label{subsection:intv_eff_defs}
+
+Let $G_{i}(a)$ represent a random draw of a mediator value from $M(a)$, which now represents a 
+the population-level distribution of the potential mediator given treatment level $a$ (and covariates $C_{i}$).
+Let $Y_{i}(a,G_{i}(a'))$ represent a potential outcome for unit $i$ assigned treatment $a$ and
+a random level for the mediator from the distribution of $G(a')$. This is a stochastic potential 
+outcome: the potential outcome is itself a random variable because its value depends on a realization
+from the distribution of $G(a')$~\citep{vanderweelerobins2012}. 
+
+The definitions for interventional effects mirror those for natural effects above, except that they are
+defined in terms of stochastic potential outcomes $Y_{i}(a,G_{i}(a'))$, which represent joint interventions
+to assign unit $i$ values for the treatment and the mediator. First, we write out the equation, the so-called 
+mediational g-formula, to estimate the mean of $Y_{i}(a,G_{i}(a'))$ for any 
+$a, a' \in \mathcal{T}$~\citep{kuhaetal2021}: 
+
+\begin{equation}\label{eq:RIE_one_mediator_g_comp}
+\begin{aligned}
+	\mathbb{E}[Y(a,G(a'))|C] = 
+	\int_{m} \mathbb{E}[Y(a,m)|T = a, M = m, C]\mathbb{P}[M(a') = m|C]dm
+\end{aligned}
+\end{equation}
+
+We then define interventional effects in the following way: 
+
+\begin{itemize}[noitemsep,topsep=0pt]
+\item  $\mathbb{E}[Y(1,G(1)) - Y_{i}(0,G(0))]$ --- The \textit{interventional total effect} 
+represents the effect of a joint intervention that gives a unit treatment while assigning their mediator 
+level to a random draw from the distribution of the mediator for treated units, compared to an intervention
+to assign a unit to no treatment while drawing their mediator level from the distribution of the mediator for 
+untreated units. 
+\item  $\mathbb{E}[Y(1,G(0)) - Y_{i}(0,G(0))]$ --- The \textit{pure interventional direct effect} 
+represents the effect of a joint intervention that gives a unit treatment while drawing their mediator level 
+from the distribution of the mediator for untreated units, compared to an intervention
+to assign a unit to no treatment while drawing their mediator level from the distribution of the mediator for 
+untreated units. 
+\item  $\mathbb{E}[Y(1,G(1)) - Y_{i}(0,G(1))]$ --- The \textit{total interventional direct effect} 
+represents the effect of a joint intervention that gives a unit treatment while drawing their mediator level 
+from the distribution of the mediator for treated units, compared to an intervention
+to assign a unit to no treatment while drawing their mediator level from the distribution of the mediator for 
+treated units. 
+\item  $\mathbb{E}[Y(0,G(1)) - Y_{i}(0,G(0))]$ --- The \textit{pure interventional indirect effect} 
+represents the effect of a joint intervention that gives a unit no treatment while drawing their mediator level 
+from the distribution of the mediator for treated units, compared to an intervention
+to assign a unit to no treatment while drawing their mediator level from the distribution of the mediator for 
+treated units.
+\item  $\mathbb{E}[Y(1,G(1)) - Y_{i}(1,G(0))]$ --- The \textit{total interventional indirect effect} 
+represents the effect of a joint intervention that gives a unit treatment while drawing their mediator level 
+from the distribution of the mediator for treated units, compared to an intervention
+to assign a unit to treatment while drawing their mediator level from the distribution of the mediator for 
+treated units.
+\end{itemize}
+
+The total interventional effect is formally defined in~\cite{linvanderweele2017}. 
+Much like with natural effects, there is a decomposition of the interventional total effect into the sum of the 
+pure interventional direct effect and the total interventional indirect effect (or the total interventional
+direct effect and the pure interventional indirect effect): 
+
+\begin{equation}
+\begin{aligned}
+	\mathbb{E}[Y(1,G(1)] - \mathbb{E}[Y(0,G(0))] = 
+	\{\mathbb{E}[Y(1,G(0))] - \mathbb{E}[Y(0,G(0))]\}\\ 
+	+ \{\mathbb{E}[Y(1,G(1))] - \mathbb{E}[Y(1,G(0))]\}
+\end{aligned}
+\end{equation}
+
+The pure and total interventional effects are not explicitly defined 
+by~\cite{vanderweeleetal2014} and a distinction is generally not made between them in the literature, though 
+the notion of a pure and total interventional effect appears in the eAppendix of~\cite{vanderweele2014}. 
+The total interventional effect and the total causal effect are equivalent when the cross-world independence
+assumption is satisfied, but the two quantities are not otherwise equivalent~\citep{vanderweeleetal2014}.
+Conceptually, this occurs because the joint intervention on the treatment and the mediator breaks the 
+causal ``link'' between $T$ and $M$ that is preserved when estimating the total causal effect.
+The total interventional effect is formally defined in~\cite{linvanderweele2017}. Thus, the 
+sum of a direct and indirect interventional effect does not always equal the total causal effect, which 
+is sometimes viewed as a shortcoming of these effects~\citep{vansteelandtdaniel2017}. However, as we
+argue in Section~\ref{subsection:interpretation}, we do not believe that such decompositions are 
+particularly instructive given the interpretative goals of interventional effects. 
+
+Additionally,~\cite{didelez2006} and ~\cite{geneletti2007} defined a form of these types of
+interventional effects in terms of general randomized interventions on the mediator without defining these
+effects in terms of counterfactuals. These effects are very similar to the definition of interventional effects
+given here. However, they allow for any stochastic intervention on the mediator rather than
+restricting such interventions to the distribution of the mediator in two treatment groups. 
+
+The above effects are identified under consistency, composition, and conditions (i)-(iii) of 
+Assumption~\ref{assm:seq_ignorability}. 
+In particular, the cross-world independence assumption~\citep{vanderweeleetal2014} is not required. 
+
+\subsection{Experimental Identification}
+
+A key feature of interventional effects is that it is in principle possible to 
+design randomized experiments that can identify these effects, and, 
+given the prescriptive interpretation of interventional effects, the specific interventions carried out in such an 
+experiment would be the causal quantities we are ultimately interested in. Although such experiments might be infeasible 
+or unethical in practice, being able to conceptualize an ideal experiment to identify such effects can still
+help inform observational study design and interpretation. 
+
+The experimental setup, like our running example, is inspired by~\cite{morenobetancur2018}. Suppose we 
+are trying to estimate interventional effects in the running example. Suppose a ``headache drug'' has been developed 
+that allows us exactly set the level of headache a patient who takes this drug will experience while having no 
+other side effects. We set up the following 6-arm trial, with patients randomly assigned to each arm: 
+
+\begin{experiment}\label{exp:one_mediator}
+\indent 
+\begin{enumerate}[noitemsep,topsep=0pt]
+	\item Patients in \textbf{Arm 1} receive the anti-depressant, while patients in \textbf{Arm 2} do not. 
+	The levels of both headache and depression are recorded for each patient.
+	\item After recording the results of the experiment in stage 1, patients in arms 3-6 receive the following
+	combinations of treatment and headache medication: 
+	\begin{enumerate}[noitemsep,topsep=0pt]
+		\item \textbf{Arm 3} receives the anti-depressant, and the headache drug is used to give each patient 
+		a randomly selected level of headache from the distribution of observed headache levels in Arm 1. 
+		\item \textbf{Arm 4} receives the anti-depressant, and the headache drug is used to give each patient 
+		a randomly selected level of headache from the distribution of observed headache levels in Arm 2. 
+		\item \textbf{Arm 5} does not receive the anti-depressant, and the headache drug is used to give each patient 
+		a randomly selected level of headache from the distribution of observed headache levels in Arm 1. 
+		\item \textbf{Arm 6} does not receive the anti-depressant, and the headache drug is used to give each patient 
+		a randomly selected level of headache from the distribution of observed headache levels in Arm 2. 
+	\end{enumerate}
+\end{enumerate}
+\end{experiment}
+
+\begin{table}[ht]
+\centering
+\caption{Table of results for Experiment~\ref{exp:one_mediator}}
+\label{tab:rct_one_mediator}
+\begin{tabularx}{\textwidth}{@{}
+  >{\hsize=0.40\hsize\centering\arraybackslash}X
+  >{\hsize=0.40\hsize\centering\arraybackslash}X
+  >{\hsize=1.40\hsize\centering\arraybackslash}X
+  >{\hsize=1.40\hsize\centering\arraybackslash}X
+  >{\hsize=1.40\hsize\centering\arraybackslash}X @{}}
+\hline
+\addlinespace[6pt]
+\makecell[bc]{\textbf{Stage}} &
+\makecell[bc]{\textbf{Arm}} &
+\makecell[bc]{\textbf{Treatment}} &
+\makecell[bc]{\textbf{Headaches}} &
+\makecell[bc]{\textbf{Depression}} \\
+\addlinespace[3pt]
+\noalign{\hrule height 1pt}
+\addlinespace[3pt]
+\multirow{2}{*}{1} 
+&1 & 1 & $\hat{M}(1)_{1}$ & $y_{1}$\\
+&2 & 0 & $\hat{M}(0)_{2}$ & $y_{2}$\\
+\addlinespace[2pt]
+\noalign{\hrule height 0.5pt}
+\addlinespace[2pt]
+\multirow{4}{*}{2}
+&3 & 1 & $\hat{G}(1)_{3}$ & $y_{3}$\\
+&4 & 1 & $\hat{G}(0)_{4}$ & $y_{4}$\\
+&5 & 0 & $\hat{G}(1)_{5}$ & $y_{5}$\\
+&6 & 0 & $\hat{G}(0)_{6}$ & $y_{6}$\\
+\addlinespace[3pt]
+\noalign{\hrule height 1pt}
+\end{tabularx}
+
+\vspace{4pt}
+{\footnotesize
+\emergencystretch=3em
+\setlength{\parindent}{1.5em}
+\textsuperscript{1} $\hat{M}(1)$ and $\hat{M}(0)$ represent the distributions of headache in
+arms 1 and 2, respectively. $\hat{G}(1)$  and $\hat{G}(0)$ represent the distributions of assigned
+headache from random draws from $\hat{M}(1)$ and $\hat{M}(0)$, respectively.
+
+Finally, $y$ gives the observed average level of depression in each arm.\par}
+\end{table}
+
+Given this experimental setup, it is possible to identify the suite of interventional effects defined in
+Section~\ref{subsection:intv_eff_defs} by taking observed differences in outcomes $y$ (see Table~\ref{tab:rct_one_mediator}). For
+example, the estimated total interventional effect is $y_{3} - y_{6}$, the pure interventional direct
+effect is $y_{4} - y_{6}$, and the pure interventional indirect effect is $y_{5} - y_{6}$. Such an 
+experimental setup also highlights how despite the focus on the pure direct and total indirect 
+interventional effects in the literature, there is no \textit{a priori} reason to prefer these 
+interventional effects to the other effects that are identified by such an experiment. 
+
+\section{Multiple Mediators}
+
+We now extend the interventional effects framework to a situation with two mediators. Additionally, we 
+assume that we know the causal ordering of these two mediators (though this condition can be relaxed in 
+some cases). Extending the running example from~\cite{morenobetancur2018}, we now suppose that we notice 
+that the anti-depressant, in addition to causing headache, can cause insomnia in the first few weeks of
+treatment. We also believe that insomnia can cause chronic headaches, so headaches can be caused both 
+directly by the anti-depressant and indirectly through the anti-depressant's effect on insomnia. The 
+causal structure of this problem is represented in Figure~\ref{fig:two_mediators} (note that this is 
+identical to Figure~\ref{fig:exposure_induced_confounder}). 
+
+\begin{figure}
+\centering
+\begin{tikzpicture}
+
+  % Define nodes
+  \node[obs] (T) {$\mathbf{T}$};
+  \node[obs, right=of T, yshift=1.5cm] (L) {$\mathbf{M_{1}}$};
+  \node[obs, right=2cm of T] (M) {$\mathbf{M_{2}}$};
+  \node[obs, right=1cm of M]  (Y) {$\mathbf{Y}$};
+  \node[obs, left=of T]  (C) {$\mathbf{C}$};
+
+  % Connect the nodes
+  \edge {T,L} {M} ; %
+  \edge {M} {Y} ; %
+  \draw[->] (T) to[out=-30, in=-150] (Y); %
+  \draw[->] (L) to[out=0, in=120] (Y); %
+  \draw[->] (C) to[out=300, in=240] (Y); %
+  \draw[->] (C) to[out=315, in=225] (M); %
+  \edge {C,T} {L} ; %
+  \edge {C} {T} ; %
+
+\end{tikzpicture}
+\caption{Two mediators with known causal ordering}
+\label{fig:two_mediators}
+\end{figure}
+
+
+There are two significant definitions of interventional effects with
+two mediators in the literature that we will focus on. The first, proposed by~\cite{linvanderweele2017} and
+inspired by similar work done by~\cite{vanderweeletchetgentchetgen2017}, attempts to estimate 
+interventional effect analogues of path-specific effects $T \rightarrow Y$, 
+$T \rightarrow M_{1} \rightarrow Y$, $T \rightarrow M_{2} \rightarrow Y$ and 
+$T \rightarrow M_{1} \rightarrow M_{2} \rightarrow Y$. The second proposal, by~\cite{vansteelandtdaniel2017}
+has the advantage of not making any assumptions about the causal ordering of the mediators. Instead,
+interventional effects are estimated from interventions on the marginal distributions of the mediators, 
+assuming the mediators are independent. Afterwards, a remainder term, which represents the dependence between
+the mediators, is computed. 
+
+\subsection{Lin-VanderWeele Interventional Effects}
+
+We now let $M_{1,i}$ be the observed level of insomnia for unit $i$ and $M_{2,i}$ the observed level of
+headache. Let $\mathcal{M}_{1}$ be the support of $M_{1}$ and $\mathcal{M}_{2}$ the support of $M_{2}$. 
+We also redefine potential mediators and outcomes as follows:
+
+\begin{itemize}[noitemsep,topsep=0pt]
+	\item Let $M_{1,i}(a)$ represent the potential levels of insomnia for unit $i$ given 
+	treatment level $a$. 
+	\item Let $M_{2,i}(a,M_{1,i}(a'))$ represent the potential levels of headache for unit $i$ given 
+	treatment level $a$ and an insomnia level $M_{1,i}(a')$ that they would have if they received 
+	treatment level $a'$. 
+	\item Let $Y_{i}(a,M_{1,i}(a'),M_{2,i}(a'',a'''))$ represent the potential outcomes 
+	for unit $i$ given treatment level $a$ and potential mediator levels $M_{1,i}(a')$ and 
+	$M_{2,i}(a'',a''')$. 
+\end{itemize}
+
+Finally, we define $G_{1,i}(a)$ as a random draw from the distribution of $M_{1}(a)$ 
+and\\ $G_{2,i}(a,M(a'))$ as a random draw from the distribution of $M_{2}(a,M(a'))$. 
+
+The main idea in~\cite{linvanderweele2017} is to estimate
+path-specific interventional effects in the multiple mediator setting in a similar way to how 
+such effects are estimated in the single mediator case. In particular, they pursue a decomposition
+of the total interventional effect in terms of path-specific interventional effects 
+$T \rightarrow Y$, $T \rightarrow M_{1} \rightarrow Y$, $T \rightarrow M_{2} \rightarrow Y$, 
+and $T \rightarrow M_{1} \rightarrow M_{2} \rightarrow Y$, which mirrors the decomposition of 
+the total interventional effect in terms of the pure direct interventional effect and the total 
+indirect interventional effect in the one mediator case. This decomposition relies on the following
+simple algebraic expansion: 
+
+\begin{equation}
+\begin{aligned}
+	\mathbb{E}[Y(1,G_{1}(1),G_{2}(1,G_{1}(1)))] - 
+	\mathbb{E}[Y(0,G_{1}(0),G_{2}(0,G_{1}(0)))]\\ 
+	= \Psi(1,1,1,1) - \Psi(0,0,0,0)\\
+	= \{\Psi(1,0,0,0) - \Psi(1,0,0,0)\} + \{\Psi(1,1,0,0) - \Psi(1,0,0,0)\} +\\ 
+	\{\Psi(1,1,1,0) - \Psi(1,1,0,0)\} + \{\Psi(1,1,1,1) - \Psi(1,1,1,0)\}
+\end{aligned}
+\end{equation}
+
+where $\Psi$ is defined by the mediational g-formula given in~\cite{linvanderweele2017}:
+
+\begin{equation}\label{eq:RIE_two_mediator_g_comp}
+\begin{aligned}
+	\Psi(a,a',a'',a''') = \mathbb{E}[Y(a,G_{1}(a'),G_{2}(a'',a'''))|C] =\\ 
+	\int_{m_{2}}\int_{m_{1}'}\int_{m_{1}} \mathbb{E}[Y(a,m_{1},m_{2})|T = a, 
+	M_{1} = m_{1}, M_{2} = m_{2}, C]\\
+	\mathbb{P}[M_{2}(a'',m_{1}') = m_{2}|T = a''', M = m_{1}', C]\\
+	\mathbb{P}[M_{1}(a''') = m_{1}|C]\mathbb{P}[M_{1}(a') = m_{1}'|C]dm_{1}dm_{1}'dm_{2}
+\end{aligned}
+\end{equation}
+
+Each term in the decomposition represents a particular interventional effect that corresponds 
+to the pathways 
+$T \rightarrow Y$, $T \rightarrow M_{1} \rightarrow Y$, $T \rightarrow M_{2} \rightarrow Y$, 
+and $T \rightarrow M_{1} \rightarrow M_{2} \rightarrow Y$, respectively. However, the mediational
+g-formula allows for identification of 22 different quantities $\Psi$ for a binary treatment $a$ 
+that we might be interested in. In general, we conceive of interventional 
+effects with two mediators to be the average potential outcome of a joint intervention that assigns
+a treatment level $a$, a level of the fist mediator randomly drawn from the distribution of the 
+mediator in a population with treatment level $a'$, and a level of the second mediator randomly drawn
+from the distribution of the mediator in a population with treatment level $a''$ and first mediator 
+level randomly drawn from a population with treatment level $a'''$. 
+
+~\cite{linvanderweele2017} proved that equation~\ref{eq:RIE_two_mediator_g_comp} identifies 
+$\Psi(a,a',a'',a''')$, and thus any estimands defined in terms of $\Psi(a,a',a'',a''')$, 
+under the following expanded set of ignorability assumptions: 
+
+\begin{assumption}\label{assm:seq_ignorability_2med} 
+\indent
+\begin{enumerate}[noitemsep,topsep=0pt,label=(\roman*)]
+	\item $Y_{i}(a,m_{1},m_{2}) \indep T_{i} | C_{i}$ for all 
+	$a \in \mathcal{T}$, $m_{1} \in \mathcal{M}_{1}$, $m_{2} \in \mathcal{M}_{2}$. 
+	\item $M_{1,i}(a) \indep T_{i} | C_{i}$ for all $a \in \mathcal{T}$. 
+	\item $M_{2,i}(a) \indep T_{i} | C_{i}$ for all $a \in \mathcal{T}$. 
+	\item $Y_{i}(a,m_{1},m_{2}) \indep M_{2,i} | C_{i}$ 
+	for all $a \in \mathcal{T}$, $m_{1} \in \mathcal{M}_{1}$, $m_{2} \in \mathcal{M}_{1}$. 
+	\item $Y_{i}(a,m_{1},m_{2}) \indep M_{1,i} | C_{i}$ 
+	for all $a \in \mathcal{T}$, $m_{1} \in \mathcal{M}_{1}$, $m_{2} \in \mathcal{M}_{1}$. 
+	\item $M_{2,i}(a,m_{1}) \indep M_{1,i} | C_{i}$ 
+	for all $a \in \mathcal{T}$, $m_{1} \in \mathcal{M}_{1}$
+\end{enumerate}
+where $0 < \mathbb{P}[T = a | C]$, $0 < \mathbb{P}[M_{1} = m_{1} | T = a, C]$,
+$0 < \mathbb{P}[M_{2} = m_{2} | T = a, M = m_{1}, C]$
+for all $a \in \mathcal{T}$, $m_{1} \in \mathcal{M}_{1}, m_{2} \in \mathcal{M}_{2}$. 
+\end{assumption}
+
+Assumption~\ref{assm:seq_ignorability_2med} is a simple generalization of parts (i)-(iii) of 
+Assumption~\ref{assm:seq_ignorability} to the two causally ordered mediators case. It rules out
+any treatment-mediator confounding and any mediator-mediator confounding after controlling for 
+pre-treatment covariates. 
+
+For clarity, we outline an experimental procedure that can hypothetically be implemented to identify
+both Lin-VanderWeele interventional effects and a number of other potentially substantively interesting
+interventional effects. In particular, this experimental procedure
+can identify any estimands of interest that are defined in terms of $\Psi(a,a',a'',a''')$, and the 
+four terms in the Lin-VanderWeele decomposition above are a subset of these possible estimands. 
+
+We now suppose that in addition to the ``headache drug'' defined for the previous experiment, there 
+exists a similar ``insomnia drug'' that allows us to exactly set the level of insomnia a patient
+experiences. We set up the following 22-arm trial (see Table~\ref{tab:rct_two_mediator}):
+
+\begin{experiment}\label{exp:two_mediators}
+\indent 
+\begin{enumerate}[noitemsep,topsep=0pt]
+	\item Patients in \textbf{Arm 1} receive the anti-depressant, while patients in \textbf{Arm 2} do not. 
+	The levels of insomnia, headache, and depression are recorded for each patient.
+	\item After recording the results of the experiment in stage 1, patients in \textbf{Arms 3-6} 
+	receive combinations of treatment levels and a randomly selected level of insomnia 
+	from the distribution of observed insomnia levels in either Arm 1 or Arm 2, similar to in 
+	Experiment~\ref{exp:one_mediator}. The levels of insomnia, headache, and depression are recorded 
+	for each patient.
+	\item After recording the results of the experiment in stage 2, patients in \textbf{Arms 7-22} 
+	receive combinations of treatment levels, a randomly selected level of insomnia from the distribution of
+	observed insomnia levels in either Arm 1 or Arm 2, and a selected level of headache from the 
+	distribution of observed headache levels in one of Arms 3-6. 
+\end{enumerate}
+\end{experiment}
+
+\begin{table}[ht]
+\centering
+\caption{Table of results for Experiment~\ref{exp:two_mediators}}
+\label{tab:rct_two_mediator}
+\begin{tabularx}{\textwidth}{@{}
+  >{\hsize=0.50\hsize\centering\arraybackslash}X
+  >{\hsize=0.50\hsize\centering\arraybackslash}X
+  >{\hsize=1.25\hsize\centering\arraybackslash}X
+  >{\hsize=1.25\hsize\centering\arraybackslash}X
+  >{\hsize=1.25\hsize\centering\arraybackslash}X
+  >{\hsize=1.25\hsize\centering\arraybackslash}X @{}}
+\hline
+\addlinespace[6pt]
+\makecell[bc]{\textbf{Stage}} &
+\makecell[bc]{\textbf{Arm}} &
+\makecell[bc]{\textbf{Treatment}} &
+\makecell[bc]{\textbf{Insomnia}} &
+\makecell[bc]{\textbf{Headaches}} &
+\makecell[bc]{\textbf{Depression}} \\
+\addlinespace[3pt]
+\noalign{\hrule height 1pt}
+\addlinespace[3pt]
+\multirow{2}{*}{1} 
+&1 & 1 & $\hat{M_{1}}(1)_{1}$ & $\hat{M_{2}}(1,\hat{M_{1}}(1)_{1})_{1}$ & $y_{1}$\\
+&2 & 0 & $\hat{M_{1}}(0)_{2}$ & $\hat{M_{2}}(0,\hat{M_{1}}(0)_{2})_{2}$ & $y_{2}$\\
+\addlinespace[2pt]
+\noalign{\hrule height 0.5pt}
+\addlinespace[2pt]
+\multirow{4}{*}{2}
+&3 & 1 & $\hat{G}_{1}(1)_{3}$ & $\hat{M_{2}}(1,\hat{G}_{1}(1)_{3})_{3}$ & $y_{3}$\\
+&4 & 1 & $\hat{G}_{1}(0)_{4}$ & $\hat{M_{2}}(1,\hat{G}_{1}(0)_{4})_{4}$ & $y_{4}$\\
+&5 & 0 & $\hat{G}_{1}(1)_{5}$ & $\hat{M_{2}}(0,\hat{G}_{1}(1)_{5})_{5}$ & $y_{5}$\\
+&6 & 0 & $\hat{G}_{1}(0)_{6}$ & $\hat{M_{2}}(0,\hat{G}_{1}(0)_{6})_{6}$ & $y_{6}$\\
+\addlinespace[2pt]
+\noalign{\hrule height 0.5pt}
+\addlinespace[2pt]
+\multirow{16}{*}{3}
+&7 & 1 & $\hat{G}_{1}(1)_{7}$ & $\hat{G_{2}}(1,\hat{G}_{1}(1)_{3})_{7}$ & $y_{7}$\\
+&8 & 1 & $\hat{G}_{1}(1)_{8}$ & $\hat{G_{2}}(1,\hat{G}_{1}(0)_{4})_{8}$ & $y_{8}$\\
+&9 & 1 & $\hat{G}_{1}(1)_{9}$ & $\hat{G_{2}}(0,\hat{G}_{1}(1)_{5})_{9}$ & $y_{9}$\\
+&10 & 1 & $\hat{G}_{1}(1)_{10}$ & $\hat{G_{2}}(0,\hat{G}_{1}(0)_{6})_{10}$ & $y_{10}$\\
+&11 & 1 & $\hat{G}_{1}(0)_{11}$ & $\hat{G_{2}}(1,\hat{G}_{1}(1)_{3})_{11}$ & $y_{11}$\\
+&12 & 1 & $\hat{G}_{1}(0)_{12}$ & $\hat{G_{2}}(1,\hat{G}_{1}(0)_{4})_{12}$ & $y_{12}$\\
+&13 & 1 & $\hat{G}_{1}(0)_{13}$ & $\hat{G_{2}}(0,\hat{G}_{1}(1)_{5})_{13}$ & $y_{13}$\\
+&14 & 1 & $\hat{G}_{1}(0)_{14}$ & $\hat{G_{2}}(0,\hat{G}_{1}(0)_{6})_{14}$ & $y_{14}$\\
+&15 & 0 & $\hat{G}_{1}(1)_{15}$ & $\hat{G_{2}}(1,\hat{G}_{1}(1)_{3})_{15}$ & $y_{15}$\\
+&16 & 0 & $\hat{G}_{1}(1)_{16}$ & $\hat{G_{2}}(1,\hat{G}_{1}(0)_{4})_{16}$ & $y_{16}$\\
+&17 & 0 & $\hat{G}_{1}(1)_{17}$ & $\hat{G_{2}}(0,\hat{G}_{1}(1)_{5})_{17}$ & $y_{17}$\\
+&18 & 0 & $\hat{G}_{1}(1)_{18}$ & $\hat{G_{2}}(0,\hat{G}_{1}(0)_{6})_{18}$ & $y_{18}$\\
+&19 & 0 & $\hat{G}_{1}(0)_{19}$ & $\hat{G_{2}}(1,\hat{G}_{1}(1)_{3})_{19}$ & $y_{19}$\\
+&20 & 0 & $\hat{G}_{1}(0)_{20}$ & $\hat{G_{2}}(1,\hat{G}_{1}(0)_{4})_{20}$ & $y_{20}$\\
+&21 & 0 & $\hat{G}_{1}(0)_{21}$ & $\hat{G_{2}}(0,\hat{G}_{1}(1)_{5})_{21}$ & $y_{21}$\\
+&22 & 0 & $\hat{G}_{1}(0)_{22}$ & $\hat{G_{2}}(0,\hat{G}_{1}(0)_{6})_{22}$ & $y_{22}$\\
+\addlinespace[3pt]
+\noalign{\hrule height 1pt}
+\end{tabularx}
+
+\vspace{4pt}
+{\footnotesize
+\emergencystretch=3em
+\setlength{\parindent}{1.5em}
+\textsuperscript{1} $\hat{M}_{1}(1)$ and $\hat{M}_{1}(0)$ represent the distributions of insomnia in
+arms 1 and 2, respectively. $\hat{G}_{1}(1)$  and $\hat{G}_{1}(0)$ represent the distributions of assigned
+insomnia from random draws from $\hat{M}_{1}(1)$ and $\hat{M}_{1}(0)$, respectively. $\hat{M}_{2}(1,\hat{G}_{1}(1))$,
+ $\hat{M}_{2}(1,\hat{G}_{1}(0))$,
+$\hat{M}_{2}(0,\hat{G}_{1}(1))$, and $\hat{M}_{2}(0,\hat{G}_{0}(1))$ represent the distributions 
+of headache in arms 3-6. $\hat{G}_{2}(1,\hat{G}_{1}(1))$, $\hat{G}_{2}(1,\hat{G}_{1}(0))$,
+$\hat{G}_{2}(0,\hat{G}_{1}(1))$, and $\hat{G}_{2}(0,\hat{G}_{0}(1))$ represent the distributions of assigned
+headache from random draws from the corresponding empirical distributions of $M_{2}$. Finally,
+$y$ gives the observed average level of depression in each arm.\par}
+\end{table}
+
+Such an experiment fulfills all the requirements of Assumption~\ref{assm:seq_ignorability_2med}, so any
+estimand written in terms of $\Psi(a,a',a'',a''')$ can be identified. This includes the four interventional 
+effect analogues of the path-specific effects defined by~\cite{linvanderweele2017}. If we were only interested in 
+these four interventional effects, we could reduce the number of arms in the trial and compute the 
+following quantities: 
+\begin{itemize}[noitemsep,topsep=0pt]
+	\item $T \rightarrow Y$: $\Psi(1,0,0,0) - \Psi(0,0,0,0) = y_{14} - y_{22}$
+	\item $T \rightarrow M_{1} \rightarrow Y$: $\Psi(1,1,0,0) - \Psi(1,0,0,0) = y_{10} - y_{14}$
+	\item $T \rightarrow M_{2} \rightarrow Y$: $\Psi(1,1,1,0) - \Psi(1,1,0,0) = y_{8} - y_{10}$
+	\item $T \rightarrow M_{1} \rightarrow M_{2} \rightarrow Y$: $\Psi(1,1,1,1) - \Psi(1,1,1,0) = y_{7} - y_{8}$
+\end{itemize}
+
+However, there are many 
+other estimands defined in terms of comparisons of two values of $\Psi(a,a',a'',a''')$ that we might
+be interested in, and which estimands we are interested in should
+be driven by substantive considerations. As an example, consider the interventional effect given by 
+$\Psi(1,0,0,0) - \Psi(0,0,0,0)$. This corresponds to the difference in the effect of a three-part intervention
+to assign treatment to a patient while drawing their level of insomnia from $M_{1}(0)$ and their level of 
+headache from $M_{2}(0,0)$, compared to the same intervention but with no treatment assigned. There is no 
+particular reason why this particular treatment regime comparison should be of interest compared to the 
+same comparison but with insomnia and headache being drawn from $M_{1}(1)$ and $M_{2}(1,1)$, respectively. 
+
+
+\subsection{Vansteelandt-Daniel Interventional Effects}
+
+~\cite{vansteelandtdaniel2017} proposes defining interventional effects for multiple mediators in
+a way that both does not require knowing the causal ordering of the mediators and sums to the total
+effect even in the presence of exposure-induced confounding. The distinctive feature of these effects
+is that for the indirect effects through $M_{1}$ and $M_{2}$, the mediators are treated as if they
+are independent regardless of the actual dependence between them.~\cite{vansteelandtdaniel2017} 
+defines four effects, which we give in the context of our anti-depressant example. However, it
+is now imagined that we do not know the precise dependence between insomnia and headache: we 
+believe that there might exist feedback between headache and insomnia, where the existence of 
+either can cause the other at a later date. We define the following effects: 
+
+\begin{itemize}[noitemsep,topsep=0pt]
+\item The \textit{interventional direct effect} is defined to be the average effect of a 
+joint intervention on the treatment and two mediators that assigns the anti-depressant to
+a patient while assigning a random draw of insomnia and headache from the joint distribution 
+of insomnia and headache for patients that did not take the anti-depressant, compared to an 
+intervention that draws from the same mediator distribution but assigns no anti-depressant. 
+\item The \textit{interventional indirect effect through $M_{1}$} is defined to be the average effect
+of a joint intervention on the treatment and two mediators that assigns anti-depressant to
+a patient while assigning a random draw of insomnia from the corresponding distribution for patients 
+who took the anti-depressant and a random draw of headache from the distribution for patients
+who did not take the anti-depressant, compared to an 
+intervention that also assigns the anti-depressant and assigns a level of headache from the 
+distribution of headache for patients who did not take the anti-depressant but now also 
+assigns a level of insomnia from the distribution of insomnia for patients who did take the 
+anti-depressant. 
+\item The \textit{interventional indirect effect through $M_{2}$} is defined to be the average effect
+of a joint intervention on the treatment and two mediators that assigns anti-depressant to
+a patient while assigning a random draw of insomnia from the corresponding distribution for patients 
+who did not take the anti-depressant and a random draw of headache from the distribution for patients
+who took the anti-depressant, compared to an 
+intervention that also assigns the anti-depressant and assigns a level of headache from the 
+distribution of insomnia for patients who did not take the anti-depressant but now also 
+assigns a level of headache from the distribution of insomnia for patients who did take the 
+anti-depressant. 
+\item Finally,~\cite{vansteelandtdaniel2017} defines a \textit{remainder term} that corresponds to the 
+difference between the (non-interventional) total effect and the sum of the three effects defined 
+above. They say this captures the indirect effect resulting from the effect of the treatment on
+the dependence between the counterfactuals $M_{1}(1)$ and $M_{2}(1)$ given $C$. 
+\end{itemize}
+
+These effects are also identified under Assumption~\ref{assm:seq_ignorability_2med}. However,
+there are a number of important differences between these effects and the effects defined 
+by~\cite{linvanderweele2017}. Vansteelandt-Daniel indirect effects compare random interventions 
+on the mediator that set 
+their mediator value to a random draw from its marginal distribution under either treatment or
+control. In our example, this means that we imagine interventions where headache level is drawn from 
+one of two marginal distributions: either the distribution of headache among a population that 
+received the anti-depressant or the distribution among those who did not. For the indirect effects we 
+have defined, meanwhile, we imagine drawing a mediator from a 
+distribution that is conditional on both the treatment level and any mediators that we assume to 
+causally precede the mediator. Thus, we imagine an intervention where headache can be drawn from 
+one of four populations, where each population either was or was not assigned the anti-depressant and 
+received a random level of insomnia from either a population that did or did not 
+receive the anti-depressant. 
+
+Another important difference between these effects and Lin-VanderWeele effects is in the estimation of 
+the direct effect $T \rightarrow Y$, where 
+both effects compare interventions where the intervention on the mediators is held constant while
+varying whether treatment or control is taken, but the exact intervention on the mediators is 
+different. In particular, the interventional effects that map to the Lin-VanderWeele path-specific effect 
+$T \rightarrow Y$ involve drawing each mediator independently, where the first mediator is drawn
+from a distribution conditional on no treatment and the second mediator is drawn from a distribution
+conditional on no treatment and the first mediator having been drawn again from the distribution
+conditional on no treatment (this is a separate draw from this distribution from the draw
+for the value of the first mediator). The Vansteelandt-Daniel direct effect, meanwhile, involves 
+only one random draw from the joint distribution of the mediators conditional on no treatment. 
+This is different from both the procedure for the Lin-VanderWeele direct effect and the 
+Vansteelandt-Daniel indirect effects. 
+
+Finally, while both Vansteelandt-Daniel and Lin-VanderWeele effects are motivated by a decomposition of a total 
+effect, Lin-VanderWeele effects
+decompose the total interventional effect $\Phi(1,1,1,1) - \Phi(0,0,0,0)$, which is not always equal to the total
+causal effect, while Vansteelandt-Daniel effects 
+decompose the total causal effect $\mathbb{E}[Y_{i}(1) - Y_{i}(0)]$. As was the case for Lin-VanderWeele effects,
+alternative decompositions can be pursued, and the choice between which particular decomposition to favor 
+is difficult to justify. In general, we see this difference as less important given that the decomposition of 
+the total effect in terms of interventional effects, while seemingly a motivation for the definition of both 
+Lin-VanderWeele and Vansteelandt-Daniel effects, does not map onto meaningful information about causal 
+mechanisms (see Section~\ref{subsection:interpretation}). 
+
+We can identify Vansteelandt-Daniel effects using a version of the 
+simpler two-stage experimental setup discussed in~\cite{morenobetancur2018}:
+
+\begin{experiment}\label{exp:vd_effects}
+\indent 
+\begin{enumerate}[noitemsep,topsep=0pt]
+	\item Patients in \textbf{Arm 1} receive the anti-depressant, while patients in \textbf{Arm 2} do not. 
+	The levels of insomnia, headache, and depression are recorded for each patient.
+	\item After recording the results of the experiment in stage 1, patients in \textbf{Arms 3-5} 
+	receive treatment. In Arm 3, their insomnia level is drawn from the marginal distribution
+	for patients in Arm 1 and headache is drawn from the marginal distribution from Arm 2; in Arm 4, insomnia is 
+	drawn from Arm 2 and headache from Arm 1; and in Arm 5, both insomnia and headache are (independently)
+	drawn from Arm 2. The levels of insomnia, headache, and depression are recorded for each patient. 
+	To identify the direct effect, patients in \textbf{Arm 6} receive treatment 
+	and a random draw from the joint distribution of insomnia and headache of patients in Arm 2, 
+	while patients in \textbf{Arm 7} do not receive treatment and are also assigned a random draw 
+	from the joint distribution of the mediators in Arm 2. 
+\end{enumerate}
+\end{experiment}
+
+Indirect effect identification involves a comparison of the outcomes of Arm 3 and Arm 5 for $M_{1}$ and 
+Arm 4 and Arm 4 and Arm 5 respectively; direct effects can be identified by comparing outcomes for Arms 6
+and 7; and the remainder term is identified by the difference between Arm 1 and Arm 2 minus the sum of 
+the three other effects~\citep{morenobetancur2018}. 
+
+\section{Interpretation of Interventional Effects}\label{subsection:interpretation}
+
+In the previous sections, we briefly covered the distinction between the descriptive and prescriptive 
+motivations underlying natural and controlled effects given by~\cite{pearl2001}. In 
+Section~\ref{chapter:natural_effects}, we gave an example of why we might be interested in the 
+descriptive information natural effects give us about the mechanisms underlying a causal effect. 
+
+There are also clear examples of situations where the controlled direct effect might be of interest. To take our
+anti-depressant example where headache is considered as the only mediator, to combat the negative indirect
+effect of the anti-depressant on depressian via headache, we might prescribe a particular dose of a 
+strong anti-headache medication that is guaranteed to prevent headache. Thus, we would be testing the efficacy
+of a joint intervention assigning both the anti-depressant and a particular level of headache (no headache)
+on depression. This has clear clinical relevance: if such a joint intervention is seen to be effective, 
+relative to a control group that took the anti-headache drug but not the anti-depressant,
+this supports a treatment regime where both the anti-depressant and the anti-headache drug are exactly 
+prescribed. 
+
+Like the controlled effect, the interventional effect is motivated primarily by prescriptive rather than
+descriptive considerations. By inspecting Equation~\ref{eq:RIE_one_mediator_g_comp} and comparing to the 
+definition of the controlled direct effect, we can see that the interventional direct effect is the
+average of controlled direct effects weighted by the probability distribution function of the mediator 
+for units under no treatment. Thus, the interventional direct effect can be viewed as being itself a 
+controlled direct effect under a stochastic intervention (as opposed to a deterministic one like the
+controlled effect) that sets the mediator to a random level for untreated units~\cite{vanderweeleetal2014}.
+In the example above, this would correspond to evaluating a joint intervention where we gave 
+treated units both the anti-depressant and 
+an anti-headache drug that ensured that their rates of headache merely mirrored the 
+general population rather than prevented headache altogether (a more difficult assumption we would 
+need to make here is that the anti-headache drug worked in a way such
+that the final distribution of headache from those who had strong side effect from the anti-depressant is the 
+same as for those who had only minor side effects). The results of comparing a control group to the 
+group that received this joint intervention would have prescriptive implications: if this treatment regime 
+were effective, the treatment regime would be an attractive intervention to implement. 
+
+Since their introduction, interventional effects have been widely used as a substitute for natural effects 
+among practicioners attempting to conduct descriptive mediation analysis.~\citep{miles2023} 
+This is likely because the identification 
+assumptions required for interventional effects are far less stringent than natural effects, especially in 
+settings with multiple mediators and exposure-induced confounding, which are very common in the social and 
+biomedical sciences. However,~\cite{miles2023} showed that unless very strong assumptions are made, 
+interventional effects do not fulfill many important criteria that would allow us to use it as a reliable
+conceptual substitute for natural effects. For instance, interventional effects do not always correctly 
+detect when a mediational effect does not exist and can be of the opposite sign even when all unit-level
+mediational effects are in the opposite direction.~\citep{miles2023} This means that interventional effects
+are only useful in the prescriptive sense and cannot give us information about the relative strength of 
+competing causal pathways in bringing about a total causal effect like natural effects can. 
+
+The 4-way causal decomposition results that partially motivate both~\cite{linvanderweele2017} 
+and~\cite{vansteelandtdaniel2017} have a descriptive motivation: they attempt to shed light on 
+the relative strength of different mediated pathways in their contribution to a total effect. In light of 
+the results in~\cite{miles2023}, these decompositions do not seem to be important virtues of these 
+interventional effect definitions. While ambiguities in terms of choosing between different possible 
+decompositions of the total causal effect exist in the natural effect decompositions discussed in 
+Section~\ref{chapter:natural_effects}, these decompositions theoretically map onto the relative 
+importance of different path-specific effects in a way that purely prescriptive interventional effects
+do not.
+
+Despite the conceptual issues with these decompositions, interventional effects with multiple mediators
+could still be useful for measuring the effects of individual 
+joint stochastic interventions. Each effect identified by Experiment~\ref{exp:two_mediators} might map to an
+individually relevant stochastic intervention depending on the substantive question, without reference 
+to the other effects. For example, consider the problem with insomnia and headache as causally ordered
+mediators. The outcome $\Psi(1,0,0,0)$ would represent the effect of a sequential joint intervention 
+that would first give treated units a sleeping pill to make their insomnia follow the distribution for 
+untreated units and then give anti-headache medication to make their headaches follow the 
+distribution for untreated units. If we were interested in learning how deleterious the induced side effects 
+of insomnia are for mental health absent any interaction with the drug or with headache, we might instead 
+be interested in $\Psi(0,1,0,0)$ and design a joint intervention to induce this effect. Similar situations 
+of substantive interest might exist in cases where Vansteelandt-Daniel effects would be relevant. However, 
+it is harder to think of practical 3-part joint interventions that correspond to these effects compared to 
+hypothetical interventions that correspond to one mediator interventional effects. 
+
+Even in situations where such stochastic intervention treatment regimes might be of interest, it is unclear
+whether we would be interested in the exact effects given by~\cite{linvanderweele2017} 
+and~\cite{vansteelandtdaniel2017}. For example, to the interventional effect $\Psi(1,0,0,0)$ 
+above maps to the direct effect $T \rightarrow Y$ given by $\Psi(1,0,0,0) - \Psi(0,0,0,0)$
+in~\cite{linvanderweele2017}. However, it is unclear why $\Psi(0,0,0,0)$, which represents a potentially costly
+sequential joint intervention on the treatment and the two mediators, would be the relevant outcome to 
+compare $\Psi(1,0,0,0)$ to to evaluate its effectiveness rather than $\mathbb{E}[Y_{i}(0,0,0)]$, the 
+(deterministic) potential outcome for untreated units that we might be trying to improve upon. Additionally, 
+even in situations where we posit the existence of multiple mediators, we might be interested
+in one mediator~\cite{vanderweeleetal2014} interventional effects in situations where it would be costly,
+unethical, or impossible to manipulate one of the mediators. 
+
+
+\section{VanderWeele-Robinson Interventional Effects}\label{section:vr_int_eff}
+
+% Need to split this apart: move some of the explanation of one mediator to here; then formally develop one
+% and then multiple mediators; also might need to discuss experimental identification and assumptions, but
+% putting it all together makes sense and will save time/confusion
+
+In arguing for interpreting interventional effects as distinct stochastic interventions rather than
+as mediational quantities,~\cite{miles2023} highlights a version of interventional effects developed 
+by~\cite{vanderweelerobinson2014} as a particularly promising use case. These 
+VanderWeele-Robinson effects are conceptually motivated by situations in which we are interested 
+in what causal effect ``equalizing'' a mediator distribution between two groups
+would have on an outcome of interest. This question is often of particular interest in the health 
+disparities literature~\citep{jacksonvanderweele2018}.
+
+Our running example to introduce these effects comes from~\cite{kuhaetal2021}, 
+who considers how education mediates intergenerational social class mobility. Here, the ``treatment'' is
+father's social class, the mediator is level of education, and the outcome is the unit's social
+class at middle age. For expositional purposes, 
+we treat child's social class for now as an ordered variable from ``higher'' to ``lower''
+social class. When we extend these effects to two mediator problems, we will additionally 
+consider child intelligence as measured by an IQ test as an additional mediator that causally precedes
+level of education. 
+
+In situations in which~\cite{vanderweelerobinson2014} are applied, the treatment is generally 
+thought to be an unmanipulable characteristic such as race, sex, or social class. 
+We then identify two different groups of interest --- in our running example, this might be people 
+whose fathers were higher managers and 
+people whose fathers were manual labourers (routine occupations). Our estimand of interest 
+is then what the causal effect of randomly assigning the children of manual laborers 
+a level of education from the distribution of education for the children of higher managers
+would have on the child's average social class. Typically, another effect of interest is the 
+proportion of the difference in the outcome --- the difference between the social class of children
+of managers versus the social class of children of manual labourers --- that is eliminated 
+due to ``equalizing'' the distribution of the mediator in the manner described 
+above~\citep{vanderweelerobinson2014}. 
+% Add an example here or in the interpretation section: imagine a situation where we think that 
+% the educational differences are driven entirely by one unjust policy; what if we repealed this policy
+% (e.g. funding public schools through local property tax in the US)?
+% Easy substantive interpretation relative to interventional effects
+
+\subsection{One Mediator}\label{subsection:vr_effects_1m}
+
+~\cite{vanderweelerobinson2014} originally introduced their version of interventional effects for single
+mediator problems. 
+We briefly modify the notation we have been using for interventional effects to adapt it for use
+for VR interventional effects. Since it is imagined that units could not take on a different value of 
+treatment, potential outcomes are a function of only the mediator $M$ and units do not have potential mediators. 
+The fact that each unit
+can only take on one possible value of treatment also means that there is no VanderWeele-Robinson 
+interventional direct effect,
+only an indirect one. Mathematically, the \textit{VR interventional indirect effect} is defined to be
+
+% Should probably briefly introduce the parametric g-formula equation here in the single mediator 
+% interventional effects section
+\begin{equation}\label{eq:g_formula_vr_1m}
+\begin{aligned}
+ \mathbb{E}[Y_{i}(G(1)) - Y_{i}(G(0))|C, T = 0] = \\
+	\int_{m} \mathbb{E}[Y_{i}(m)|T_{i} = 0, C_{i}]
+	(\mathbb{P}[M = m|T = 1, C] - \mathbb{P}[M = m|T = 0, C])dm\\
+\end{aligned}
+\end{equation}
+
+VR interventional effects target an analogue of the \textit{average treatment effect on the untreated} (ATU)
+rather than the ATE like the interventional effects defined by~\cite{vanderweeleetal2014}. The 
+VR interventional indirect effect and the interventional indirect effect are equivalent if both fulfill 
+their respective identification assumptions without controlling for any confounders $C_{i}$. 
+However, such effects
+are identified under weaker conditions compared to interventional effects; in particular, there are 
+no conditions on the independence of the treatment and the mediator and outcome variables. Thus, only
+a version of condition (iii) of Assumption~\ref{assm:seq_ignorability} is required for 
+identification~\citep{jacksonvanderweele2018}.
+
+\begin{assumption}[Ignorability for VR Effects]\label{assm:seq_ignorability_vr_effects} 
+\indent
+$Y_{i}(m) \indep M_{i} | C_{i}$ for all $m \in \mathcal{M}$, 
+where $0 < \mathbb{P}[M = m | T = 1, C]$
+for $m \in \mathcal{M}$. 
+\end{assumption}
+
+The VR interventional indirect effect has a clear substantive interpretation: it represents the causal
+effect of a hypothetical intervention to draw the distribution of the mediator from the treatment group
+rather than the control group on the control group's outcomes. In our example, suppose our control group 
+is manual labourers and our treatment group is high salaried professionals. If our 
+outcome is the probability of children of father of these respective social classes becoming managers or 
+high salaried professionals (destination class), we may observe a disparity in this probability depending 
+on the father's social class (origin class). We may then be interested in how much this disparity in 
+destination class would shrink if the children of manual labourers were assigned a level of education from
+the children of high salaried professionals. This quantity could then give a measure of what effect
+a policy to equalize distributions in education would have on increasing 
+intergenerational social class mobility. 
+
+% Experimental identification? Maybe not needed, can think about adding later; it makes the multiple
+% mediator stuff needlessly complicated
+
+\subsection{Multiple Mediators}\label{subsection:vr_effects_2m}
+
+% Re-framing as reinterpretation of effects given in Jackson and VanderWeele (2018) in a situation where
+% we have two causally ordered mediators rather than treating the first mediator as a confounder
+
+% Highlight issues with marginal equalization of 2nd mediator: basically impossible to identify 
+% observationally, since we would explicitly not be controlling for the first mediator (which is also
+% a confounder)
+We now extend VR interventional effects to the two mediator case. Extensions of the framework for 
+one mediator in~\cite{vanderweelerobinson2014} have been considered in~\cite{jacksonvanderweele2018} 
+in the context of considering different ways of accounting for confounders. This exercise is motivated
+primarily by the health disparities literature. In problems like racial disparities in health outcomes,
+certain confounders like clinical history are considered to be ``allowable'', while others like 
+socioeconomic status or wealth are not~\citep{jackson2021}. Here, we consider similar effects to those
+outlined in~\cite{jacksonvanderweele2018} but reframe the problem to one where instead of considering a 
+mediator and confounder, we are considering two mediators of substantive interest. The difference between
+our framework and that of~\cite{jacksonvanderweele2018} is similar to the difference between the framing of
+exposure-induced confounding versus two mediator problems discussed in 
+Section~\ref{subsection:natural_effects_mm}. 
+
+We now consider intelligence at birth as an 
+additional mediator. We make the assumption that intelligence causally precedes education, so 
+intelligence might both affect outcome social class directly and through its effect on educational 
+attainment (see Figure~\ref{fig:application_DAG}). Let $T_{i}$ be the non-manipulable treatment, 
+father's social class, let $M_{1,i}$ represent IQ with no 
+corresponding potential mediators, let $M_{2,i}(m_{1})$ be potential mediators for 
+education and let $Y_{i}(m_{1},m_{2})$ be potential outcomes for child's social class. 
+For simplicitly, we assume that no other confounders exist. 
+
+% Fit formatting
+\begin{figure}
+\centering
+\begin{tikzpicture}
+
+  % Define nodes
+  \node[obs, align=center, minimum size=1.8cm, inner sep=0pt] (T) {Father's\\social class};
+  \node[obs, right=1.5cm of T, yshift=2.5cm, align=center, minimum size=1.8cm, inner sep=0pt] (M1) {IQ};
+  \node[obs, right=3.5cm of T, align=center, minimum size=1.8cm, inner sep=0pt]  (M2) {Education};
+  \node[obs, right=2cm of M2, align=center, minimum size=1.8cm, inner sep=0pt]  (Y) {Social class};
+
+  % Connect the nodes
+  \draw[->, line width= 1] (T) --  (M1) ; %
+  \draw[->, line width= 1] (T) --  (M2) ; %
+  \draw[->, line width= 1] (M1) --  (M2) ; %
+  \draw[->, line width= 1] (M1) --  (Y) ; %
+  \draw[->, line width= 1] (T) to[out=325, in=215] (Y) ; %
+  \draw[->, line width= 1] (M2) --  (Y) ; %
+
+\end{tikzpicture}
+\caption{Causal story for how IQ and education mediate social class mobility}
+% Fix figure numbering
+\label{fig:application_DAG}
+\end{figure}
+
+Suppose we are considering a problem where we are attempting to characterize how a disparity in odds 
+of ending up as a high salaried professional between children of high salaried professionals and 
+manual labourers is mediated by intelligence and education. 
+Given this problem,~\cite{jacksonvanderweele2018} highlights a number of different VR interventional effects
+we might have substantive interest in:
+
+\begin{itemize}[noitemsep,topsep=0pt]
+\item  The effect of equalizing the distribution of intelligence between the two social classes. This would 
+consist of an intervention to randomly assign intelligence for children of manual labourers to a random draw
+from the distribution from the marginal distribution of high salaried professionals. This is numerically 
+equivalent to estimating the one mediator VR interventional effect with intelligence as the only mediator, 
+given that the set of controlled counfounders remains the same. 
+\item  The effect of equalizing the marginal distribution of level of education between the two social classes. 
+This would consist of an intervention to randomly assign level of education for children of manual labourers 
+to a random draw from the marginal distribution of education among high salaried professionals. This is numerically 
+equivalent to estimating the one mediator VR interventional effect with education as the only mediator, 
+given that the set of controlled counfounders remains the same. 
+\item  The effect of equalizing the distribution of level of education, conditional on intelligence,
+between the two social classes. This would consist of an intervention to randomly assign level of education 
+for children of manual labourers to a random draw from the distribution of education among 
+high salaried professionals with the same measured intelligence as the child of the manual labourer. 
+This is numerically equivalent to estimating the one mediator VR interventional effect with education as the 
+only mediator and holding the set of controlled counfounders the same in addition to controlling for intelligence
+(which would framed as an additional confounder here). 
+\item  The effect of equalizing the joint distribution of intelligence and education between the two social
+classes. This would consist of an intervention to randomly assign intelligence and level of education 
+for children of manual labourers to a random draw from the joint distribution of intelligence and education among 
+high salaried professionals with the same measured intelligence as the child of the manual labourer. This is 
+numerically equivalent, given the same set of confounders, to estimating the Vansteelandt-Daniel interventional 
+direct effect, though the identification assumptions are less stringent compared to those effects. 
+\end{itemize}
+
+Each of the above four effects can be computed through minor modifications to Equation~\ref{eq:g_formula_vr_1m}
+and can be identified under minor modifications to
+Assumption~\ref{assm:seq_ignorability_vr_effects}~\citep{jacksonvanderweele2018}. One practical note to highlight is 
+that the effect of equalizing the marginal level of education between social classes requires that no confounders of 
+the relationship between level of education and the unit's social class exist. However, in a situation where we have
+IQ and education as two mediators, IQ is a confounder of the education-destination social class relationship, so 
+there is no way to observationally identify this effect: if we wanted to identify this effect, we would need to 
+experimentally manipulate level of education, which might be infeasible. 
+
+It is notable that these 
+effects, with the exception of the joint intervention on intelligence and education, are analogues of the 
+one mediator interventional effect definitions. While it is possible to define additional VanderWeele-Robinson 
+style interventional effect analogues of the Lin-VanderWeele or Vansteelandt-Daniel effects that imagine separate, 
+joint interventions on two mediators, these would be difficult to map to the types of substantive questions about 
+health and social disparities that the VanderWeele-Robinson style effects are motivated by. For example, consider 
+a hypothetical intervention to set the intelligence of a member of a social group to a random level of a different
+(advantaged) group, but to additionally intervene to draw their level of education from their own social group's 
+marginal distribution (this would correspond to a Vansteelandt-Daniel style interventional effect).~\cite{miles2023} 
+shows that such a quantity could not be said to show how important intelligence is in bringing about the observed
+disparity in outcomes between the two groups. Furthermore, it is difficult to think off situations where such a 
+joint intervention would be feasible or interesting when compared to a simple intervention to equalize only 
+intelligence and leave education unmanipulated. 
+
+
+% Application section
+% Information about the goals, variables, monte carlo approach (Imai et al, Kuha et al appendix)
+% Illustrative purposes (no confounders): VR interventional 
+% Discuss how for conditional M_2 interventional, this is actually a structural problem with any non-experimental setup
+% Even more illustrative: Lin-Vanderweele and Vansteelandt-Daniel effects (compare joint intervention to me)
+% Maybe: One mediator effects (for comparison)
+
+
+% Notes/To-do:
+% - Additive vs. proportional scale (throat-clearing)
+% - Composition assumption (Vanderweele and Vansteelandt, 2009; Pearl, 2001)
+% - Need to check binary vs. continuous mediator and outcome; consider at the very least switching to binary mediator, then
+% giving general equations for MC estimation in section 5
+% - Wording: treatment vs. exposure
+
+% Independence of Y(a,m) and M
+
+% Test for whether there is exposure-induced confounding
+
+
+%%%%% Notes for revision -----
+% - Cut down section on natural effects/potentially combine with potential outcomes stuff
+% - Introduce parametric g-formula in single mediator interventional effects section
+% - Add g-formula for Vansteelandt-Daniel effects
+% - Explicitly mention g-formula as a term
+% - Figure out what to do with the Psi(...) functions; consider either cutting entirely or adding to 
+% single mediator section/incorporating in VD and VR effects sections
+% - Emphasize difficulty of assumptions for conditional equalization outside of an experimental setup
+
+%%%%% Notes for formatting clean-up -----
+
+%%% Notation ---
+% A vs. T, exposure vs. treatment!!!
+% Subscripts on variables -- unit vs. population level r.v.
+
+%%% Grammatical consistency ---
+% Single vs. plural for papers with multiple authors
+% Tense agreement: present vs. future, conditional vs. subjunctive, blah blah blah
+% Non-manipulable vs. unmanipulable
+% Multiple vs. two mediators
+% Figure/table numbering and captions
+% Fix quotation marks
+% IQ vs. intelligence
+% paper vs. dissertation vs. thesis vs. research
+
+%%% Logical consistency ---
+% IQ not evaluated at birth but instead at age 10
+% Check Imai et al (a) vs. (b) cites

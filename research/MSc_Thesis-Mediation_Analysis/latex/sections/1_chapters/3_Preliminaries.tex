@@ -1,16 +1,12 @@
-\chapter{Preliminaries}\label{chapter:sample}
+\chapter{Preliminaries}\label{chapter:preliminaries}
 
 We begin by introducing the potential outcomes framework~\citep{rubin1974} that we will formulate 
 our mediational effects in terms of. We also introduce in more detail the running example 
 from~\cite{morenobetancur2018} introduced in Section~\ref{chapter:intro} that we will use to 
-demonstrate the different types of effects we are interested in estimating for the rest of this
-dissertation. We first review the potential outcomes framework for "simple"
+demonstrate the different types of effects we are interested in estimating. We first review the 
+potential outcomes framework for ``simple''
 causal inference problems with no mediation, where the goal is to infer the causal 
-effect of a particular change in a treatment variable on an outcome variable. In later sections, we 
-extend this framework to the case of mediation analysis with one mediator and discuss the 
-various mediational effects that have been proposed in the literature. 
-
-\section{Potential Outcomes}
+effect of a particular change in a treatment variable on an outcome variable. 
 
 Suppose we are weighing whether a certain anti-depressant that has been developed is effective in treating
 depression. To evaluate this question, we have access to observational data from a study on $N$
@@ -19,7 +15,7 @@ these patients were a random sample taken from a larger population of clinically
 at the start of the study period, was given the option of beginning uptake of the anti-depressant. 
 We have the following data:
 \begin{itemize}[noitemsep,topsep=0pt]
-\item The treatment variable $A_{i}$ denotes a binary treatment variable that equals $1$ if the 
+\item The treatment variable $T_{i}$ denotes a binary treatment variable that equals $1$ if the 
 unit takes a certain dose of the anti-depressant and equals $0$ otherwise. 
 \item The outcome variable $Y_{i}$ represents the patient's score on a questionnaire evaluating the severity 
 of depression in the patient that is filled out months after the patient begins or does not begin treatment. 
@@ -27,23 +23,25 @@ of depression in the patient that is filled out months after the patient begins 
 related to the patient's propensity to take treatment and the strength of their depression 6 months later. 
 \end{itemize}
 
-Let $\mathcal{A}$, $\mathcal{Y}$, and $\mathcal{C}$ denote the supports of $A_{i}$, $Y_{i}$, and $C_{i}$,
-respectively. 
+We suppose $T_{i}$, $C_{i}$, and $Y_{i}$ are independent and identically distributed: they are drawn from 
+population random variables $T$, $C$, and $Y$. Let $\mathcal{T}$, $\mathcal{Y}$, and $\mathcal{C}$ 
+denote the supports of $T$, $Y$, and $C$ respectively. 
 
 Under the potential outcomes framework, it is imagined that each unit in our sample also has
 two potential values of $Y_{i}$ --- their realized outcome under the treatment level they actually received
 and the outcome they would have experienced had they received the other treatment level. Let $Y_{i}(1)$
-and $Y_{i}(0)$ denote the outcome values unit $i$ would obtain under each treatment level. One of these
+and $Y_{i}(0)$ denote the outcome values unit $i$ would obtain under each treatment level, drawn from 
+$Y(1)$ and $Y(0)$ respectively. One of these
 potential outcomes will always be observed and will be equal to the realized $Y_{i}$, while the other
 will always be missing. 
 
-The \textit{unit level treatment effect} of $A$ on $Y$ is equal to $Y_{i}(1) - Y_{i}(0)$ and represents 
+The \textit{unit level treatment effect} of $T$ on $Y$ is equal to $Y_{i}(1) - Y_{i}(0)$ and represents 
 the effect of taking anti-depressants on unit $i$'s severity of depression. This
 effect is never identified for individual units because one potential outcome for each unit is always
-unobserved ---~\cite{rubin1974} and~\cite{holland1986} call this "the fundamental problem of causal 
-inference". However, different population-level causal estimands are identified under certain assumptions. 
+unobserved ---~\cite{rubin1974} and~\cite{holland1986} call this ``the fundamental problem of causal 
+inference''. However, different population-level causal estimands are identified under certain assumptions. 
 One such estimand we focus on is the \textit{average treatment effect} (ATE), given by 
-$\mathbb{E}[Y_{i}(a^{*}) - Y_{i}(a)]$.
+$\mathbb{E}[Y(a^{*}) - Y(a)]$.
 
 The ATE represents the average causal effect of the treatment on the outcome in the larger population. In
 our example, this represents the average difference of patients' severity of depression in worlds where they 
@@ -52,7 +50,7 @@ do not take the medication, holding all other relevant factors constant. The ATE
 important estimands, can be identified given the following assumptions~\citep{imbens2015}: 
 
 \begin{assumption}[Consistency]\label{assm:Consistency}
-$Y_{i}(a) = Y_{i}$ if unit $i$ receives treatment level $a \in \mathcal{A}$. 
+$Y_{i}(a) = Y_{i}$ if unit $i$ receives treatment level $a \in \mathcal{T}$. 
 \end{assumption}
 
 \begin{assumption}[No interference]\label{assm:no_interference}
@@ -61,18 +59,18 @@ the treatment level for any other unit $j \neq i$.
 \end{assumption}
 
 \begin{assumption}[Conditional Ignorability]\label{assm:ignorability} After controlling for some set of 
-observable covariates $C$, treatment level is independent of unit potential 
-outcomes: $Y_{i}(a) \indep A_{i} | C_{i} = c$ for all $a \in \mathcal{A}$, where 
-$0 < \mathbb{P}[A_{i} = a | C_{i}] < 1$ for all $a \in \mathcal{A}$. 
+observable covariates $C_{i}$, treatment level is independent of unit potential 
+outcomes: $Y_{i}(a) \indep T_{i} | C_{i} = c$ for all $a \in \mathcal{T}$, where 
+$0 < \mathbb{P}[T = a | C] < 1$ for all $a \in \mathcal{T}$. 
 \end{assumption}
 
 The first two assumptions are sometimes presented together as the Stable Unit Treatment Value Assumption 
 (SUTVA)~\citep{rubin1980a} and give technical conditions under which
 the ATE can be identified. It requires that there is no interference between units, meaning that a unit's 
 treatment status does not affect the potential outcomes of other units and vice versa. In this example, a violation
-might occur if we believed depression within a household was "contagious", meaning that whether the people a patient
+might occur if we believed depression within a household was ``contagious'', meaning that whether the people a patient
 was living with received treatment or not (if they were included in the study) affected the patient's outcome.  
-Additionally, there are to be no "hidden versions" of treatments, meaning that a given treatment 
+Additionally, there are to be no ``hidden versions'' of treatments, meaning that a given treatment 
 level cannot map to multiple different treatments for a unit. For example, in the birth control example from 
 Section~\ref{chapter:intro}, a violation would occur if some women who are recording as receiving the treatment take
 expired birth control pills that have lower efficacy. Violations can also occur in experimental settings where differences
@@ -88,8 +86,8 @@ in the rest of this dissertation.
 
 The conditional ignorability assumption~\citep{rubin1978} allows us to identify estimands like the ATE because while both 
 potential outcomes for a single unit can never be observed, ignorability allows us to treat these missing potential 
-outcomes as if they were "missing at random" because there will be no bias driving which potential outcomes are revealed
-versus hidden~\citep{imbens2015} after controlling for confounders $C_{i}$. This assumption
+outcomes as if they were ``missing at random'' because there will be no bias driving which potential outcomes are revealed
+versus hidden~\citep{imbens2015} after controlling for confounders $C$. This assumption
 rules out selection bias: for example, it rules out the possibility that patients with an unobserved lower desire to 
 make positive lifestyle changes are also less likely to take the anti-depressants. Alternatively, a randomized experiment
 where all study participants were randomly assigned to either take the anti-depressant or a placebo would also satisfy 
@@ -100,7 +98,7 @@ Throughout this paper, we will also present directed acyclic graph (DAG) represe
 we are developing within the potential outcomes framework. The non-parametric structural equation 
 modeling or DAG framework of~\cite{pearl2000} is an alternative method 
 for approaching causal inference problems that has been adapted by many applied researchers, especially in 
-epidemiology~\citep{hernan2024}, and is particularly helpful for visually encoding the types of identification 
+epidemiology~\citep{hernan2024}. It is particularly helpful for visually encoding the types of identification 
 assumptions made above. Much of the early work on mediation analysis (e.g.~\citep{pearl2001,avinetal2005}) was
 conducted within the DAG framework. We find DAG representations to be helpful in gaining intuition for the types of 
 complicated causal structures with many variables that are encountered in mediation analysis, but these graphs are 
@@ -111,7 +109,7 @@ presented as illustrative aids only.
 \begin{tikzpicture}
 
   % Define nodes
-  \node[obs] (A) {$\mathbf{A}$};
+  \node[obs] (A) {$\mathbf{T}$};
   \node[obs, right=1.5cm of A]  (Y) {$\mathbf{Y}$};
   \node[obs, left=1.5cm of A]  (C) {$\mathbf{C}$};
 
@@ -121,8 +119,8 @@ presented as illustrative aids only.
   \edge {C} {A} ; %
 
 \end{tikzpicture}
-\caption[]{DAG encoding the conditional ignorability assumption}
-\label{fig:one_mediator_dag}
+\caption{DAG encoding the conditional ignorability assumption}
+\label{fig:ignorability_dag}
 \end{figure}
 
 % Potentially add discussion of the difference between randomized experiments and observational studies here; can
