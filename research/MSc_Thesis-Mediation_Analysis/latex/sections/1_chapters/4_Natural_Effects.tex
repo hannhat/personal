@@ -6,7 +6,7 @@ with the positive effects of the drug. In this situation, there are two possibil
 
 \begin{itemize}[noitemsep,topsep=0pt]
 	\item The drug is effective at treating existing depressive symptoms, but the chronic pain from the side-effects 
-	cancel out this benefit and provide a new mental health challenge. 
+	cancels out this benefit and provides a new mental health challenge.
 	\item The headaches are a minor mental health issue, but the drug is not effective at treating the original 
 	symptoms. 
 \end{itemize}
@@ -21,9 +21,9 @@ process and the relative strength of these mechanisms, independent of any specif
 
 \section{Effect Definitions}\label{subsection:natural_effect_defs}
 
-We now define a mediator variable $M_{i}$, drawn from $M$, which represents a continuous measure of whether the 
+We now define a mediator variable $M_{i}$, drawn from $M$, which represents a continuous measure of the
 intensity of chronic
-headache pain a patient experienced during the study period. Let $\mathcal{M}$ represent the support of $M$. 
+headache pain a patient experienced during the study period. Let $\mathcal{M}$ represent the support of $M$.
 We also define potential mediators over $M_{i}$ and potential outcomes over $Y_{i}$:
 \begin{itemize}[noitemsep,topsep=0pt]
 	\item $M_{i}(0)$ --- The level of headache a patient would experience if they did not take anti-depressants.
@@ -40,8 +40,8 @@ We also define potential mediators over $M_{i}$ and potential outcomes over $Y_{
 
 If a unit does not receive treatment, we observe their realized mediators $M_{i}(0)$ and outcomes $Y_{i}(0,M_{i}(0))$;
 if they are treated, we observe $M_{i}(1)$ and $Y_{i}(1,M_{i}(1))$. Note that we can never observe $Y_{i}(1,M_{i}(0))$ or
-$Y_{i}(0,M_{i}(1))$ because a unit can only be assigned a treatment level once, but evaluating $Y_{i}(t',M_{i}(t))$ for 
-$t' \neq t$ would require knowing both the unit's outcome under treatment level $t'$ and their mediator value under
+$Y_{i}(0,M_{i}(1))$ because a unit can only be assigned a treatment level once, but evaluating $Y_{i}(a,M_{i}(a'))$ for 
+$a' \neq a$ would require knowing both the unit's outcome under treatment level $a$ and their mediator value under
 treatment level $t$~\citep{robinsgreenland1992}. There does not exist an experimental procedure to identify 
 these cross-world counterfactuals~\citep{pearl2001} without making an additional set of hard-to-satisfy 
 assumptions~\citep{imaietal2013}. Having defined this expanded set of potential mediators and outcomes, we
@@ -55,7 +55,7 @@ population.
 	\item $\mathbb{E}[Y(1,M(0)) - Y(0,M(0))]$ --- The \textit{pure direct effect}
 	is the average causal effect that receiving treatment has on the outcome, keeping the level of the mediator constant 
 	for each unit at the level of the mediator that would have been realized had the unit not received treatment. 
-	\item $\mathbb{E}[Y(1,M(0)) - Y(0,M(0))]$ --- The \textit{total direct effect}
+	\item $\mathbb{E}[Y(1,M(1)) - Y(0,M(1))]$ --- The \textit{total direct effect}
 	is the average causal effect that receiving treatment has on the outcome, keeping the level of the mediator constant 
 	for each unit at the level of the mediator that would have been realized had the unit received treatment. 
 	\item $\mathbb{E}[Y(0,M(1)) - Y(0,M(0))]$ --- The \textit{pure indirect effect}
@@ -80,7 +80,7 @@ and the mediator to be expressed.
 In addition to the set of natural effect definitions given above,~\cite{robinsgreenland1992} and~\cite{pearl2001} introduce an 
 additional effect definition with a very different interpretation from the natural effects. The \textit{controlled direct effect}
 at $M=m^{*}$ is the average causal effect that receiving treatment has on the outcome, keeping the level of the mediator fixed at a 
-particular level $m$ for all units. There is a (potentially different) CDE defined at all possible values of the 
+particular level $m^{*}$ for all units. There is a (potentially different) CDE defined at all possible values of the 
 mediator. This effect actually has a closer relationship to the interventional effects we will introduce later, but we
 introduce it here to clarify the conceptual differences between natural and controlled and interventional effects.
 
@@ -158,7 +158,7 @@ drug's absence do not exist. Given this typology, we can say that for patients f
 false, the drug has had a direct effect on the patient's depression: depression occurs for the 
 patient only in the absence of the drug, regardless of whether they experience headache. 
 For patients for whom 1, 4, and 6 are true and 2, 3, and 5 are false (here, the additional condition that 1 is 
-true and 2 is false ensure that the treatment actually has an effect on the level of headahce), we can say
+true and 2 is false ensures that the treatment actually has an effect on the level of headache), we can say
 that the drug has had an indirect effect on depression: headache occurs only in the presence of the drug,
 and depression occurs only in the presence of headache, regardless of whether the drug is taken. 
 
@@ -179,8 +179,8 @@ term that can be interpreted as the causal effect of interactions between the tr
 
 \begin{equation}
 \begin{aligned}
-	\mathbb{E}[Y(1,M(1))] - \mathbb{E}[Y_{i}(0,M(0))] = 
-	\{\mathbb{E}[Y(1,M(0))] - \mathbb{E}[Y_{i}(0,M(0))]\}\\ 
+	\mathbb{E}[Y(1,M(1))] - \mathbb{E}[Y(0,M(0))] = 
+	\{\mathbb{E}[Y(1,M(0))] - \mathbb{E}[Y(0,M(0))]\}\\ 
 	+ \{\mathbb{E}[Y(1,M(1))] - \mathbb{E}[Y(1,M(0))]\}\\
 	= \{\mathbb{E}[Y(1,M(0))] - \mathbb{E}[Y(0,M(0))]\}
 	+ \{\mathbb{E}[Y(0,M(1))] - \mathbb{E}[Y(0,M(0))]\} + \\
@@ -246,7 +246,7 @@ Assumption~\ref{assm:ignorability}.
 	\item $Y_{i}(a,m) \indep T_{i} | C_{i}$ for all $a \in \mathcal{T}$, $m \in \mathcal{M}$. 
 	\item $M_{i}(a) \indep T_{i} | C_{i}$ for all $a \in \mathcal{T}$. 
 	\item $Y_{i}(a,m) \indep M_{i} | C_{i}$ for all $a \in \mathcal{T}$, $m \in \mathcal{M}$. 
-	\item $Y_{i}(a,m) \indep M_{i}(a^{*}) | T_{i} = a, C_{i} = c$ for all $a,a^{*} \in \mathcal{T}$, $m \in \mathcal{M}$. 
+	\item $Y_{i}(a,m) \indep M_{i}(a') | T_{i} = a, C_{i} = c$ for all $a,a' \in \mathcal{T}$, $m \in \mathcal{M}$. 
 \end{enumerate}
 where $0 < \mathbb{P}[T = a | C] < 1$ and $0 < \mathbb{P}[M = m | T = a, C]$
  for all $a \in \mathcal{T}$, $m \in \mathcal{M}$. 
@@ -259,17 +259,17 @@ assumption is guaranteed to hold in randomized experiments where the treatment i
 treatment. In the running example, an experiment that both randomly prescribed the anti-depressant and a dose of a 
 (hypothetical) headache medication that sets a level of headache but has no other effects would fulfill the 
 first part of the sequential ignorability assumption. In observational studies, similar strategies to those pursued
-in observational studies in simple causal inference problems --- for example, collecting information on a number
+in simple causal inference problems --- for example, collecting information on a number
 of relevant confounding variables --- can be pursued to fulfill this assumption, except that confounders of both 
 the treatment-outcome and the treatment-mediator relationship need to be controlled for~\citep{imaietal2010b}.  
 
-Part (iv) of Assumption~\ref{assm:seq_ignorability}, commonly referred to the cross-world independence assumption, 
+Part (iv) of Assumption~\ref{assm:seq_ignorability}, commonly referred to as the cross-world independence assumption,
 requires that the potential mediators and the potential outcomes are independent of each other. 
 An alternative interpretation is that, among units that 
 share a set of covariates $C_{i}$ and treatment assignment $a$, the natural level of the mediator for each unit 
 can be treated as if it were randomized~\citep{imaietal2010a}. Unlike the first ignorability assumption, there does not 
 exist an experiment that can fulfill this assumption without difficult-to-satisfy 
-auxilliary assumptions~\citep{imaietal2013}. 
+auxiliary assumptions~\citep{imaietal2013}.
 
 The hypothetical experiment outlined above would not fulfill the cross-world independence assumption 
 because the randomization of the mediator does not give any information about the potential mediators
@@ -280,13 +280,13 @@ unfalsifiable~\citep{vanderweelevansteelandt2009, vanderweeleetal2014}. Importan
 condition would occur if there were a 
 post-treatment confounder $L$ of the relationship between $M$ and $Y$, even if $L$ were observed. Even though it is 
 possible to test for the presence of such a post-treatment confounder, the absence of such a confounder actually
-does not help verify the cross-world independence assumption.~\cite{andrewsdidelez2021} gives an example of a 
-situation in which post-treatment confounder does not exist but the cross-world independence assumption is still not
+does not help verify the cross-world independence assumption.~\cite{andrewsdidelez2021} gives an example of a
+situation in which a post-treatment confounder does not exist but the cross-world independence assumption is still not
 true. 
 
 The controlled direct effect is identifiable under technical conditions of consistency and composition and part (i) of 
 the sequential ignorability assumption~\citep{imaietal2010b}. All forms of the natural direct and indirect effects require 
-that the cross-world independence assumption holds in addition to SUTVA and parts (i)-{iii} of the
+that the cross-world independence assumption holds in addition to SUTVA and parts (i)-(iii) of the
 sequential ignorability assumption~\citep{pearl2001, imaietal2010a}. The implied DAG representing
 the relationships between $C$, $T$, $M$, and $Y$ under these identification assumptions is given in 
 Figure~\ref{fig:one_mediator_dag}. 
@@ -327,7 +327,7 @@ The key limitation of natural effects for the purposes of this dissertation lies
 independence assumption for identification. With one mediator, there is controversy over this assumption because it
 cannot be empirically tested. With two or more causally related mediators, however, the necessity of this assumption
 prevents the identification of natural effects and their multiple mediator natural effect analogues (in particular, 
-path specific effects $T \rightarrow Y$, $T \rightarrow M_{1} \rightarrow Y$, $T \rightarrow M_{2} \rightarrow Y$ and 
+path-specific effects $T \rightarrow Y$, $T \rightarrow M_{1} \rightarrow Y$, $T \rightarrow M_{2} \rightarrow Y$ and 
 $T \rightarrow M_{1} \rightarrow M_{2} \rightarrow Y$) altogether. This 
 is because the cross-world independence assumption rules out any post-treatment confounders. In 
 Figure~\ref{fig:exposure_induced_confounder}, $L$ would be such a post-treatment confounder, so natural effects would
@@ -373,7 +373,7 @@ generally not be a fruitful one.
   \edge {C} {T} ; %
 
 \end{tikzpicture}
-\caption{One mediator, exposure-induced confounding}
+\caption{One mediator, treatment-induced confounding}
 \label{fig:exposure_induced_confounder}
 \end{figure}
 

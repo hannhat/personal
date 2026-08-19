@@ -61,12 +61,12 @@ treated units.
 represents the effect of a joint intervention that gives a unit no treatment while drawing their mediator level 
 from the distribution of the mediator for treated units, compared to an intervention
 to assign a unit to no treatment while drawing their mediator level from the distribution of the mediator for 
-treated units.
+untreated units.
 \item  $\mathbb{E}[Y(1,G(1)) - Y_{i}(1,G(0))]$ --- The \textit{total interventional indirect effect} 
 represents the effect of a joint intervention that gives a unit treatment while drawing their mediator level 
 from the distribution of the mediator for treated units, compared to an intervention
 to assign a unit to treatment while drawing their mediator level from the distribution of the mediator for 
-treated units.
+untreated units.
 \end{itemize}
 
 The total interventional effect is formally defined in~\cite{linvanderweele2017}. 
@@ -116,7 +116,7 @@ help inform observational study design and interpretation.
 
 The experimental setup, like our running example, is inspired by~\cite{morenobetancur2018}. Suppose we 
 are trying to estimate interventional effects in the running example. Suppose a ``headache drug'' has been developed 
-that allows us exactly set the level of headache a patient who takes this drug will experience while having no 
+that allows us to exactly set the level of headache a patient who takes this drug will experience while having no
 other side effects. We set up the following 6-arm trial, with patients randomly assigned to each arm: 
 
 \begin{experiment}\label{exp:one_mediator}
@@ -260,7 +260,7 @@ We also redefine potential mediators and outcomes as follows:
 \end{itemize}
 
 Finally, we define $G_{1,i}(a)$ as a random draw from the distribution of $M_{1}(a)$ 
-and\\ $G_{2,i}(a,M(a'))$ as a random draw from the distribution of $M_{2}(a,M(a'))$. 
+and\\ $G_{2,i}(a,M_{1}(a'))$ as a random draw from the distribution of $M_{2}(a,M_{1}(a'))$. 
 
 The main idea in~\cite{linvanderweele2017} is to estimate
 path-specific interventional effects in the multiple mediator setting in a similar way to how 
@@ -277,7 +277,7 @@ simple algebraic expansion:
 	\mathbb{E}[Y(1,G_{1}(1),G_{2}(1,G_{1}(1)))] - 
 	\mathbb{E}[Y(0,G_{1}(0),G_{2}(0,G_{1}(0)))]\\ 
 	= \Psi(1,1,1,1) - \Psi(0,0,0,0)\\
-	= \{\Psi(1,0,0,0) - \Psi(1,0,0,0)\} + \{\Psi(1,1,0,0) - \Psi(1,0,0,0)\} +\\ 
+	= \{\Psi(1,0,0,0) - \Psi(0,0,0,0)\} + \{\Psi(1,1,0,0) - \Psi(1,0,0,0)\} +\\ 
 	\{\Psi(1,1,1,0) - \Psi(1,1,0,0)\} + \{\Psi(1,1,1,1) - \Psi(1,1,1,0)\}
 \end{aligned}
 \end{equation}
@@ -289,7 +289,7 @@ where $\Psi$ is defined by the mediational g-formula given in~\cite{linvanderwee
 	\Psi(a,a',a'',a''') = \mathbb{E}[Y(a,G_{1}(a'),G_{2}(a'',a'''))|C] =\\ 
 	\int_{m_{2}}\int_{m_{1}'}\int_{m_{1}} \mathbb{E}[Y(a,m_{1},m_{2})|T = a, 
 	M_{1} = m_{1}, M_{2} = m_{2}, C]\\
-	\mathbb{P}[M_{2}(a'',m_{1}') = m_{2}|T = a''', M = m_{1}', C]\\
+	\mathbb{P}[M_{2}(a'',m_{1}') = m_{2}|T = a''', M_{1} = m_{1}', C]\\
 	\mathbb{P}[M_{1}(a''') = m_{1}|C]\mathbb{P}[M_{1}(a') = m_{1}'|C]dm_{1}dm_{1}'dm_{2}
 \end{aligned}
 \end{equation}
@@ -298,10 +298,10 @@ Each term in the decomposition represents a particular interventional effect tha
 to the pathways 
 $T \rightarrow Y$, $T \rightarrow M_{1} \rightarrow Y$, $T \rightarrow M_{2} \rightarrow Y$, 
 and $T \rightarrow M_{1} \rightarrow M_{2} \rightarrow Y$, respectively. However, the mediational
-g-formula allows for identification of 22 different quantities $\Psi$ for a binary treatment $a$ 
+g-formula allows for identification of 16 different quantities $\Psi$ for a binary treatment $a$ 
 that we might be interested in. In general, we conceive of interventional 
 effects with two mediators to be the average potential outcome of a joint intervention that assigns
-a treatment level $a$, a level of the fist mediator randomly drawn from the distribution of the 
+a treatment level $a$, a level of the first mediator randomly drawn from the distribution of the
 mediator in a population with treatment level $a'$, and a level of the second mediator randomly drawn
 from the distribution of the mediator in a population with treatment level $a''$ and first mediator 
 level randomly drawn from a population with treatment level $a'''$. 
@@ -318,14 +318,14 @@ under the following expanded set of ignorability assumptions:
 	\item $M_{1,i}(a) \indep T_{i} | C_{i}$ for all $a \in \mathcal{T}$. 
 	\item $M_{2,i}(a) \indep T_{i} | C_{i}$ for all $a \in \mathcal{T}$. 
 	\item $Y_{i}(a,m_{1},m_{2}) \indep M_{2,i} | C_{i}$ 
-	for all $a \in \mathcal{T}$, $m_{1} \in \mathcal{M}_{1}$, $m_{2} \in \mathcal{M}_{1}$. 
+	for all $a \in \mathcal{T}$, $m_{1} \in \mathcal{M}_{1}$, $m_{2} \in \mathcal{M}_{2}$. 
 	\item $Y_{i}(a,m_{1},m_{2}) \indep M_{1,i} | C_{i}$ 
-	for all $a \in \mathcal{T}$, $m_{1} \in \mathcal{M}_{1}$, $m_{2} \in \mathcal{M}_{1}$. 
+	for all $a \in \mathcal{T}$, $m_{1} \in \mathcal{M}_{1}$, $m_{2} \in \mathcal{M}_{2}$. 
 	\item $M_{2,i}(a,m_{1}) \indep M_{1,i} | C_{i}$ 
 	for all $a \in \mathcal{T}$, $m_{1} \in \mathcal{M}_{1}$
 \end{enumerate}
 where $0 < \mathbb{P}[T = a | C]$, $0 < \mathbb{P}[M_{1} = m_{1} | T = a, C]$,
-$0 < \mathbb{P}[M_{2} = m_{2} | T = a, M = m_{1}, C]$
+$0 < \mathbb{P}[M_{2} = m_{2} | T = a, M_{1} = m_{1}, C]$
 for all $a \in \mathcal{T}$, $m_{1} \in \mathcal{M}_{1}, m_{2} \in \mathcal{M}_{2}$. 
 \end{assumption}
 
@@ -460,7 +460,7 @@ same comparison but with insomnia and headache being drawn from $M_{1}(1)$ and $
 
 ~\cite{vansteelandtdaniel2017} proposes defining interventional effects for multiple mediators in
 a way that both does not require knowing the causal ordering of the mediators and sums to the total
-effect even in the presence of exposure-induced confounding. The distinctive feature of these effects
+effect even in the presence of treatment-induced confounding. The distinctive feature of these effects
 is that for the indirect effects through $M_{1}$ and $M_{2}$, the mediators are treated as if they
 are independent regardless of the actual dependence between them.~\cite{vansteelandtdaniel2017} 
 defines four effects, which we give in the context of our anti-depressant example. However, it
@@ -488,9 +488,9 @@ of a joint intervention on the treatment and two mediators that assigns anti-dep
 a patient while assigning a random draw of insomnia from the corresponding distribution for patients 
 who did not take the anti-depressant and a random draw of headache from the distribution for patients
 who took the anti-depressant, compared to an 
-intervention that also assigns the anti-depressant and assigns a level of headache from the 
+intervention that also assigns the anti-depressant and assigns a level of insomnia from the 
 distribution of insomnia for patients who did not take the anti-depressant but now also 
-assigns a level of headache from the distribution of insomnia for patients who did take the 
+assigns a level of headache from the distribution of headache for patients who did take the 
 anti-depressant. 
 \item Finally,~\cite{vansteelandtdaniel2017} defines a \textit{remainder term} that corresponds to the 
 difference between the (non-interventional) total effect and the sum of the three effects defined 
@@ -529,7 +529,7 @@ Vansteelandt-Daniel indirect effects.
 
 Finally, while both Vansteelandt-Daniel and Lin-VanderWeele effects are motivated by a decomposition of a total 
 effect, Lin-VanderWeele effects
-decompose the total interventional effect $\Phi(1,1,1,1) - \Phi(0,0,0,0)$, which is not always equal to the total
+decompose the total interventional effect $\Psi(1,1,1,1) - \Psi(0,0,0,0)$, which is not always equal to the total
 causal effect, while Vansteelandt-Daniel effects 
 decompose the total causal effect $\mathbb{E}[Y_{i}(1) - Y_{i}(0)]$. As was the case for Lin-VanderWeele effects,
 alternative decompositions can be pursued, and the choice between which particular decomposition to favor 
@@ -559,7 +559,7 @@ simpler two-stage experimental setup discussed in~\cite{morenobetancur2018}:
 \end{experiment}
 
 Indirect effect identification involves a comparison of the outcomes of Arm 3 and Arm 5 for $M_{1}$ and 
-Arm 4 and Arm 4 and Arm 5 respectively; direct effects can be identified by comparing outcomes for Arms 6
+Arm 4 and Arm 5 respectively; direct effects can be identified by comparing outcomes for Arms 6
 and 7; and the remainder term is identified by the difference between Arm 1 and Arm 2 minus the sum of 
 the three other effects~\citep{morenobetancur2018}. 
 
@@ -572,7 +572,7 @@ descriptive information natural effects give us about the mechanisms underlying 
 
 There are also clear examples of situations where the controlled direct effect might be of interest. To take our
 anti-depressant example where headache is considered as the only mediator, to combat the negative indirect
-effect of the anti-depressant on depressian via headache, we might prescribe a particular dose of a 
+effect of the anti-depressant on depression via headache, we might prescribe a particular dose of a 
 strong anti-headache medication that is guaranteed to prevent headache. Thus, we would be testing the efficacy
 of a joint intervention assigning both the anti-depressant and a particular level of headache (no headache)
 on depression. This has clear clinical relevance: if such a joint intervention is seen to be effective, 
@@ -598,10 +598,10 @@ group that received this joint intervention would have prescriptive implications
 were effective, the treatment regime would be an attractive intervention to implement. 
 
 Since their introduction, interventional effects have been widely used as a substitute for natural effects 
-among practicioners attempting to conduct descriptive mediation analysis.~\citep{miles2023} 
+among practitioners attempting to conduct descriptive mediation analysis~\citep{miles2023}.
 This is likely because the identification 
 assumptions required for interventional effects are far less stringent than natural effects, especially in 
-settings with multiple mediators and exposure-induced confounding, which are very common in the social and 
+settings with multiple mediators and treatment-induced confounding, which are very common in the social and
 biomedical sciences. However,~\cite{miles2023} showed that unless very strong assumptions are made, 
 interventional effects do not fulfill many important criteria that would allow us to use it as a reliable
 conceptual substitute for natural effects. For instance, interventional effects do not always correctly 
@@ -676,11 +676,11 @@ thought to be an unmanipulable characteristic such as race, sex, or social class
 We then identify two different groups of interest --- in our running example, this might be people 
 whose fathers were higher managers and 
 people whose fathers were manual labourers (routine occupations). Our estimand of interest 
-is then what the causal effect of randomly assigning the children of manual laborers 
+is then what the causal effect of randomly assigning the children of manual labourers
 a level of education from the distribution of education for the children of higher managers
 would have on the child's average social class. Typically, another effect of interest is the 
 proportion of the difference in the outcome --- the difference between the social class of children
-of managers versus the social class of children of manual labourers --- that is eliminated 
+of managers and the social class of children of manual labourers --- that is eliminated
 due to ``equalizing'' the distribution of the mediator in the manner described 
 above~\citep{vanderweelerobinson2014}. 
 % Add an example here or in the interpretation section: imagine a situation where we think that 
@@ -759,7 +759,7 @@ socioeconomic status or wealth are not~\citep{jackson2021}. Here, we consider si
 outlined in~\cite{jacksonvanderweele2018} but reframe the problem to one where instead of considering a 
 mediator and confounder, we are considering two mediators of substantive interest. The difference between
 our framework and that of~\cite{jacksonvanderweele2018} is similar to the difference between the framing of
-exposure-induced confounding versus two mediator problems discussed in 
+treatment-induced confounding versus two mediator problems discussed in
 Section~\ref{subsection:natural_effects_mm}. 
 
 We now consider intelligence at birth as an 
@@ -769,7 +769,7 @@ attainment (see Figure~\ref{fig:application_DAG}). Let $T_{i}$ be the non-manipu
 father's social class, let $M_{1,i}$ represent IQ with no 
 corresponding potential mediators, let $M_{2,i}(m_{1})$ be potential mediators for 
 education and let $Y_{i}(m_{1},m_{2})$ be potential outcomes for child's social class. 
-For simplicitly, we assume that no other confounders exist. 
+For simplicity, we assume that no other confounders exist.
 
 % Fit formatting
 \begin{figure}
@@ -807,19 +807,19 @@ we might have substantive interest in:
 consist of an intervention to randomly assign intelligence for children of manual labourers to a random draw
 from the distribution from the marginal distribution of high salaried professionals. This is numerically 
 equivalent to estimating the one mediator VR interventional effect with intelligence as the only mediator, 
-given that the set of controlled counfounders remains the same. 
+given that the set of controlled confounders remains the same. 
 \item  The effect of equalizing the marginal distribution of level of education between the two social classes. 
 This would consist of an intervention to randomly assign level of education for children of manual labourers 
 to a random draw from the marginal distribution of education among high salaried professionals. This is numerically 
 equivalent to estimating the one mediator VR interventional effect with education as the only mediator, 
-given that the set of controlled counfounders remains the same. 
+given that the set of controlled confounders remains the same. 
 \item  The effect of equalizing the distribution of level of education, conditional on intelligence,
 between the two social classes. This would consist of an intervention to randomly assign level of education 
 for children of manual labourers to a random draw from the distribution of education among 
 high salaried professionals with the same measured intelligence as the child of the manual labourer. 
 This is numerically equivalent to estimating the one mediator VR interventional effect with education as the 
-only mediator and holding the set of controlled counfounders the same in addition to controlling for intelligence
-(which would framed as an additional confounder here). 
+only mediator and holding the set of controlled confounders the same in addition to controlling for intelligence
+(which would be framed as an additional confounder here). 
 \item  The effect of equalizing the joint distribution of intelligence and education between the two social
 classes. This would consist of an intervention to randomly assign intelligence and level of education 
 for children of manual labourers to a random draw from the joint distribution of intelligence and education among 

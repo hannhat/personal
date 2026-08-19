@@ -11,7 +11,7 @@ effect of a particular change in a treatment variable on an outcome variable.
 Suppose we are weighing whether a certain anti-depressant that has been developed is effective in treating
 depression. To evaluate this question, we have access to observational data from a study on $N$
 patients diagnosed with clinical depression indexed by $i = 1, 2, ..., N$. It is imagined that
-these patients were a random sample taken from a larger population of clinically despressed patients. Each patient,
+these patients were a random sample taken from a larger population of clinically depressed patients. Each patient,
 at the start of the study period, was given the option of beginning uptake of the anti-depressant. 
 We have the following data:
 \begin{itemize}[noitemsep,topsep=0pt]
@@ -41,7 +41,7 @@ effect is never identified for individual units because one potential outcome fo
 unobserved ---~\cite{rubin1974} and~\cite{holland1986} call this ``the fundamental problem of causal 
 inference''. However, different population-level causal estimands are identified under certain assumptions. 
 One such estimand we focus on is the \textit{average treatment effect} (ATE), given by 
-$\mathbb{E}[Y(a^{*}) - Y(a)]$.
+$\mathbb{E}[Y(a') - Y(a)]$.
 
 The ATE represents the average causal effect of the treatment on the outcome in the larger population. In
 our example, this represents the average difference of patients' severity of depression in worlds where they 
@@ -72,7 +72,7 @@ might occur if we believed depression within a household was ``contagious'', mea
 was living with received treatment or not (if they were included in the study) affected the patient's outcome.  
 Additionally, there are to be no ``hidden versions'' of treatments, meaning that a given treatment 
 level cannot map to multiple different treatments for a unit. For example, in the birth control example from 
-Section~\ref{chapter:intro}, a violation would occur if some women who are recording as receiving the treatment take
+Section~\ref{chapter:intro}, a violation would occur if some women who are recorded as receiving the treatment take
 expired birth control pills that have lower efficacy. Violations can also occur in experimental settings where differences
 in the mode of treatment assignment itself --- for example, the attitude of the doctor or lab assistant administering 
 treatment --- might affect potential outcomes.
